@@ -1,0 +1,52 @@
+#!/bin/sh
+#@desc this script can auto create cscope file and ctags
+#@date 2013-12-9 13:53:44
+#@author viticm<viticm@126.com>
+paths="
+./ ../../pf/core/include 
+../../pf/dependencies/iconv/include 
+../../pf/dependencies/lua/src
+../common/
+"
+types="php lua h cpp c cc hpp erl hrl inl"
+n=0
+
+is_win32=false
+ENV_PATH="F:\tools\editor\vim\vim74"
+if [[ `uname | grep W32_NT` != "" ]] ; then
+  is_win32=true
+  export PATH=$ENV_PATH
+fi
+
+for path in ${paths}
+do
+  cmd="find ${path}"
+  i=0
+  for filetype in ${types} 
+  do
+    if [[ 0 -eq ${i} ]] ; then
+      cmd=${cmd}" -name \*."${filetype}
+    else
+      cmd=${cmd}" -o -name \*."${filetype}
+    fi
+    ((++i))
+  done
+  if [[ 0 -eq ${n} ]] ; then
+    cmd=${cmd}" > cscope.files"
+  else
+    cmd=${cmd}" >> cscope.files"
+  fi
+  echo ${cmd} | sh
+  ((++n))
+done
+
+if $is_win32 ; then
+  if [ -f ./cscope.out ] ; then
+    echo "please close gvim and delete current cscope.out, then try angin."
+    exit 1
+  fi
+  cscope -bk -i cscope.files
+else
+  cscope -bkq -i cscope.files
+fi
+ctags -R
