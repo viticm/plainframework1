@@ -66,8 +66,7 @@ uint32_t TimeManager::get_current_date() {
   __ENTER_FUNCTION
     reset_time();
     uint32_t time;
-    tm _tm;
-    tm_totime(&_tm, time);
+    tm_totime(&tm_, time);
     return time;
   __LEAVE_FUNCTION
     return 0;
