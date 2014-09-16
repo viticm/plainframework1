@@ -347,7 +347,7 @@ void System::processall() {
   __ENTER_FUNCTION
     //处理慢速队列
     if (!delayquene_.empty()) {
-      uint32_t now_tickcount = TIME_MANAGER_POINTER->get_current_time();
+      uint32_t now_tickcount = TIME_MANAGER_POINTER->get_tickcount();
       uint32_t step_tickcount = now_tickcount - last_tickcount_;
       if (step_tickcount > 20) {
         last_tickcount_ = now_tickcount;

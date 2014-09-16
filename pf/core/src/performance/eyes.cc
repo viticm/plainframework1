@@ -88,7 +88,7 @@ void Eyes::activate() {
   __ENTER_FUNCTION
     using namespace pf_sys;
     using namespace pf_base;
-    uint32_t currenttime = TIME_MANAGER_POINTER->get_current_time();
+    uint32_t currenttime = TIME_MANAGER_POINTER->get_tickcount();
     if (currenttime - last_printtime_ >= printinfo_interval_ * 1000) {
       float cpu_usage = 0.0f;
       if (currenttime - last_printtime_ == currenttime) {
@@ -109,7 +109,7 @@ void Eyes::tick_forFPS() {
     static uint32_t last_ticktime = 0;
     static uint32_t looptime = 0; //时间累计数
     static uint32_t loopcount = 0;
-    uint32_t currenttime = TIME_MANAGER_POINTER->get_current_time();
+    uint32_t currenttime = TIME_MANAGER_POINTER->get_tickcount();
     uint32_t difftime = currenttime - last_ticktime;
     //计算帧率
     const uint32_t kCalculateFPS = 1000; //每一秒计算一次
@@ -149,7 +149,7 @@ uint64_t Eyes::get_downtraffic() const {
 
 void Eyes::set_sendbytes(uint64_t bytes) {
   __ENTER_FUNCTION
-    uint32_t currenttime = TIME_MANAGER_POINTER->get_current_time();
+    uint32_t currenttime = TIME_MANAGER_POINTER->get_tickcount();
     if (currenttime - last_counttime_ > 60) {
       uint64_t temp = sendbytes_[1];
       sendbytes_[1] = bytes;
@@ -161,7 +161,7 @@ void Eyes::set_sendbytes(uint64_t bytes) {
 
 void Eyes::set_receivebytes(uint64_t bytes) {
   __ENTER_FUNCTION
-    uint32_t currenttime = TIME_MANAGER_POINTER->get_current_time();
+    uint32_t currenttime = TIME_MANAGER_POINTER->get_tickcount();
     if (currenttime - last_counttime_ > 60) {
       uint64_t temp = receivebytes_[1];
       receivebytes_[1] = bytes;

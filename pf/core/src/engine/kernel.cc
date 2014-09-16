@@ -166,12 +166,12 @@ void Kernel::run() {
       run_net();
     }
     while (isactive_) {
-      uint32_t runtime = TIME_MANAGER_POINTER->get_current_time();
+      uint32_t runtime = TIME_MANAGER_POINTER->get_tickcount();
       loop_handle();
       uint32_t waittime = 
         runtime + 
         static_cast<uint32_t>(1000/ENGINE_KERNEL_FRAME) - 
-        TIME_MANAGER_POINTER->get_current_time();
+        TIME_MANAGER_POINTER->get_tickcount();
       calculate_FPS();
       if (waittime > 0) pf_base::util::sleep(waittime);
     }
@@ -598,7 +598,7 @@ void Kernel::calculate_FPS() {
     static uint32_t last_ticktime = 0;
     static uint32_t looptime = 0; //时间累计数
     static uint32_t loopcount = 0;
-    uint32_t currenttime = TIME_MANAGER_POINTER->get_current_time();
+    uint32_t currenttime = TIME_MANAGER_POINTER->get_tickcount();
     uint32_t difftime = currenttime - last_ticktime;
     //计算帧率
     const uint32_t kCalculateFPS = 1000; //每一秒计算一次

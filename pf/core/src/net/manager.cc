@@ -38,7 +38,7 @@ bool Manager::init(uint16_t connectionmax,
 
 bool Manager::heartbeat(uint32_t time) {
   __ENTER_FUNCTION
-    uint32_t _time = 0 == time ? g_time_manager->get_current_time() : time;
+    uint32_t _time = 0 == time ? g_time_manager->get_tickcount() : time;
     uint16_t connectioncount = getcount();
     uint16_t i;
     for (i = 0; i < connectioncount; ++i) {
@@ -108,11 +108,11 @@ void Manager::loop() {
       //这里有个问题，就是当网络管理器以线程模式运行时会大肆的消耗CPU，
       //如果是不是线程模式则不会出现，所以临时使用了帧率控制的方式解决此问题
       //主要的原因是epoll不是以阻塞的方式来select的
-      uint32_t runtime = TIME_MANAGER_POINTER->get_current_time();
+      uint32_t runtime = TIME_MANAGER_POINTER->get_tickcount();
       uint32_t waittime = 
         runtime + 
         static_cast<uint32_t>(1000/NET_MANAGER_FRAME) - 
-        TIME_MANAGER_POINTER->get_current_time();
+        TIME_MANAGER_POINTER->get_tickcount();
 #endif /* } */
       tick(); //循环逻辑
 #if __LINUX__ && defined(_PF_NET_EPOLL) /* { */

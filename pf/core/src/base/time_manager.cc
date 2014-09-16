@@ -39,13 +39,13 @@ bool TimeManager::init() {
 #endif
     reset_time();
     g_file_name_fix = get_day_time();
-    g_file_name_fix_last = get_current_time();
+    g_file_name_fix_last = get_tickcount();
     return true;
   __LEAVE_FUNCTION
     return false;
 }
 
-uint32_t TimeManager::get_current_time() {
+uint32_t TimeManager::get_tickcount() {
   __ENTER_FUNCTION
 #if __WINDOWS__
     current_time_ = GetTickCount();
@@ -62,7 +62,7 @@ uint32_t TimeManager::get_current_time() {
     return 0;
 }
 
-uint32_t TimeManager::get_current_date() {
+uint32_t TimeManager::get_current_time() {
   __ENTER_FUNCTION
     reset_time();
     uint32_t time;
@@ -233,7 +233,7 @@ uint32_t TimeManager::get_day_time() {
 
 uint32_t TimeManager::get_run_time() {
   __ENTER_FUNCTION
-    get_current_time();
+    get_tickcount();
     uint32_t result = current_time_ - start_time_;
     return result;
   __LEAVE_FUNCTION
@@ -271,10 +271,12 @@ uint32_t TimeManager::diff_time(uint32_t time1, uint32_t time2) {
     tm _tm1, _tm2;
     time_totm(time1, &_tm1);
     time_totm(time2, &_tm2);
-    time_t timefirst = 0, timeNext = 0;
+    time_t timefirst = 0, timenext = 0;
+    timefirst = mktime(&_tm1);
+    timenext = mktime(&_tm2);
     uint32_t result = static_cast<uint32_t>(
         abs(static_cast<int32_t>(
-        difftime(timefirst, timeNext))) * 1000);
+        difftime(timefirst, timenext))) * 1000);
     return result;
   __LEAVE_FUNCTION
     return 0;

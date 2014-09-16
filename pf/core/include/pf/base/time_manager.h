@@ -36,7 +36,7 @@ class PF_API TimeManager : public Singleton<TimeManager> {
 
  public:
    bool init();
-   uint32_t get_current_time(); //获取从程序启动到现在经历的时间(ms)
+   uint32_t get_tickcount(); //获取从程序启动到现在经历的时间(ms)
    uint32_t get_saved_time();
    uint32_t get_start_time();
    static TimeManager &getsingleton();
@@ -56,15 +56,15 @@ class PF_API TimeManager : public Singleton<TimeManager> {
    uint8_t get_second();
    uint8_t get_week();
    uint32_t tm_todword();
-   void dword_totm(uint32_t time, tm* _tm);
+   void dword_totm(uint32_t time, tm *_tm);
    uint32_t diff_dword_time(uint32_t time1, uint32_t time2);
    int32_t diff_day_count(time_t ansi_time1, time_t ansi_time2);
    uint32_t get_day_time(); //20131129
-   uint32_t get_current_date();
    uint32_t get_run_time();
+   uint32_t get_current_time();
    uint32_t diff_time(uint32_t time1, uint32_t time2); //两个时间的差值，毫秒
-   void time_totm(uint32_t time, tm* _tm);
-   void tm_totime(tm* _tm, uint32_t &time);
+   void time_totm(uint32_t time, tm *_tm);
+   void tm_totime(tm *_tm, uint32_t &time);
    uint32_t get_days(); //取得以天为单位的时间值, 千位数代表年份，其他三位代表时间（天数）
    uint32_t get_hours(); //12723表示本年度第127天的5(23/4)点的第3(23%4)刻钟时间
    uint32_t get_weeks(); //取得以周为单位的时间值, 千位数代表年份，其他三位代表时间（周数）
