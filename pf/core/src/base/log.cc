@@ -188,7 +188,7 @@ void Log::get_log_filename(uint8_t logid, char *save) {
                kBaseLogSaveDir,
                prefixfinal,
                g_time_manager->get_year(),
-               g_time_manager->get_month() + 1,
+               g_time_manager->get_month(),
                g_time_manager->get_day());
     } else {
       snprintf(save,
@@ -228,7 +228,7 @@ void Log::get_log_filename(const char *filename_prefix,
                strlen(typestr) > 0 ? "_" : "",
                typestr,
                g_time_manager->get_year(),
-               g_time_manager->get_month() + 1,
+               g_time_manager->get_month(),
                g_time_manager->get_day());
     } else {
       snprintf(save,

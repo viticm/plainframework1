@@ -123,7 +123,7 @@ uint16_t TimeManager::get_year() {
 
 uint8_t TimeManager::get_month() {
   __ENTER_FUNCTION
-    return static_cast<uint8_t>(tm_.tm_mon);
+    return static_cast<uint8_t>(tm_.tm_mon + 1);
   __LEAVE_FUNCTION
     return 0;
 }
@@ -170,7 +170,7 @@ uint32_t TimeManager::tm_todword() {
     result += get_year();
     result -= 2000;
     result *= 100;
-    result += get_month() + 1;
+    result += get_month();
     result *= 100;
     result += get_day();
     result = result * 100;
@@ -189,6 +189,7 @@ void TimeManager::dword_totm(uint32_t time, tm* _tm) {
     _tm->tm_year = (time / 100000000) + 2000 - 1900;
     _tm->tm_mon = (time % 100000000) / 1000000 - 1;
     _tm->tm_mday = (time % 1000000) / 10000;
+    _tm->tm_hour = (time % 10000) / 100 ;
     _tm->tm_min  = time % 100;
   __LEAVE_FUNCTION
 }
@@ -244,12 +245,12 @@ void TimeManager::time_totm(uint32_t time, tm* _tm) {
   __ENTER_FUNCTION
     Assert(_tm);
     memset(_tm, 0, sizeof(_tm));
-    _tm->tm_year = ((time >> 26) & 0xf) + 100;
-    _tm->tm_mon  = (time >> 22) & 0xf;
-    _tm->tm_mday = (time >> 17) & 0x1f;
-    _tm->tm_hour = (time >> 12) & 0x1f;
-    _tm->tm_min  = (time >> 6) & 0x3f;
-    _tm->tm_sec  = time & 0x3f;
+    _tm->tm_year = (time >> 24) & 0xff;
+    _tm->tm_mon  = (time >> 20) & 0xf;
+    _tm->tm_mday = (time >> 15) & 0x1f;
+    _tm->tm_hour = (time >> 10) & 0x1f;
+    _tm->tm_min  = (time >> 4) & 0x3f;
+    _tm->tm_sec  = (time) & 0xf;
   __LEAVE_FUNCTION
 }
 
@@ -257,17 +258,12 @@ void TimeManager::tm_totime(tm* _tm, uint32_t &time) {
   __ENTER_FUNCTION
     Assert(_tm);
     time = 0;
-    time += (_tm->tm_year % 10) & 0xf;
-    time = time << 4;
-    time += _tm->tm_mon & 0xf;
-    time = time << 5;
-    time += _tm->tm_mday & 0x1f;
-    time = time << 5;
-    time += _tm->tm_hour & 0x1f;
-    time = time << 6;
-    time += _tm->tm_min & 0x3f;
-    time = time << 6;
-    time += _tm->tm_sec & 0x3f;
+    time += ((_tm->tm_year) & 0xff) << 24;
+    time += ((_tm->tm_mon) & 0xf) << 20;
+    time += ((_tm->tm_mday) & 0x1f) << 15;
+    time += ((_tm->tm_hour) & 0x1f) << 10;
+    time += ((_tm->tm_min) & 0x3f) << 4;
+    time += ((_tm->tm_sec) & 0xf);
   __LEAVE_FUNCTION
 }
 
