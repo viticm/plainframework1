@@ -11,7 +11,7 @@
 #ifndef PF_BASE_CONFIG_H_
 #define PF_BASE_CONFIG_H_
 
-#define DATE_LENGTH_MAX 20
+#define DATE_LENGTH_MAX 30
 
 /* base log { */
 enum {
