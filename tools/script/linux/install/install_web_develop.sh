@@ -28,6 +28,7 @@ cDate_TimeZone="Asia/Shanghai"
 cDisplay_Errors=On
 cError_Reporting="E_ALL & ~E_NOTICE"
 cAllow_Call_Time_Pass_Reference=On
+cPHPDefaultVersion="5.4.32"
 ###### PHP ########
 
 #### PHP-FPM CONFIGS ####
@@ -47,7 +48,7 @@ cat <<EOF
 Usage: $0 <params>
 -m or --mysql install mysql
 -n or --nginx install nginx
--p or --php install php( and this can enter two params,like -p 5.3( 5.4 ) then install php what version is 5.3 )
+-p or --php install php( and this can enter two params,like -p version then install php what version is ${cPHPDefaultVersion} )
 
 
 EOF
@@ -220,6 +221,8 @@ function InstallMysql()
   CC=gcc CFLAGS="-DBIG_JOINS=1 -DHAVE_DLOPEN=1 -O3" CXX=g++ CXXFLAGS="-DBIG_JOINS=1 -DHAVE_DLOPEN=1 -felide-constructors -fno-rtti -O3"
   cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mysql \
   -DMYSQL_UNIX_ADDR=/tmp/mysql.sock \
+  -DDEFAULT_CHARSET=utf8 \
+  -DDEFAULT_COLLATION=utf8_general_ci \
   -DWITH_EXTRA_CHARSETS=all \
   -DWITH_MYISAM_STORAGE_ENGINE=1 \
   -DWITH_INNOBASE_STORAGE_ENGINE=1 \
@@ -239,10 +242,10 @@ function InstallMysql()
   if [[ -f ${cMysqlConfUploadFile} ]] ; then
     cp ${cMysqlConfUploadFile} /etc/my.cnf
   else
-    cp ${cMysqlInstallPath}support-files/my-default.cnf /etc/my.cnf
-    #sed "s/skip-locking/external-locking/g" -i /etc/my.cnf
-    #sed "s/#innodb_/innodb_/g" -i /etc/my.cnf
-    #sed -i '32 i\default-storage-engine=InnoDB' -i /etc/my.cnf   
+  cp ${cMysqlInstallPath}support-files/my-default.cnf /etc/my.cnf
+  #sed "s/skip-locking/external-locking/g" -i /etc/my.cnf
+  #sed "s/#innodb_/innodb_/g" -i /etc/my.cnf
+  #sed -i '32 i\default-storage-engine=InnoDB' -i /etc/my.cnf   
   fi
   ${cMysqlInstallPath}/scripts/mysql_install_db --basedir=${cMysqlInstallPath}/ --user=mysql --datadir=/var/mysql/data
   ln -s /usr/local/mysql/lib/libmysqlclient.so.18 /usr/lib/libmysqlclient.so.18
@@ -259,7 +262,6 @@ function InstallMysql()
   echo "Change your password after 10 seconds"
   sleep 10
   cd ${cMysqlInstallPath} && ./bin/mysqladmin -uroot password ${cMysqlDefaultPasswd}
-
   if [[ "" == `cat /etc/rc.d/rc.local | grep "service mysql start"` ]] ; then
     echo "service mysql start" >> /etc/rc.d/rc.local
   fi
@@ -395,30 +397,20 @@ function InstallPHP()
   cd ${cInstallFile}
   echo
   echo "**********************************************"
-  echo "* Start install PHP.( Default version 5.3 ). *" 
+  echo "* Start install PHP.( Default version ${cPHPDefaultVersion} ). *" 
   echo "**********************************************"
 
-  local cPhpVersion=${2}
+  local cPhpVersion=${1}
   local cPhpPackage=""
   local cPhpPackageDir=""
-  if [[ -z ${cPhpVersion} ]]; then
-    echo install default php version 5.3
-    cPhpVersion="5.3"
-    cPhpPackage="php-5.3.28.tar.bz2"
-    cPhpPackageDir="php-5.3.28"
+  if [[ ${cPhpVersion} == "" ]]; then
+    echo install default php version ${cPHPDefaultVersion}
+    cPhpVersion=${cPHPDefaultVersion}
+    cPhpPackage="php-${cPHPDefaultVersion}.tar.bz2"
+    cPhpPackageDir="php-${cPHPDefaultVersion}"
   else
-    if [[ "5.3" != ${cPhpVersion} && "5.4" != ${cPhpVersion} ]]; then
-      Useage
-      exit 1
-    else
-      if [[ "5.3" == ${cPhpVersion} ]]; then
-        cPhpPackage="php-5.3.28.tar.bz2"
-        cPhpPackageDir="php-5.3.28"
-      else
-        cPhpPackage="php-5.4.15.tar.bz2"
-        cPhpPackageDir="php-5.4.15"
-      fi
-    fi
+    cPhpPackage="php-${cPhpVersion}.tar.bz2"
+    cPhpPackageDir="php-${cPhpVersion}"
   fi
 
   if [[ ${cDownload} == "on" ]] ; then
@@ -765,7 +757,7 @@ elif [[ $cCommand == "-n" || "--nginx" == ${cCommand} ]] ; then
   InstallNginx
 elif [[ $cCommand == "-p" || "--php" == ${cCommand} ]] ; then
   DownloadTip
-  InstallPHP
+  InstallPHP ${2}
 elif [[ $cCommand == "--test" ]] ; then
   InsertStrAboveLastLine "|1|2|3|4|5|" /home/test.txt
 else
