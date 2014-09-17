@@ -219,7 +219,7 @@ void get_sizestr(uint64_t size, char *buffer, uint32_t length, int8_t type) {
     float lastsize = size / 1.0f;
     float floatsize = size / 1.0f;
     float finalsize = .0f;
-    for (int8_t i = -1 == type ? 4 : type; i > 0; ++i) {
+    for (int8_t i = -1 == type ? 4 : type; i > 0; --i) {
       lastsize = floatsize;
       floatsize /= 1024;
       ++realtype;

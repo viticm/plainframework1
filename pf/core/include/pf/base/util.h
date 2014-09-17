@@ -22,10 +22,10 @@ PF_API char value_toascii(char in);
 PF_API char ascii_tovalue(char in);
 PF_API bool binary_tostring(const char *in, uint32_t in_length, char *out);
 PF_API bool string_tobinary(const char *in, 
-                     uint32_t in_length, 
-                     char *out, 
-                     uint32_t out_limit, 
-                     uint32_t &out_length);
+                            uint32_t in_length, 
+                            char *out, 
+                            uint32_t out_limit, 
+                            uint32_t &out_length);
 PF_API void sleep(uint32_t million_seconds);
 /**
  * 由byte类型获得单位大小字符串如：32bytes,32kb,32mb,32gb,32t
@@ -34,9 +34,9 @@ PF_API void sleep(uint32_t million_seconds);
  *       不过规则是返回最至少大于0.01单位的字符串
  */ 
 PF_API void get_sizestr(uint64_t size, 
-                 char *buffer, 
-                 uint32_t length, 
-                 int8_t type = -1);
+                        char *buffer, 
+                        uint32_t length, 
+                        int8_t type = -1);
 
 PF_API void path_tounix(char *buffer, uint16_t length);
 PF_API void path_towindows(char *buffer, uint16_t length); 
