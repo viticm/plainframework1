@@ -1,0 +1,5 @@
+INT	INT	INT	INT
+index	raceid	cost_itemid	cost_itemcount
+#索引	种族ID	扣除物品ID	扣除物品数量
+0	0	20307104	1
+1	0	20307105	1
