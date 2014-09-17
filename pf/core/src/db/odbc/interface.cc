@@ -248,6 +248,7 @@ bool Interface::collect_resultinfo() {
 }
 
 bool Interface::execute() {
+  if (strlen(query_.sql_str_) <= 0) return false;
   try {
     //int column_index;
     result_ = SQLExecDirect(sql_hstmt_, 
