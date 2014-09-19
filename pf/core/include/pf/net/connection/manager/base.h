@@ -66,8 +66,8 @@ class PF_API Base {
    connection::Pool *getpool();
    int32_t get_onestep_accept() const;
    void set_onestep_accept(int32_t count);
-   uint64_t get_send_bytes() const;
-   uint64_t get_receive_bytes() const;
+   uint64_t get_send_bytes();
+   uint64_t get_receive_bytes();
    bool isinit() const;
 
  protected:

@@ -21,9 +21,8 @@ Eyes &Eyes::getsingleton() {
 
 Eyes::Eyes() {
   __ENTER_FUNCTION
-    memset(sendbytes_, 0, sizeof(sendbytes_));
-    memset(receivebytes_, 0, sizeof(receivebytes_));
-    last_counttime_ = 0;
+    sendbytes_ = 0;
+    receivebytes_ = 0;
     last_printtime_ = 0;
     printinfo_interval_ = PERFORMANCE_EYES_PRINT_INTERVAL_DEFAULT;
   __LEAVE_FUNCTION
@@ -99,7 +98,7 @@ void Eyes::activate() {
       last_printtime_ = currenttime;
     }
     //tick_forFPS();
-    util::sleep(10 * 1000);
+    util::sleep(100);
   __LEAVE_FUNCTION
 }
 
@@ -133,41 +132,27 @@ uint32_t Eyes::get_connectioncount() const {
    
 uint64_t Eyes::get_uptraffic() const {
   __ENTER_FUNCTION
-    uint64_t result = sendbytes_[1] - sendbytes_[0];
-    return result;
+    return sendbytes_;
   __LEAVE_FUNCTION
     return 0;
 }
 
 uint64_t Eyes::get_downtraffic() const {
   __ENTER_FUNCTION
-    uint64_t result = receivebytes_[1] - receivebytes_[0];
-    return result;
+    return receivebytes_;
   __LEAVE_FUNCTION
     return 0;
 }
 
 void Eyes::set_sendbytes(uint64_t bytes) {
   __ENTER_FUNCTION
-    uint32_t currenttime = TIME_MANAGER_POINTER->get_tickcount();
-    if (currenttime - last_counttime_ > 60) {
-      uint64_t temp = sendbytes_[1];
-      sendbytes_[1] = bytes;
-      sendbytes_[0] = temp;
-      last_counttime_ = currenttime;
-    }
+    sendbytes_ = bytes;
   __LEAVE_FUNCTION
 }
 
 void Eyes::set_receivebytes(uint64_t bytes) {
   __ENTER_FUNCTION
-    uint32_t currenttime = TIME_MANAGER_POINTER->get_tickcount();
-    if (currenttime - last_counttime_ > 60) {
-      uint64_t temp = receivebytes_[1];
-      receivebytes_[1] = bytes;
-      receivebytes_[0] = temp;
-      last_counttime_ = currenttime;
-    }
+    receivebytes_ = bytes;
   __LEAVE_FUNCTION
 }
 

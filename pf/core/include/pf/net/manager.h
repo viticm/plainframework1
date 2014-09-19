@@ -57,7 +57,7 @@ class PF_API Manager : public connection::manager::Select {
    void broadcast(packet::Base *packet);
 
  protected:
-   bool active_;
+   bool active_; //管理器是否激活
 
 };
 

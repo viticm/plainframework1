@@ -61,43 +61,46 @@ bool Manager::heartbeat(uint32_t time) {
 
 void Manager::tick() {
   __ENTER_FUNCTION
-      bool result = false;
-      try {
-        result = select();
-        Assert(result);
+    bool result = false;
+    uint32_t tickcount = TIME_MANAGER_POINTER->get_tickcount();
+    static uint32_t last_tickcount = 0;
+    try {
+      result = select();
+      Assert(result);
 
-        result = processexception();
-        Assert(result);
+      result = processexception();
+      Assert(result);
 
-        result = processinput();
-        Assert(result);
+      result = processinput();
+      Assert(result);
 
-        result = processoutput();
-        Assert(result); 
-        if (PERFORMANCE_EYES_POINTER) { //网络性能监视
-          uint16_t connectioncount = getcount();
-          PERFORMANCE_EYES_POINTER->set_onlinecount(connectioncount);
-          PERFORMANCE_EYES_POINTER->set_connectioncount(connectioncount);
-          uint64_t sendbytes = get_send_bytes();
-          uint64_t receivebytes = get_receive_bytes();
-          PERFORMANCE_EYES_POINTER->set_sendbytes(sendbytes);
-          PERFORMANCE_EYES_POINTER->set_receivebytes(receivebytes);
-        }
-      } catch(...) {
-        
+      result = processoutput();
+      Assert(result); 
+      if (PERFORMANCE_EYES_POINTER && tickcount - last_tickcount > 1000) { //网络性能监视
+        last_tickcount = tickcount;
+        uint16_t connectioncount = getcount();
+        PERFORMANCE_EYES_POINTER->set_onlinecount(connectioncount);
+        PERFORMANCE_EYES_POINTER->set_connectioncount(connectioncount);
+        uint64_t sendbytes = get_send_bytes();
+        uint64_t receivebytes = get_receive_bytes();
+        PERFORMANCE_EYES_POINTER->set_sendbytes(sendbytes);
+        PERFORMANCE_EYES_POINTER->set_receivebytes(receivebytes);
       }
-      try {
-        result = processcommand();
-        Assert(result);
-      } catch(...) {
-        
-      }
-      try {
-        result = heartbeat();
-        Assert(result);
-      } catch(...) {
+    } catch(...) {
+      
+    }
+    try {
+      result = processcommand();
+      Assert(result);
+    } catch(...) {
+      
+    }
+    try {
+      result = heartbeat();
+      Assert(result);
+    } catch(...) {
 
-      }
+    }
   __LEAVE_FUNCTION
 }
 

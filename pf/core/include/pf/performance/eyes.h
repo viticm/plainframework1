@@ -40,17 +40,16 @@ class PF_API Eyes : public pf_base::Singleton<Eyes> {
    uint64_t get_downtraffic() const;
 
  public:
-   void set_sendbytes(uint64_t bytes);
-   void set_receivebytes(uint64_t bytes);
+   void set_sendbytes(uint64_t bytes); //当前秒中的发送字节
+   void set_receivebytes(uint64_t bytes); //当前秒中接收的字节
    void set_printinfo_interval(uint32_t interval);
    void set_onlinecount(uint32_t count);
    void set_connectioncount(uint32_t count);
    void set_fps(float value);
 
  protected:
-   uint64_t sendbytes_[2];
-   uint64_t receivebytes_[2];
-   uint32_t last_counttime_;
+   uint64_t sendbytes_;
+   uint64_t receivebytes_;
    uint32_t last_printtime_;
    uint32_t printinfo_interval_;
    uint32_t onlinecount_;

@@ -98,6 +98,7 @@ bool Base::heartbeat(uint32_t time) {
 bool Base::add(connection::Base *connection) {
   __ENTER_FUNCTION
     Assert(connection);
+    if (count_ >= maxcount_) return false;
     //首先处理socket
     if (!addsocket(connection->getsocket()->getid(), connection->getid()))
       return false;
@@ -106,7 +107,7 @@ bool Base::add(connection::Base *connection) {
       connection_idset_[count_] = connection->getid();
       connection->set_managerid(count_);
       ++count_;
-      Assert(count_ < maxcount_);
+      Assert(count_ <= maxcount_);
     } else {
       Assert(false);
     }
@@ -307,12 +308,16 @@ void Base::set_onestep_accept(int32_t count) {
   onestep_accept_ = count;
 }
 
-uint64_t Base::get_send_bytes() const {
-  return send_bytes_;
+uint64_t Base::get_send_bytes() {
+  uint64_t result = send_bytes_;
+  send_bytes_ = 0;
+  return result;
 }
    
-uint64_t Base::get_receive_bytes() const {
-  return receive_bytes_;
+uint64_t Base::get_receive_bytes() {
+  uint64_t result = receive_bytes_;
+  receive_bytes_ = 0;
+  return result;
 }
 
 connection::Pool *Base::getpool() {
