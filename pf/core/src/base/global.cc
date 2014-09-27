@@ -18,8 +18,7 @@ const char *get_net_modulename() {
     if (strlen(net_modulename) > 0) return net_modulename;
     snprintf(net_modulename, 
              sizeof(net_modulename) - 1, 
-             "net_%s", 
-             APPLICATION_NAME);
+             "net");
     return net_modulename;
   __LEAVE_FUNCTION
     return NULL;
@@ -30,8 +29,7 @@ const char *get_script_modulename() {
     if (strlen(script_modulename) > 0) return script_modulename;
     snprintf(script_modulename, 
              sizeof(script_modulename) - 1, 
-             "script_%s", 
-             APPLICATION_NAME);
+             "script");
     return script_modulename;
   __LEAVE_FUNCTION
     return NULL;
@@ -42,8 +40,7 @@ const char *get_performanace_modulename() {
     if (strlen(performance_modulename) > 0) return performance_modulename;
     snprintf(performance_modulename, 
              sizeof(performance_modulename) - 1, 
-             "performance_%s", 
-             APPLICATION_NAME);
+             "performance");
     return performance_modulename;
   __LEAVE_FUNCTION
     return NULL;
@@ -54,8 +51,7 @@ const char *get_db_modulename() {
     if (strlen(db_modulename) > 0) return db_modulename;
     snprintf(db_modulename, 
              sizeof(db_modulename) - 1, 
-             "db_%s", 
-             APPLICATION_NAME);
+             "db");
     return db_modulename;
   __LEAVE_FUNCTION
     return NULL;
@@ -66,8 +62,7 @@ const char *get_engine_modulename() {
     if (strlen(engine_modulename) > 0) return engine_modulename;
     snprintf(engine_modulename, 
              sizeof(engine_modulename) - 1, 
-             "engine_%s", 
-             APPLICATION_NAME);
+             "engine");
     return engine_modulename;
   __LEAVE_FUNCTION
     return NULL;

@@ -203,46 +203,6 @@ void Database::create_index(int32_t column, const char *filename) {
   __LEAVE_FUNCTION
 }
 
-int32_t Database::convert_string_tovector(const char *source,
-                                          std::vector<std::string> &result,
-                                          const char *key,
-                                          bool one_key,
-                                          bool ignore_empty) {
-  __ENTER_FUNCTION
-    result.clear();
-    std::string str = source; //use stanard string class to source
-    if (str.empty()) return 0;
-    std::string::size_type left = 0;
-    std::string::size_type right;
-    if (one_key) {
-      right = str.find_first_of(key);
-    } else {
-      right = str.find(key);
-    }
-
-    if (std::string::npos == right) right = str.length();
-    for(;;) {
-      std::string item = str.substr(left, right - left);
-
-      if (item.length() > 0 || !ignore_empty) result.push_back(item);
-      if (right == str.length()) break;
-      left = right + (one_key ? 1 : strlen(key));
-      if (one_key) {
-
-        std::string temp = str.substr(left);
-        right = temp.find_first_of(key);
-        if (right != std::string::npos) right += left;
-      } else {
-        right = str.find(key, left);
-      }
-      if (std::string::npos == right) right = str.length();
-    }
-    int32_t _result = static_cast<int32_t>(result.size());
-    return _result;
-  __LEAVE_FUNCTION
-    return 0;
-}
-
 const char *Database::get_line_from_memory(char *str, 
                                            int32_t size, 
                                            const char *memory, 
@@ -298,7 +258,7 @@ bool Database::open_from_memory_text(const char *memory,
     _memory = get_line_from_memory(line, sizeof(line) - 1, _memory, end);
     if (!_memory) return false;
     std::vector<std::string> result;
-    convert_string_tovector(line, result, "\t", true, true);
+    string::explode(line, result, "\t", true, true);
     if (result.empty()) return false;
     field_type _field_type;
     _field_type.resize(result.size());
@@ -322,7 +282,7 @@ bool Database::open_from_memory_text(const char *memory,
     std::map<std::string, int32_t> map_string_buffer;
     _memory = get_line_from_memory(line, sizeof(line) - 1, _memory, end);
     //第二行为列名（相当于数据库的字段名），应尽量使用英文
-    convert_string_tovector(line, fieldnames_, "\t", true, true);
+    string::explode(line, fieldnames_, "\t", true, true);
     if (!_memory) return false;
     int32_t string_buffer_size = 0;
     bool loop = true;
@@ -331,7 +291,7 @@ bool Database::open_from_memory_text(const char *memory,
       _memory = get_line_from_memory(line, sizeof(line) - 1, _memory, end);
       if (!_memory) break;
       if ('#' == line[0]) continue; //注释行
-      convert_string_tovector(line, result, "\t", true, false);
+      string::explode(line, result, "\t", true, false);
       if (result.empty()) continue; //空行
       if (static_cast<int32_t>(result.size()) != field_number) { //列数不对
         int32_t left_number = 

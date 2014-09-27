@@ -30,9 +30,6 @@ bool Epoll::init(uint16_t connectionmax,
                  const char *listenip) {
   __ENTER_FUNCTION
     if (!Base::init(connectionmax, listenport, listenip)) return false;
-    if (is_servermode_) {
-      poll_add(polldata_, socketid_, EPOLLIN, ID_INVALID);
-    }
     return true;
   __LEAVE_FUNCTION
     return false;
@@ -66,8 +63,12 @@ bool Epoll::select() {
 bool Epoll::set_poll_maxcount(uint16_t maxcount) {
   __ENTER_FUNCTION
     if (polldata_.fd > 0) return true;
-    bool result = 0 < poll_create(polldata_, maxcount) ? true : false;
-    return result;
+    bool result = poll_create(polldata_, maxcount) > 0 ? true : false;
+    if (!result || SOCKET_INVALID == socketid_) return false;
+    if (is_servermode_) {
+      poll_add(polldata_, socketid_, EPOLLIN, ID_INVALID);
+    }
+    return true;
   __LEAVE_FUNCTION
     return false;
 }

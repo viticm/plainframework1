@@ -49,11 +49,15 @@ class PF_API VM {
    //注册方法到一个全局表中
    bool register_functiontable(
        const char *name, const struct luaL_Reg regtable[]);
+   //注册全局变量
+   bool register_globalvalue(const char *name, const char *value);
+   bool register_globalvalue(const char *name, lua_Number value);
    bool load(const char *filename);
    bool loadbuffer(unsigned char *buffer, uint64_t length);
 
  public:
    void callfunction_enter(int32_t *index);
+   bool callfunction(const char *);
    bool callfunction(const char *, int32_t, const char *, ...);
    bool callfunction(const char *, int32_t); //0
    bool callfunction(const char *, int32_t, int64_t); //1

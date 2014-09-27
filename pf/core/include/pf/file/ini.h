@@ -29,18 +29,17 @@ class PF_API Ini {
    bool open(const char *file_name);
    void close();
    bool save(char *file_name = NULL);
-   const int32_t get_title_index(const char *title);
    
  public: //以下函数让外部可以获取到文件所有数据
-   int32_t goto_next_line(int32_t line); //提行
-   char *find_key(int32_t &postion); //在指定位置读取键
-   char *readstring(int32_t postion); //在指定位置读取字符串
+   int32_t goto_next_line(int32_t position); //提行
+   char *find_key(int32_t &position); //在指定位置读取键
+   char *readstring(int32_t position); //在指定位置读取字符串
    int32_t *get_section_indexlist();
    int32_t get_sectionnumber() const;
    int32_t get_datalength() const;
    int32_t find_section_index(const char *section);
    //返回数据所在的索引
-   int32_t find_key_index(int32_t postion, const char *key);
+   int32_t find_key_index(int32_t position, const char *key);
  
  public: //out useful functions
    int64_t read_int64(const char *section, const char *key);

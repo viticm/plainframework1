@@ -488,7 +488,7 @@ inline void gettable_number(lua_State *L,
                             const char *key, 
                             T& number);
 template <typename T>
-inline void gettable_bumber_byindex(lua_State *L, 
+inline void gettable_number_byindex(lua_State *L, 
                                     int32_t table_index, 
                                     int32_t index, 
                                     T& number);
@@ -502,6 +502,7 @@ void gettable_string_byindex(lua_State *L,
                              int32_t index, 
                              char *string, 
                              int32_t length);
+bool istable_numbervalue(lua_State *L, int32_t table_index, int32_t index);
 int32_t gettable(lua_State *L, int32_t table_index, const char *key);
 int32_t gettable(lua_State *L, int32_t table_index, int index);
 int32_t dofile(lua_State *L, const char *filename);

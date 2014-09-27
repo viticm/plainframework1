@@ -2,6 +2,9 @@
 #include <execinfo.h>
 #endif
 #include <time.h>
+#include "pf/base/time_manager.h"
+#include "pf/base/util.h"
+#include "pf/sys/thread.h"
 #include "pf/sys/assert.h"
 int g_command_assert = 0;
 bool g_command_ignore_message_box = false; //控制参数，跳过MyMessageBox的中断
@@ -17,34 +20,66 @@ namespace pf_sys {
  **/
 
 void __show__(const char *temp) {
+  char savedir[FILENAME_MAX] = {0};
 #if __LINUX__
-  printf("Assert:%s",temp);
+  printf("Assert: %s",temp);
 #endif
+  if (TIME_MANAGER_POINTER) {
+    snprintf(savedir, 
+             sizeof(savedir) - 1,
+             "./log/%.2d_%.2d_%.2d/%s",
+             TIME_MANAGER_POINTER->get_year(),
+             TIME_MANAGER_POINTER->get_month(),
+             TIME_MANAGER_POINTER->get_day(),
+             APPLICATION_NAME);
+  } else {
+    snprintf(savedir,
+             sizeof(savedir) - 1,
+             "./log/%s",
+             APPLICATION_NAME);
+  }
+  pf_base::util::makedir(savedir, 0755);
+  char filename[128] = {0};
+  if (TIME_MANAGER_POINTER) {
+    snprintf(filename, 
+             sizeof(filename) - 1,
+             "assert_%.2d_%.2d_%.2d.log",
+             TIME_MANAGER_POINTER->get_hour(),
+             TIME_MANAGER_POINTER->get_minute(),
+             TIME_MANAGER_POINTER->get_second());
+  } else {
+    snprintf(filename, sizeof(filename) - 1, "assert.log");
+  }
+  char final_savefile[FILENAME_MAX] = {0};
+  snprintf(final_savefile, 
+           sizeof(final_savefile) - 1, 
+           "%s/%s", 
+           savedir, 
+           filename);
   //保存日志
-#ifndef GAME_CLIENT
-  FILE* f = fopen( "./Log/assert.log", "a" ) ;
-  fwrite( temp, 1, strlen(temp), f ) ;
-  fwrite( "\n", 1, 2, f ) ;
-  fclose(f) ;
-#endif
+  if (0 == APPLICATION_TYPE) {
+    FILE* fp = fopen(final_savefile, "a");
+    if (fp) {
+      fwrite(temp, 1, strlen(temp), fp);
+      fwrite("\n", 1, 2, fp);
+      fclose(fp);
+    }
+  }
 
 #if __WINDOWS__
-/**
-  static MyLock lock;
+  static pf_sys::ThreadLock lock;
   if (1 != g_command_assert) {
-    lock.Lock() ;
-    int ret = ::MessageBoxA( NULL, temp, "异常", MB_OK ) ;
-    lock.Unlock() ;
+    lock.lock() ;
+    ::MessageBoxA(NULL, temp, "异常", MB_OK);
+    lock.unlock() ;
   }
-**/
 #elif __LINUX__
 #endif
-
-#ifdef GAME_CLIENT
-  throw(std::string(temp));
-#else
-  throw(1);
-#endif
+  if (0 == APPLICATION_TYPE) {
+    throw(std::string(temp));
+  } else {
+    throw(1);
+  }
 }
 
 void __messagebox__(const char *msg) {

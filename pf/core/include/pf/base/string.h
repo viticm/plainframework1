@@ -51,6 +51,12 @@ PF_API int32_t charset_convert(const char *from,
 
 PF_API bool get_escapechar(char in, char &out);
 PF_API bool getescape(const char *in, size_t insize, char *out, size_t outsize);
+PF_API int32_t explode(const char *source,
+                       std::vector<std::string> &result,
+                       const char *key,
+                       bool one_key,
+                       bool ignore_empty);
+
 
 }; //namespace string
 

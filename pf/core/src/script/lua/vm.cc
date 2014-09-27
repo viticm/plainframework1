@@ -1,3 +1,4 @@
+#include "pf/base/string.h"
 #include "pf/base/log.h"
 #include "pf/sys/memory/dynamic_allocator.h"
 #include "pf/script/lua/vm.h"
@@ -182,6 +183,40 @@ bool VM::callfunction(const char *name,
     }
     va_end(vlist);
     int32_t call_result = lua_pcall(lua_state_, args_number, result, NULL);
+    if (call_result != 0) {
+      on_scripterror(kErrorCodeExecute, result);
+      return false;
+    }
+    return true;
+  __LEAVE_FUNCTION
+    return false;
+}
+
+bool VM::callfunction(const char *function) {
+  __ENTER_FUNCTION
+    using namespace pf_base;
+    int32_t result = 0;
+    if (!lua_state_) {
+      on_scripterror(kErrorCodeStateIsNil);
+      return false;
+    }
+    std::vector<std::string> array;
+    string::explode(function, array, "\t", true, true);
+    if (array.size() < 1) return false;
+    lua_getglobal(lua_state_, array[0].c_str());
+    for (int32_t i = 1; i < static_cast<int32_t>(array.size()); ++i) {
+      char value[512] = {0};
+      string::safecopy(value, array[i].c_str(), sizeof(value));
+      if ('\"' == value[0] && 
+          '\"' == value[strlen(value) - 1]) {
+        value[strlen(value) - 1] = '\0';
+        lua_pushstring(lua_state_, value + 1);
+      } else {
+        lua_pushnumber(lua_state_, 
+                       static_cast<lua_Number>(atof(value)));
+      }
+    }
+    int32_t call_result = lua_pcall(lua_state_, array.size() - 1, result, NULL);
     if (call_result != 0) {
       on_scripterror(kErrorCodeExecute, result);
       return false;
@@ -513,6 +548,28 @@ bool VM::register_functiontable(
       lua_pushcfunction(lua_state_, regtable->func);
       lua_settable(lua_state_, -3);
     }
+    lua_setglobal(lua_state_, name);
+    return true;
+  __LEAVE_FUNCTION
+    return false;
+}
+
+bool VM::register_globalvalue(const char *name, const char *value) {
+  __ENTER_FUNCTION
+    if (!lua_state_) return false;
+    lua_getglobal(lua_state_, name);
+    lua_pushstring(lua_state_, value);
+    lua_setglobal(lua_state_, name);
+    return true;
+  __LEAVE_FUNCTION
+    return false;
+}
+
+bool VM::register_globalvalue(const char *name, lua_Number value) {
+  __ENTER_FUNCTION
+    if (!lua_state_) return false;
+    lua_getglobal(lua_state_, name);
+    lua_pushnumber(lua_state_, value);
     lua_setglobal(lua_state_, name);
     return true;
   __LEAVE_FUNCTION

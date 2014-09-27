@@ -51,13 +51,15 @@ class PF_API Manager : public connection::manager::Select {
    void loop();
    bool isactive();
    void setactive(bool active);
+   void set_performance_active(bool active);
 
  public:
    //服务器广播
-   void broadcast(packet::Base *packet);
+   void broadcast(packet::Base *packet, int32_t status = -1);
 
  protected:
    bool active_; //管理器是否激活
+   bool performance_active_; //性能监视是否激活，注意只应有一个管理器被激活
 
 };
 

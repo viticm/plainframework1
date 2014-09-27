@@ -13,6 +13,7 @@
 
 #include "pf/file/api.h"
 #include "pf/base/util.h"
+#include "pf/base/log.h"
 #if __LINUX__
 #include <sys/epoll.h>
 #include <poll.h>

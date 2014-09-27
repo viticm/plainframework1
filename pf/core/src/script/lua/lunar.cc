@@ -38,6 +38,16 @@ void gettable_string_byindex(lua_State *L,
   __LEAVE_FUNCTION
 }
 
+bool istable_numbervalue(lua_State *L, int32_t table_index, int32_t index) {
+  __ENTER_FUNCTION
+    lua_pushvalue(L, table_index);
+    lua_rawgeti(L, -1, index);
+    bool result = lua_isnumber(L, -1);
+    return result;
+  __LEAVE_FUNCTION
+    return false;
+}
+
 int32_t gettable(lua_State *L, int32_t table_index, const char *key) {
   __ENTER_FUNCTION
     lua_pushvalue(L, table_index);    
@@ -46,8 +56,7 @@ int32_t gettable(lua_State *L, int32_t table_index, const char *key) {
     if (lua_isnil(L, -1) || !lua_istable(L, -1)) {
       lua_pop(L, 2);
       return -1;
-    }
-    else {
+    } else {
       lua_insert(L, -2);
       lua_pop(L, 1);
       return lua_gettop(L);
@@ -64,8 +73,7 @@ int32_t gettable(lua_State *L, int32_t table_index, int32_t index) {
     if (lua_isnil(L, -1) || !lua_istable(L, -1)) {
       lua_pop(L, 2);
       return -1;
-    }
-    else {
+    } else {
       lua_insert(L, -2);
       lua_pop(L, 1);
       return lua_gettop(L);

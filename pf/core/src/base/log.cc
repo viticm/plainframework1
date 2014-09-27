@@ -56,16 +56,17 @@ Log::~Log() {
 
 void Log::get_log_timestr(char *time_str, int32_t length) {
   __ENTER_FUNCTION
-    if (g_time_manager) {
-        g_time_manager->reset_time();
-        snprintf(time_str, 
-                 length, 
-                 "%.2d:%.2d:%.2d (%"PRIu64" %.4f)",
-                 g_time_manager->get_hour(),
-                 g_time_manager->get_minute(),
-                 g_time_manager->get_second(),
-                 pf_sys::get_current_thread_id(), 
-                 static_cast<float>(g_time_manager->get_run_time())/1000.0);
+    if (TIME_MANAGER_POINTER) {
+        TIME_MANAGER_POINTER->reset_time();
+        snprintf(
+            time_str, 
+            length, 
+            "%.2d:%.2d:%.2d (%"PRIu64" %.4f)",
+            TIME_MANAGER_POINTER->get_hour(),
+            TIME_MANAGER_POINTER->get_minute(),
+            TIME_MANAGER_POINTER->get_second(),
+            pf_sys::get_current_thread_id(), 
+            static_cast<float>(TIME_MANAGER_POINTER->get_run_time())/1000.0);
     } else {
       snprintf(time_str,
                length, 
@@ -89,7 +90,7 @@ void Log::disk_log(const char *file_nameprefix, const char *format, ...) {
                 format, 
                 argptr);
       va_end(argptr);
-      if (g_time_manager) {
+      if (TIME_MANAGER_POINTER) {
         char time_str[kLogNameTemp] ;
         memset(time_str, '\0', sizeof(time_str));
         get_log_timestr(time_str, sizeof(time_str) - 1);        
@@ -181,15 +182,25 @@ void Log::get_log_filename(uint8_t logid, char *save) {
              filename_prefix, 
              logid != kApplicationLogFile ? "_" : "",
              logid != kApplicationLogFile ? APPLICATION_NAME : "");
-    if (g_time_manager) {
+    if (TIME_MANAGER_POINTER) {
+      char savedir[128] = {0};
+      snprintf(savedir, 
+               sizeof(savedir) - 1, 
+               "%s/%.2d_%.2d_%.2d/%s", 
+               kBaseLogSaveDir, 
+               TIME_MANAGER_POINTER->get_year(), 
+               TIME_MANAGER_POINTER->get_month(),
+               TIME_MANAGER_POINTER->get_day(),
+               APPLICATION_NAME);
+      pf_base::util::makedir(savedir, 0755);
       snprintf(save,
                FILENAME_MAX - 1,
-               "%s/%s_%d_%d_%d.log",
-               kBaseLogSaveDir,
+               "%s/%s_%.2d_%.2d_%.2d.log",
+               savedir,
                prefixfinal,
-               g_time_manager->get_year(),
-               g_time_manager->get_month(),
-               g_time_manager->get_day());
+               TIME_MANAGER_POINTER->get_hour(),
+               TIME_MANAGER_POINTER->get_minute(),
+               TIME_MANAGER_POINTER->get_second());
     } else {
       snprintf(save,
                FILENAME_MAX - 1,
@@ -219,17 +230,33 @@ void Log::get_log_filename(const char *filename_prefix,
         typestr = "";
         break;
     }
-    if (g_time_manager) {
+    char prefixfinal[128] = {0};
+    snprintf(prefixfinal, 
+             sizeof(prefixfinal) - 1, 
+             "%s%s%s",
+             filename_prefix,
+             strlen(typestr) > 0 ? "_" : "",
+             typestr);
+    if (TIME_MANAGER_POINTER) {
+      char savedir[128] = {0};
+      snprintf(savedir, 
+               sizeof(savedir) - 1, 
+               "%s/%.2d_%.2d_%.2d/%s", 
+               kBaseLogSaveDir, 
+               TIME_MANAGER_POINTER->get_year(), 
+               TIME_MANAGER_POINTER->get_month(),
+               TIME_MANAGER_POINTER->get_day(),
+               APPLICATION_NAME);
+      if (!pf_base::util::makedir(savedir, 0755))
+        ERRORPRINTF("save dir: %s make failed", savedir);
       snprintf(save,
                FILENAME_MAX - 1,
-               "%s/%s%s%s_%d_%d_%d.log",
-               kBaseLogSaveDir,
-               filename_prefix,
-               strlen(typestr) > 0 ? "_" : "",
-               typestr,
-               g_time_manager->get_year(),
-               g_time_manager->get_month(),
-               g_time_manager->get_day());
+               "%s/%s_%.2d_%.2d_%.2d.log",
+               savedir,
+               prefixfinal,
+               TIME_MANAGER_POINTER->get_hour(),
+               TIME_MANAGER_POINTER->get_minute(),
+               TIME_MANAGER_POINTER->get_second());
     } else {
       snprintf(save,
                FILENAME_MAX - 1,

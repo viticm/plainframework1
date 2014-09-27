@@ -12,6 +12,7 @@ namespace pf_net {
 Manager::Manager() {
   __ENTER_FUNCTION
     setactive(true);
+    performance_active_ = false;
   __LEAVE_FUNCTION
 }
 
@@ -76,7 +77,9 @@ void Manager::tick() {
 
       result = processoutput();
       Assert(result); 
-      if (PERFORMANCE_EYES_POINTER && tickcount - last_tickcount > 1000) { //网络性能监视
+      if (PERFORMANCE_EYES_POINTER && 
+          tickcount - last_tickcount > 1000 &&
+          true == performance_active_) { //网络性能监视
         last_tickcount = tickcount;
         uint16_t connectioncount = getcount();
         PERFORMANCE_EYES_POINTER->set_onlinecount(connectioncount);
@@ -133,7 +136,11 @@ void Manager::setactive(bool active) {
   active_ = active;
 }
 
-void Manager::broadcast(packet::Base *packet) {
+void Manager::set_performance_active(bool active) {
+  performance_active_ = active;
+}
+
+void Manager::broadcast(packet::Base *packet, int32_t status) {
   __ENTER_FUNCTION
     uint16_t connectioncount = getcount();
     uint16_t i;
@@ -145,6 +152,8 @@ void Manager::broadcast(packet::Base *packet) {
         Assert(false); 
         continue;
       }
+      int32_t _status = static_cast<int32_t>(connection->getstatus());
+      if (status != -1 && status != _status) continue;
       connection->sendpacket(packet);
     }
   __LEAVE_FUNCTION

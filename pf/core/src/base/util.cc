@@ -316,7 +316,8 @@ bool makedir(const char *path, uint16_t mode) {
       _path[length] = '/';
       _path[length + 1] = '\0';
     }
-    for (i = 0; i < length; ++i) {
+    int32_t _length = static_cast<int32_t>(strlen(_path));
+    for (i = 0; i < _length; ++i) {
       if ('/' ==  _path[i]) {
         _path[i] = '\0';
         result = access(_path, 0);

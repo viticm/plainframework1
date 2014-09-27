@@ -30,6 +30,7 @@ Kernel::Kernel() {
     registerconfig(ENGINE_CONFIG_SCRIPT_WORKPATH, SCRIPT_WORK_PATH_DEFAULT);
     registerconfig(ENGINE_CONFIG_SCRIPT_GLOBALFILE, 
                    SCRIPT_LUA_GLOBAL_VAR_FILE_DEFAULT);
+    registerconfig(ENGINE_CONFIG_SETTING_ROOTPATH, "");
     registerconfig(ENGINE_CONFIG_DB_RUN_ASTHREAD, false);
     registerconfig(ENGINE_CONFIG_NET_RUN_ASTHREAD, false);
     registerconfig(ENGINE_CONFIG_PERFORMANCE_RUN_ASTHREAD, true);
@@ -382,21 +383,69 @@ bool Kernel::init_net() {
       bool result = true;
       if (is_usethread) {
         if (!net_thread_) net_thread_ = new thread::Net();
-        if (NULL == net_thread_) return false;
-        //在linux环境下epoll初始化的优先级需要高于管理器的优先级
-        result = net_thread_->set_poll_maxcount(connectionmax);
-        if (!result) return false;
+        if (NULL == net_thread_) {
+          SLOW_ERRORLOG(ENGINE_MODULENAME, 
+                        "[engine] (Kernel::init_net)"
+                        " NULL == net_thread_");
+          return false;
+        }
         result = net_thread_->init(connectionmax, listenport, listenip);
-        if (!result) return false;
+        if (!result) {
+          SLOW_ERRORLOG(ENGINE_MODULENAME, 
+                        "[engine] (Kernel::init_net)"
+                        " net_thread_->init(%d, %d, %s) failed",
+                        connectionmax,
+                        listenport,
+                        listenport);
+          return false;
+        }
+        //在linux环境下epoll初始化的优先级需要高于管理器的优先级 --epoll监听移到创建处
+        //以前此处有一个错误：那就是在保护进程模式下，
+        //epoll需要进程有socket处理后才能正确的创建
+        result = net_thread_->set_poll_maxcount(connectionmax);
+        if (!result) {
+          SLOW_ERRORLOG(ENGINE_MODULENAME, 
+                        "[engine] (Kernel::init_net)"
+                        " net_thread_->set_poll_maxcount(%d) failed",
+                        connectionmax);
+          return false;
+        }
       } else {
         if (!net_manager_) net_manager_ = new Manager();
-        if (NULL == net_manager_) return false;
-        result = net_manager_->set_poll_maxcount(connectionmax);
-        if (!result) return false;
+        if (NULL == net_manager_) {
+          SLOW_ERRORLOG(ENGINE_MODULENAME, 
+                        "[engine] (Kernel::init_net)"
+                        " NULL == net_manager_");
+          return false;
+        }
         result = net_manager_->init(connectionmax, listenport, listenip);
-        if (!result) return false;
+        if (!result) {
+          SLOW_ERRORLOG(ENGINE_MODULENAME, 
+                        "[engine] (Kernel::init_net)"
+                        " net_manager_->init(%d, %d, %s) failed",
+                        connectionmax,
+                        listenport,
+                        listenport);
+          return false;
+        }
+        result = net_manager_->set_poll_maxcount(connectionmax);
+        if (!result) {
+          SLOW_ERRORLOG(ENGINE_MODULENAME, 
+                        "[engine] (Kernel::init_net)"
+                        " net_manager_->set_poll_maxcount(%d) failed",
+                        connectionmax);
+          return false;
+        }
       }
-      if (result) result = init_net_connectionpool();
+      if (result) {
+        result = init_net_connectionpool();
+        if (!result) {
+          SLOW_ERRORLOG(ENGINE_MODULENAME, 
+                        "[engine] (Kernel::init_net)"
+                        " init_net_connectionpool() failed");
+          return false;
+        }
+      }
       if (result) {
         listenport = is_usethread ? 
                      net_thread_->get_listenport() : 
@@ -408,7 +457,6 @@ bool Kernel::init_net() {
                  listenport,
                  NULL == listenip ? "any" : listenip);
       }
-      return result;
     }
     return true;
   __LEAVE_FUNCTION

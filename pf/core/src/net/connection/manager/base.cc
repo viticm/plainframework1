@@ -212,6 +212,7 @@ connection::Base *Base::accept() {
     newconnection = pool_->create();
     if (NULL == newconnection) return false;
     step = 5;
+    newconnection->cleanup(); //清理一次
     newconnection->init();
     int32_t socketid = SOCKET_INVALID;
     step = 10;

@@ -350,6 +350,47 @@ uint64_t touint64(const char *str) {
     return 0;
 }
 
+int32_t explode(const char *source,
+                std::vector<std::string> &result,
+                const char *key,
+                bool one_key,
+                bool ignore_empty) {
+  __ENTER_FUNCTION
+    result.clear();
+    std::string str = source; //use stanard string class to source
+    if (str.empty()) return 0;
+    std::string::size_type left = 0;
+    std::string::size_type right;
+    if (one_key) {
+      right = str.find_first_of(key);
+    } else {
+      right = str.find(key);
+    }
+
+    if (std::string::npos == right) right = str.length();
+    for(;;) {
+      std::string item = str.substr(left, right - left);
+
+      if (item.length() > 0 || !ignore_empty) result.push_back(item);
+      if (right == str.length()) break;
+      left = right + (one_key ? 1 : strlen(key));
+      if (one_key) {
+
+        std::string temp = str.substr(left);
+        right = temp.find_first_of(key);
+        if (right != std::string::npos) right += left;
+      } else {
+        right = str.find(key, left);
+      }
+      if (std::string::npos == right) right = str.length();
+    }
+    int32_t _result = static_cast<int32_t>(result.size());
+    return _result;
+  __LEAVE_FUNCTION
+    return 0;
+}
+
+
 } //namespace string
 
 } //namespace pf_base

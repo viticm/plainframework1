@@ -176,7 +176,7 @@ int32_t Ini::find_key_index(int32_t position, const char *key) {
       char *_find_key = find_key(_position);
       if (0 == strcmp(key, _find_key)) break;
       if ('[' == _find_key[0] || _position >= data_length_) {
-        position = -1;
+        _position = -1;
         break;
       }
     }
@@ -471,6 +471,7 @@ bool Ini::read_exist_int64(const char *section,
   __ENTER_FUNCTION
     int32_t section_index = find_section_index(section);
     int32_t data_index = find_key_index(section_index, key);
+    if (-1 == data_index) return false;
     char *str = readstring(data_index);
     char *end_convert = NULL;
     result = strtoint64(str, &end_convert, 10);

@@ -76,11 +76,6 @@ class PF_API Database {
    void create_index(int32_t column = 0, const char *filename = 0);
 
  public:
-   static int32_t convert_string_tovector(const char *source,
-                                          std::vector<std::string> &result,
-                                          const char *key,
-                                          bool one_key,
-                                          bool ignore_empty);
    static const char *get_line_from_memory(char *str, 
                                            int32_t size, 
                                            const char *memory,

@@ -122,7 +122,7 @@ class PF_API Log : public Singleton<Log> {
    template <uint8_t type>
    static void slow_savelog(const char *filename_prefix, 
                             const char *format, ...) {
-       __ENTER_FUNCTION
+     __ENTER_FUNCTION
        g_log_lock.lock();
        char buffer[4096] = {0};
        char temp[4096] = {0};
@@ -169,7 +169,7 @@ class PF_API Log : public Singleton<Log> {
              "pf_base::Log::save_log have some log error here"LF"");
        }
        g_log_lock.unlock();
-       __LEAVE_FUNCTION
+     __LEAVE_FUNCTION
    }
 
  private:
