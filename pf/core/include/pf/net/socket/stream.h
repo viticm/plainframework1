@@ -21,7 +21,7 @@ class PF_API Stream {
 
  public:
    Stream(
-       Base* socket, 
+       Base *socket, 
        uint32_t bufferlength = SOCKETINPUT_BUFFERSIZE_DEFAULT, 
        uint32_t bufferlength_max = SOCKETINPUT_DISCONNECT_MAXSIZE); 
    virtual ~Stream();
@@ -33,10 +33,10 @@ class PF_API Stream {
    void cleanup();
    void setkey(unsigned char const* key);
    int32_t get_keylength();
-   Base* getsocket();
+   Base *getsocket();
 
  protected:
-   Base* socket_;
+   Base *socket_;
    streamdata_t streamdata_;
    encodeparam_t encodeparam_;
    uint64_t send_bytes_;

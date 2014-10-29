@@ -22,7 +22,7 @@ class PF_API Thread {
      kRunning,
      kExiting,
      kExit,
-   }enum_thread_status;
+   } status_t;
 
  public:
    Thread();
@@ -36,8 +36,8 @@ class PF_API Thread {
 #elif __LINUX__
    uint64_t get_id();
 #endif
-   enum_thread_status get_status();
-   void set_status(enum_thread_status status);
+   status_t get_status();
+   void set_status(status_t status);
 
  private:
 #if __LINUX__
@@ -45,7 +45,7 @@ class PF_API Thread {
 #elif __WINDOWS__
    DWORD id_;
 #endif
-   enum_thread_status status_;
+   status_t status_;
 #if __WINDOWS__
    HANDLE thread_handle_;
 #endif
@@ -97,6 +97,6 @@ class lock_guard {
 }; //namespace pf_sys
 
 //thread lock
-extern pf_sys::ThreadLock g_thread_lock;
+PF_API extern pf_sys::ThreadLock g_thread_lock;
 
 #endif //PF_THREAD_H_

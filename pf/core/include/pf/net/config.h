@@ -67,7 +67,7 @@ typedef struct {
   uint32_t insize;
   unsigned char *out;
   uint32_t outsize;
-  unsigned char const* key;
+  unsigned char const *key;
   uint32_t keysize;
   uint32_t param[2];
 } encodeparam_t;

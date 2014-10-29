@@ -254,7 +254,7 @@ bool Base::heartbeat(uint32_t time, uint32_t flag) {
   return true;
 }
 
-int16_t Base::getid() {
+int16_t Base::getid() const {
   return id_;
 }
 
@@ -262,7 +262,7 @@ void Base::setid(int16_t id) {
   id_ = id;
 }
 
-int16_t Base::get_userid() {
+int16_t Base::get_userid() const {
   return userid_;
 }
 
@@ -270,7 +270,7 @@ void Base::set_userid(int16_t id) {
   userid_ = id;
 }
 
-int16_t Base::get_managerid() {
+int16_t Base::get_managerid() const {
   return managerid_;
 }
 
@@ -321,7 +321,7 @@ void Base::cleanup() {
   __LEAVE_FUNCTION
 }
 
-bool Base::isempty() {
+bool Base::isempty() const {
   return isempty_;
 }
 
@@ -329,7 +329,7 @@ void Base::setempty(bool status) {
   isempty_ = status;
 }
 
-bool Base::isdisconnect() {
+bool Base::isdisconnect() const {
   return isdisconnect_;
 }
 

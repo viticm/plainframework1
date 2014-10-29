@@ -74,11 +74,11 @@ class PF_API Base {
    bool attach(uint32_t key, uint32_t size);
    char *get_data_pointer();
    char *get_data(uint32_t size, uint32_t index);
-   uint32_t get_size();
+   uint32_t get_size() const;
    bool dump(const char *filename);
    bool merge_from_file(const char *filename);
    void set_head_version(uint32_t version);
-   uint32_t get_head_version();
+   uint32_t get_head_version() const;
  private:
    uint32_t size_;
    char *data_pointer_;

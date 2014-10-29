@@ -1,0 +1,1469 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset=UTF-8"utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>简约框架参考手册</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" href="../css/style.css">
+        <script src="../js/vendor/modernizr-2.6.2.min.js"></script>
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="#">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+
+        <div class="wrapper">
+            <header>
+                <h1>简约框架参考手册</h1>
+            </header>
+            <aside class="sidebar">
+<ul>
+<li>入门指引
+
+<ul>
+<li><a href="../index.htm">简介</a></li>
+<li><a href="simpletutorials.htm">简明教程</a></li>
+<li><a href="style-guide.htm">代码风格</a></li>
+<li><a href="module.htm">模块</a></li>
+<li><a href="license.htm">许可</a></li>
+</ul></li>
+
+<li>基础模块
+<ul>
+<li><a href="base.macro.htm">宏</a></li>
+<li><a href="base.global.htm">全局变量</a></li>
+<li><a href="base.log.htm">日志</a></li>
+<li><a href="base.string.htm">字符串</a></li>
+<li><a href="base.hashmap.htm">hash map</a></li>
+<li><a href="base.timemanager.htm">时间管理器</a></li>
+<li><a href="base.tinytimer.htm">小型定时器</a></li>
+<li><a href="base.util.htm">工具集</a></li>
+</ul></li>
+
+<li>数据库模块
+<ul>
+<li><a href="db.manager.htm">管理器</a></li>
+<li><a href="db.odbc.htm">ODBC</a></li>
+</ul></li>
+
+<li>引擎模块
+<ul>
+<li><a href="engine.kernel.htm">核心</a></li>
+<li><a href="engine.thread.htm">线程</a></li>
+</ul></li>
+
+<li>事件模块
+<ul>
+<li><a href="event.manager.htm">管理器</a></li>
+</ul></li>
+
+<li>文件模块
+<ul>
+<li><a href="file.api.htm">系统API</a></li>
+<li><a href="file.database.htm">文件数据库</a></li>
+<li><a href="file.ini.htm">ini文件</a></li>
+</ul></li>
+
+<li>网络模块
+<ul>
+<li><a href="net.connection.htm">连接</a></li>
+<li><a href="net.packet.htm">包</a></li>
+<li><a href="net.socket.htm">套接字</a></li>
+<li><a href="net.manager.htm">管理器</a></li>
+</ul></li>
+
+<li>性能模块
+<ul>
+<li><a href="performance.eyes.htm">监视器</a></li>
+</ul></li>
+
+<li>脚本模块
+<ul>
+<li><a href="script.cache.htm">缓存</a></li>
+<li><a href="script.lua.htm">lua</a></li>
+</ul></li>
+
+<li>系统模块
+<ul>
+<li><a href="sys.memory.htm">内存</a></li>
+<li><a href="sys.info.htm">系统信息</a></li>
+<li><a href="sys.process.htm">进程</a></li>
+<li><a href="sys.thread.htm">线程</a></li>
+<li><a href="sys.util.htm">工具集</a></li>
+</ul></li>
+
+<li>工具模块
+<ul>
+<li><a href="util.compressor.htm">压缩模块</a></li>
+</ul></li>
+
+</ul>
+</aside>
+
+<section class="content">
+
+<h1>net module socket</h1>
+
+<ul>
+<li><a href="#total">总述</a></li>
+<li><a href="#api_socketex">api::socketex</a></li>
+<li><a href="#api_bindex">api::bindex</a></li>
+<li><a href="#api_connectex">api::connectex</a></li>
+<li><a href="#api_listenex">api::listenex</a></li>
+<li><a href="#api_acceptex">api::acceptex</a></li>
+<li><a href="#api_getsockopt_exb">api::getsockopt_exb</a></li>
+<li><a href="#api_getsockopt_exu">api::getsockopt_exu</a></li>
+<li><a href="#api_setsockopt_ex">api::setsockopt_ex</a></li>
+<li><a href="#api_sendex">api::sendex</a></li>
+<li><a href="#api_sendto_ex">api::sendto_ex</a></li>
+<li><a href="#api_recvex">api::recvex</a></li>
+<li><a href="#api_recvfrom_ex">api::recvfrom_ex</a></li>
+<li><a href="#api_ioctlex">api::ioctlex</a></li>
+<li><a href="#api_get_nonblocking_ex">api::get_nonblocking_ex</a></li>
+<li><a href="#api_set_nonblocking_ex">api::set_nonblocking_ex</a></li>
+<li><a href="#api_availableex">api::availableex</a></li>
+<li><a href="#api_shutdown_ex">api::shutdown_ex</a></li>
+<li><a href="#api_selectex">api::selectex</a></li>
+<li><a href="#api_getsockname_ex">api::getsockname_ex</a></li>
+<li><a href="#api_getlast_errorcode">api::getlast_errorcode</a></li>
+<li><a href="#api_getlast_errormessage">api::getlast_errormessage</a></li>
+<li><a href="#base_define">Base定义</a></li>
+<li><a href="#base_create">Base::create</a></li>
+<li><a href="#base_close">Base::close</a></li>
+<li><a href="#base_connect">Base::connect*</a></li>
+<li><a href="#base_reconnect">Base::reconnect</a></li>
+<li><a href="#base_send">Base::send</a></li>
+<li><a href="#base_available">Base::available</a></li>
+<li><a href="#base_accept">Base::accept</a></li>
+<li><a href="#base_bind">Base::bind*</a></li>
+<li><a href="#base_listen">Base::listen</a></li>
+<li><a href="#base_select">Base::select</a></li>
+<li><a href="#base_getlinger">Base::getlinger</a></li>
+<li><a href="#base_setlinger">Base::setlinger</a></li>
+<li><a href="#base_is_reuseaddr">Base::is_reuseaddr</a></li>
+<li><a href="#base_set_reuseaddr">Base::set_reuseaddr</a></li>
+<li><a href="#base_getlast_errorcode">Base::getlast_errorcode</a></li>
+<li><a href="#base_getlast_errormessage">Base::getlast_errormessage</a></li>
+<li><a href="#base_iserror">Base::iserror</a></li>
+<li><a href="#base_is_nonblocking">Base::is_nonblocking</a></li>
+<li><a href="#base_set_nonblocking">Base::set_nonblocking</a></li>
+<li><a href="#base_getreceive_buffersize">Base::getreceive_buffersize</a></li>
+<li><a href="#base_setreceive_buffersize">Base::setreceive_buffersize</a></li>
+<li><a href="#base_getsend_buffersize">Base::getsend_buffersize</a></li>
+<li><a href="#base_setsend_buffersize">Base::setsend_buffersize</a></li>
+<li><a href="#base_getport">Base::getport</a></li>
+<li><a href="#base_getuint64host">Base::getuint64host</a></li>
+<li><a href="#base_isvalid">Base::isvalid</a></li>
+<li><a href="#base_getid">Base::getid</a></li>
+<li><a href="#server_define">Server定义</a></li>
+<li><a href="#server_close">Server::close</a></li>
+<li><a href="#server_accept">Server::accept</a></li>
+<li><a href="#server_getlinger">Server::getlinger</a></li>
+<li><a href="#server_setlinger">Server::setlinger</a></li>
+<li><a href="#server_is_nonblocking">Server::is_nonblocking</a></li>
+<li><a href="#server_set_nonblocking">Server::set_nonblocking</a></li>
+<li><a href="#server_getreceive_buffersize">Server::getreceive_buffersize</a></li>
+<li><a href="#server_setreceive_buffersize">Server::setreceive_buffersize</a></li>
+<li><a href="#server_getsend_buffersize">Server::getsend_buffersize</a></li>
+<li><a href="#server_getid">Server::getid</a></li>
+<li><a href="#server_getport">Server::getport</a></li>
+<li><a href="#stream_define">Stream定义</a></li>
+<li><a href="#stream_init">Stream::init</a></li>
+<li><a href="#stream_resize">Stream::resize</a></li>
+<li><a href="#stream_reallength">Stream::reallength</a></li>
+<li><a href="#stream_cleanup">Stream::cleanup</a></li>
+<li><a href="#stream_setkey">Stream::setkey</a></li>
+<li><a href="#stream_get_keylength">Stream::get_keylength</a></li>
+<li><a href="#stream_getsocket">Stream::getsocket</a></li>
+<li><a href="#inputstream_define">InputStream定义</a></li>
+<li><a href="#inputstream_read">InputStream::read</a></li>
+<li><a href="#inputstream_readpacket">InputStream::readpacket</a></li>
+<li><a href="#inputstream_peek">InputStream::peek</a></li>
+<li><a href="#inputstream_skip">InputStream::skip</a></li>
+<li><a href="#inputstream_fill">InputStream::fill</a></li>
+<li><a href="#inputstream_read_int8">InputStream::read_int8</a></li>
+<li><a href="#inputstream_read_uint8">InputStream::read_uint8</a></li>
+<li><a href="#inputstream_read_int16">InputStream::read_int16</a></li>
+<li><a href="#inputstream_read_uint16">InputStream::read_uint16</a></li>
+<li><a href="#inputstream_read_int32">InputStream::read_int32</a></li>
+<li><a href="#inputstream_read_uint32">InputStream::read_uint32</a></li>
+<li><a href="#inputstream_read_int64">InputStream::read_int64</a></li>
+<li><a href="#inputstream_read_uint64">InputStream::read_uint64</a></li>
+<li><a href="#inputstream_read_string">InputStream::read_string</a></li>
+<li><a href="#inputstream_read_float">InputStream::read_float</a></li>
+<li><a href="#inputstream_read_double">InputStream::read_double</a></li>
+<li><a href="#outputstream_define">OutputStream定义</a></li>
+<li><a href="#outputstream_write">OutputStream::write</a></li>
+<li><a href="#outputstream_writepacket">OutputStream::writepacket</a></li>
+<li><a href="#outputstream_flush">OutputStream::flush</a></li>
+<li><a href="#outputstream_write_int8">OutputStream::write_int8</a></li>
+<li><a href="#outputstream_write_uint8">OutputStream::write_uint8</a></li>
+<li><a href="#outputstream_write_int16">OutputStream::write_int16</a></li>
+<li><a href="#outputstream_write_uint16">OutputStream::write_uint16</a></li>
+<li><a href="#outputstream_write_int32">OutputStream::write_int32</a></li>
+<li><a href="#outputstream_write_uint32">OutputStream::write_uint32</a></li>
+<li><a href="#outputstream_write_int64">OutputStream::write_int64</a></li>
+<li><a href="#outputstream_write_uint64">OutputStream::write_uint64</a></li>
+<li><a href="#outputstream_write_string">OutputStream::write_string</a></li>
+<li><a href="#outputstream_write_float">OutputStream::write_float</a></li>
+<li><a href="#outputstream_write_dobule">OutputStream::write_dobule</a></li>
+</ul>
+
+<p><a name="total"></a></p>
+
+<h2>总述</h2>
+
+<p>套接字作为网络通讯的基础，在这里也封装了与之相关的基础、服务器、输入/输出流的相关操作。</p>
+
+<p><a name="api_socketex"></a></p>
+
+<h2>api::socketex</h2>
+<blockquote>
+<p>int32_t socketex(int32_t domain, int32_t type, int32_t protocol); </p>
+<p>描述：套接字建立函数扩展。</p>
+<p>参数：</p>
+<p>int32_t domain 域。</p>
+<p>int32_t type 类型。</p>
+<p>int32_t protocol 协议。</p>
+<p>返回：int32_t</p>
+</blockquote>
+
+<p><a name="api_bindex"></a></p>
+
+<h2>api::bindex</h2>
+<blockquote>
+<p>bool bindex(int32_t socketid,                                               
+               const struct sockaddr *name,                                    
+               uint32_t namelength); </p>
+<p>描述：套接字绑定函数扩展。</p>
+<p>参数：</p>
+<p>int32_t socketid 套接字ID。</p>
+<p>const struct sockaddr * 套接字地址指针。</p>
+<p>uint32_t namelength 地址指针大小。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="api_connectex"></a></p>
+
+<h2>api::connectex</h2>
+<blockquote>
+<p>bool connectex(int32_t socketid,                                            
+                  const struct sockaddr *name,                                 
+                  uint32_t namelength); </p>
+<p>描述：套接字连接函数扩展。</p>
+<p>参数：</p>
+<p>int32_t socketid 套接字ID。</p>
+<p>const struct sockaddr * 套接字地址指针。</p>
+<p>uint32_t namelength 地址指针大小。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="api_listenex"></a></p>
+
+<h2>api::listenex</h2>
+<blockquote>
+<p>bool listenex(int32_t socketid, uint32_t backlog); </p>
+<p>描述：套接字监听函数扩展。</p>
+<p>参数：</p>
+<p>int32_t socketid 套接字ID。</p>
+<p>uint32_t backlog 级别。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="api_acceptex"></a></p>
+
+<h2>api::acceptex</h2>
+<blockquote>
+<p>int32_t acceptex(int32_t socketid,                                          
+                    struct sockaddr *addr,                                     
+                    uint32_t *addrlength); </p>
+<p>描述：套接字接受函数扩展。</p>
+<p>参数：</p>
+<p>int32_t socketid 套接字ID。</p>
+<p>struct sockaddr *addr 地址信息指针。</p>
+<p>uint32_t *addrlength 地址长度指针。</p>
+<p>返回：int32_t</p>
+</blockquote>
+
+<p><a name="api_getsockopt_exb"></a></p>
+
+<h2>api::getsockopt_exb</h2>
+<blockquote>
+<p>bool getsockopt_exb(int32_t socketid,                                    
+                       int32_t level,                                       
+                       int32_t optname,                                     
+                       void *optval,                                        
+                       uint32_t *optlength); </p>
+<p>描述：套接字获取选项数据函数扩展1。</p>
+<p>参数：</p>
+<p>int32_t socketid 套接字ID。</p>
+<p>int32_t level 级别。</p>
+<p>int32_t optname 选项名。</p>
+<p>void *optval 选项值。</p>
+<p>uint32_t *optlength 选项值长度指针。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="api_getsockopt_exu"></a></p>
+
+<h2>api::getsockopt_exu</h2>
+<blockquote>
+<p>uint32_t getsockopt_exb(int32_t socketid,                                    
+                           int32_t level,                                       
+                           int32_t optname,                                     
+                           void *optval,                                        
+                           uint32_t *optlength); </p>
+<p>描述：套接字获取选项数据函数扩展2。</p>
+<p>参数：</p>
+<p>int32_t socketid 套接字ID。</p>
+<p>int32_t level 级别。</p>
+<p>int32_t optname 选项名。</p>
+<p>void *optval 选项值。</p>
+<p>uint32_t *optlength 选项值长度指针。</p>
+<p>返回：uint32_t</p>
+</blockquote>
+
+<p><a name="api_setsockopt_ex"></a></p>
+
+<h2>api::setsockopt_ex</h2>
+<blockquote>
+<p>bool setsockopt_ex(int32_t socketid,                                     
+                      int32_t level,                                        
+                      int32_t optname,                                      
+                      const void *optval,                                   
+                      uint32_t optlength); </p>
+<p>描述：套接字设置选项函数扩展。</p>
+<p>参数：</p>
+<p>int32_t socketid 套接字ID。</p>
+<p>int32_t level 级别。</p>
+<p>int32_t optname 选项名。</p>
+<p>void *optval 选项值。</p>
+<p>uint32_t *optlength 选项值长度指针。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="api_sendex"></a></p>
+
+<h2>api::sendex</h2>
+<blockquote>
+<p>int32_t sendex(int32_t socketid,                                         
+                  const void *buffer,                                       
+                  uint32_t length,                                          
+                  uint32_t flag); </p>
+<p>描述：套接字发送函数扩展。</p>
+<p>参数：</p>
+<p>int32_t socketid 套接字ID。</p>
+<p>const void *buffer 数据指针。</p>
+<p>uint32_t length 长度。</p>
+<p>uint32_t flag 标记。</p>
+<p>返回：int32_t</p>
+</blockquote>
+
+<p><a name="api_sendto_ex"></a></p>
+
+<h2>api::sendto_ex</h2>
+<blockquote>
+<p>int32_t sendto_ex(int32_t socketid,                                      
+                     const void *buffer,                                    
+                     int32_t length,                                        
+                     uint32_t flag,                                         
+                     const struct sockaddr *to,                             
+                     int32_t tolength); </p>
+<p>描述：套接字发送到函数扩展。</p>
+<p>参数：</p>
+<p>int32_t socketid 套接字ID。</p>
+<p>const void *buffer 数据指针。</p>
+<p>uint32_t length 长度。</p>
+<p>uint32_t flag 标记。</p>
+<p>const struct sockaddr *to 目标地址指针。</p>
+<p>int32_t tolength 目标地址长度。</p>
+<p>返回：int32_t</p>
+</blockquote>
+
+<p><a name="api_recvex"></a></p>
+
+<h2>api::recvex</h2>
+<blockquote>
+<p>int32_t recvex(int32_t socketid,                                         
+                  void *buffer,                                             
+                  uint32_t length,                                          
+                  uint32_t flag); </p>
+<p>描述：套接字接收数据函数扩展。</p>
+<p>参数：</p>
+<p>int32_t socketid 套接字ID。</p>
+<p>const void *buffer 数据指针。</p>
+<p>uint32_t length 长度。</p>
+<p>uint32_t flag 标记。</p>
+<p>返回：int32_t</p>
+</blockquote>
+
+<p><a name="api_recvfrom_ex"></a></p>
+
+<h2>api::recvfrom_ex</h2>
+<blockquote>
+<p>int32_t recvfrom_ex(int32_t socketid,                                         
+                       void *buffer,                                             
+                       uint32_t length,                                          
+                       uint32_t flag,
+                       struct sockaddr* from,
+                       uint32_t *fromlength); </p>
+<p>描述：套接字指定地址接收数据函数扩展。</p>
+<p>参数：</p>
+<p>int32_t socketid 套接字ID。</p>
+<p>const void *buffer 数据指针。</p>
+<p>uint32_t length 长度。</p>
+<p>uint32_t flag 标记。</p>
+<p>struct sockaddr* from 目标地址指针。</p>
+<p>uint32_t *fromlength 目标地址长度指针。</p>
+<p>返回：int32_t</p>
+</blockquote>
+
+<p><a name="api_closeex"></a></p>
+
+<h2>api::closeex</h2>
+<blockquote>
+<p>bool closeex(int32_t socketid); </p>
+<p>描述：套接字关闭函数扩展。</p>
+<p>参数：</p>
+<p>int32_t socketid 套接字ID。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="api_ioctlex"></a></p>
+
+<h2>api::ioctlex</h2>
+<blockquote>
+<p>bool ioctlex(int32_t socketid, int64_t cmd, uint64_t *argp); </p>
+<p>描述：套接字ioctl函数扩展。</p>
+<p>参数：</p>
+<p>int32_t socketid 套接字ID。</p>
+<p>int64_t cmd 指令。</p>
+<p>uint64_t *argp 操作参数。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="api_get_nonblocking_ex"></a></p>
+
+<h2>api::get_nonblocking_ex</h2>
+<blockquote>
+<p>bool get_nonblocking_ex(int32_t socketid); </p>
+<p>描述：套接字获取是否非阻塞函数扩展。</p>
+<p>参数：</p>
+<p>int32_t socketid 套接字ID。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="api_set_nonblocking_ex"></a></p>
+
+<h2>api::set_nonblocking_ex</h2>
+<blockquote>
+<p>bool set_nonblocking_ex(int32_t socketid, bool on); </p>
+<p>描述：套接字设置是否非阻塞函数扩展。</p>
+<p>参数：</p>
+<p>int32_t socketid 套接字ID。</p>
+<p>bool on 是否开启非阻塞。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="api_availableex"></a></p>
+
+<h2>api::availableex</h2>
+<blockquote>
+<p>uint32_t availableex(int32_t socketid); </p>
+<p>描述：套接字available函数扩展。</p>
+<p>参数：</p>
+<p>int32_t socketid 套接字ID。</p>
+<p>返回：uint32_t</p>
+</blockquote>
+
+<p><a name="api_shutdown_ex"></a></p>
+
+<h2>api::shutdown_ex</h2>
+<blockquote>
+<p>bool shutdown_ex(int32_t socketid, int32_t how); </p>
+<p>描述：套接字关闭函数扩展。</p>
+<p>参数：</p>
+<p>int32_t socketid 套接字ID。</p>
+<p>int32_t how 怎样关闭。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="api_selectex"></a></p>
+
+<h2>api::selectex</h2>
+<blockquote>
+<p>int32_t selectex(int32_t maxfdp,                                         
+                    fd_set *readset,                                        
+                    fd_set *writeset,                                       
+                    fd_set *exceptset,                                      
+                    struct timeval *timeout); </p>
+<p>描述：套接字轮询函数扩展。</p>
+<p>参数：</p>
+<p>int32_t maxfdp 当前最大套接字ID。</p>
+<p>fd_set *readset 读取套接字集合指针。</p>
+<p>fd_set *writeset 写入套接字集合指针。</p>
+<p>fd_set *exceptset 异常套接字指针。</p>
+<p>struct timeval *timeout 超时时间。</p>
+<p>返回：int32_t</p>
+</blockquote>
+
+<p><a name="api_getsockname_ex"></a></p>
+
+<h2>api::getsockname_ex</h2>
+<blockquote>
+<p>int32_t getsockname_ex(int32_t socketid,                                 
+                          struct sockaddr *name,                            
+                          int32_t *namelength); </p>
+<p>描述：套接字获取连接名函数扩展。</p>
+<p>参数：</p>
+<p>int32_t socketid 套接字ID。</p>
+<p>struct sockaddr *name 套接字地址（名称）指针。</p>
+<p>int32_t *namelength 套接字地址长度指针。</p>
+<p>返回：int32_t</p>
+</blockquote>
+
+<p><a name="api_getlast_errorcode"></a></p>
+
+<h2>api::getlast_errorcode</h2>
+<blockquote>
+<p>int32_t getlast_errorcode(); </p>
+<p>描述：套接字获取最后一次的错误码。</p>
+<p>参数：无</p>
+<p>返回：int32_t</p>
+</blockquote>
+
+<p><a name="api_getlast_errormessage"></a></p>
+
+<h2>api::getlast_errormessage</h2>
+<blockquote>
+<p>void getlast_errormessage(char *buffer, uint16_t length); </p>
+<p>描述：套接字获取最后一次的错误信息。</p>
+<p>参数：</p>
+<p>char *buffer 用来保存错误信息的指针。</p>
+<p>uint16_t length 获取的错误信息的长度。</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="base_define"></a></p>
+
+<h2>Base定义</h2>
+<pre><code>
+namespace pf_net {                                                              
+                                                                                
+namespace socket {                                                              
+                                                                                
+class PF_API Base {
+</code></pre>
+
+<p><a name="base_create"></a></p>
+
+<h2>Base::create</h2>
+<blockquote>
+<p>bool create(); </p>
+<p>描述：创建函数。</p>
+<p>参数：无</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="base_close"></a></p>
+
+<h2>Base::close</h2>
+<blockquote>
+<p>bool close(); </p>
+<p>描述：关闭函数。</p>
+<p>参数：无</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="base_connect"></a></p>
+
+<h2>Base::connect</h2>
+<blockquote>
+<p>bool connect(); </p>
+<p>描述：连接函数（使用内部的地址和端口）。</p>
+<p>参数：无</p>
+<p>返回：bool</p>
+<p>-----------------------------------------------------------------------------------</p>
+<p>connect(const char *host, uint16_t port); </p>
+<p>描述：连接函数。</p>
+<p>参数：</p>
+<p>const char *host 地址。</p>
+<p>uint16_t port 端口。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="base_reconnect"></a></p>
+
+<h2>Base::reconnect</h2>
+<blockquote>
+<p>bool reconnect(const char *host, uint16_t port); </p>
+<p>描述：重连函数。</p>
+<p>参数：</p>
+<p>const char *host 地址。</p>
+<p>uint16_t port 端口。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="base_send"></a></p>
+
+<h2>Base::send</h2>
+<blockquote>
+<p>int32_t send(const void *buffer, uint32_t length, uint32_t flag = 0); </p>
+<p>描述：数据发送函数。</p>
+<p>参数：</p>
+<p>const void *buffer 数据指针。</p>
+<p>uint32_t length 数据长度。</p>
+<p>uint32_t flag 标记。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="base_receive"></a></p>
+
+<h2>Base::receive</h2>
+<blockquote>
+<p>int32_t receive(void *buffer, uint32_t length, uint32_t flag = 0); </p>
+<p>描述：数据接收函数。</p>
+<p>参数：</p>
+<p>void *buffer 数据指针。</p>
+<p>uint32_t length 数据长度。</p>
+<p>uint32_t flag 标记。</p>
+<p>返回：int32_t</p>
+</blockquote>
+
+<p><a name="base_available"></a></p>
+
+<h2>Base::available</h2>
+<blockquote>
+<p>uint32_t available() const; </p>
+<p>描述：激活函数。</p>
+<p>参数：无</p>
+<p>返回：uint32_t</p>
+</blockquote>
+
+<p><a name="base_accept"></a></p>
+
+<h2>Base::accept</h2>
+<blockquote>
+<p>int32_t accept(struct sockaddr_in *accept_sockaddr_in = NULL); </p>
+<p>描述：接受函数。</p>
+<p>参数：</p>
+<p>struct sockaddr_in *accept_sockaddr_in 接受的地址指针。</p>
+<p>返回：int32_t</p>
+</blockquote>
+
+<p><a name="base_bind"></a></p>
+
+<h2>Base::bind</h2>
+<blockquote>
+<p>bool bind(const char *ip = NULL); </p>
+<p>描述：绑定函数。</p>
+<p>参数：</p>
+<p>const char *ip 绑定的地址。</p>
+<p>返回：bool</p>
+<p>-----------------------------------------------------------------------</p>
+<p>bool bind(uint16_t port, const char *ip = NULL); </p>
+<p>描述：绑定函数。</p>
+<p>参数：</p>
+<p>uint16_t port 绑定的端口。</p>
+<p>const char *ip 绑定的地址。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="base_listen"></a></p>
+
+<h2>Base::listen</h2>
+<blockquote>
+<p> bool listen(uint32_t backlog); </p>
+<p>描述：接受函数。</p>
+<p>参数：</p>
+<p>uint32_t backlog 级别。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="base_select"></a></p>
+
+<h2>Base::select</h2>
+<blockquote>
+<p>static int32_t select(int32_t maxfdp,                                        
+                         fd_set *readset,                                       
+                         fd_set *writeset,                                      
+                         fd_set *exceptset,                                     
+                         timeval *timeout); </p>
+<p>描述：轮询函数。</p>
+<p>参数：</p>
+<p>int32_t maxfdp 当前最大的套接字ID。</p>
+<p>fd_set *readset 读取套接字集合指针。</p>
+<p>fd_set *writeset 写入套接字集合指针。</p>
+<p>fd_set *exceptset 异常套接字指针。</p>
+<p>struct timeval *timeout 超时时间。</p>
+<p>返回：int32_t</p>
+</blockquote>
+
+<p><a name="base_getlinger"></a></p>
+
+<h2>Base::getlinger</h2>
+<blockquote>
+<p>uint32_t getlinger() const; </p>
+<p>描述：获取linger时间函数。</p>
+<p>参数：无</p>
+<p>返回：uint32_t</p>
+</blockquote>
+
+<p><a name="base_setlinger"></a></p>
+
+<h2>Base::setlinger</h2>
+<blockquote>
+<p>bool setlinger(uint32_t lingertime); </p>
+<p>描述：设置linger时间函数。</p>
+<p>参数：无</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="base_is_reuseaddr"></a></p>
+
+<h2>Base::is_reuseaddr</h2>
+<blockquote>
+<p>bool is_reuseaddr() const; </p>
+<p>描述：获取当前地址是否重用。</p>
+<p>参数：无</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="base_set_reuseaddr"></a></p>
+
+<h2>Base::set_reuseaddr</h2>
+<blockquote>
+<p>bool set_reuseaddr(bool on = true); </p>
+<p>描述：设置当前地址是否重用。</p>
+<p>参数：</p>
+<p>bool on 开关标记。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="base_getlast_errorcode"></a></p>
+
+<h2>Base::getlast_errorcode</h2>
+<blockquote>
+<p>uint32_t getlast_errorcode() const; </p>
+<p>描述：获取最后一次的错误码。</p>
+<p>参数：无</p>
+<p>返回：uint32_t</p>
+</blockquote>
+
+<p><a name="base_getlast_errormessage"></a></p>
+
+<h2>Base::getlast_errormessage</h2>
+<blockquote>
+<p>void getlast_errormessage(char *buffer, uint16_t length) const; </p>
+<p>描述：获取最后一次的错误信息。</p>
+<p>参数：</p>
+<p>char *buffer 错误信息保存的指针。</p>
+<p>uint16_t length 保存的错误数据长度。</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="base_iserror"></a></p>
+
+<h2>Base::iserror</h2>
+<blockquote>
+<p>bool iserror() const; </p>
+<p>描述：检查当前套接字对象是否有错。</p>
+<p>参数：无</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="base_is_nonblocking"></a></p>
+
+<h2>Base::is_nonblocking</h2>
+<blockquote>
+<p>bool is_nonblocking() const; </p>
+<p>描述：检查当前套接字对象是否为非阻塞。</p>
+<p>参数：无</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="base_set_nonblocking"></a></p>
+
+<h2>Base::set_nonblocking</h2>
+<blockquote>
+<p>bool set_nonblocking(bool on = true); </p>
+<p>描述：设置当前套接字对象是否为非阻塞。</p>
+<p>参数：</p>
+<p>bool on 开关标记。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="base_getreceive_buffersize"></a></p>
+
+<h2>Base::getreceive_buffersize</h2>
+<blockquote>
+<p>uint32_t getreceive_buffersize() const; </p>
+<p>描述：获取当前套接字对象接收数据的长度。</p>
+<p>参数：无</p>
+<p>返回：uint32_t</p>
+</blockquote>
+
+<p><a name="base_setreceive_buffersize"></a></p>
+
+<h2>Base::setreceive_buffersize</h2>
+<blockquote>
+<p>bool setreceive_buffersize(uint32_t size); </p>
+<p>描述：设置当前套接字对象接收数据的长度。</p>
+<p>参数：</p>
+<p>uint32_t size 长度。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="base_getsend_buffersize"></a></p>
+
+<h2>Base::getsend_buffersize</h2>
+<blockquote>
+<p>uint32_t getsend_buffersize() const; </p>
+<p>描述：获取当前套接字对象发送数据的长度。</p>
+<p>参数：无</p>
+<p>返回：uint32_t</p>
+</blockquote>
+
+<p><a name="base_setsend_buffersize"></a></p>
+
+<h2>Base::setsend_buffersize</h2>
+<blockquote>
+<p>bool setsend_buffersize(uint32_t size); </p>
+<p>描述：设置当前套接字对象发送数据的长度。</p>
+<p>参数：</p>
+<p>uint32_t size 长度。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="base_getport"></a></p>
+
+<h2>Base::getport</h2>
+<blockquote>
+<p>uint16_t getport() const; </p>
+<p>描述：获得当前套接字对象的端口。</p>
+<p>参数：无</p>
+<p>返回：uint16_t</p>
+</blockquote>
+
+<p><a name="base_getuint64host"></a></p>
+
+<h2>Base::getuint64host</h2>
+<blockquote>
+<p>uint64_t getuint64host() const; </p>
+<p>描述：获得当前套接字对象uint64形式的地址。</p>
+<p>参数：无</p>
+<p>返回：uint64_t</p>
+</blockquote>
+
+<p><a name="base_isvalid"></a></p>
+
+<h2>Base::isvalid</h2>
+<blockquote>
+<p>bool isvalid() const; </p>
+<p>描述：当前套接字是否有效。</p>
+<p>参数：无</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="base_getid"></a></p>
+
+<h2>Base::getid</h2>
+<blockquote>
+<p>int32_t getid() const; </p>
+<p>描述：获得当前套接字的ID。</p>
+<p>参数：无</p>
+<p>返回：int32_t</p>
+</blockquote>
+
+<p><a name="server_define"></a></p>
+
+<h2>Server定义</h2>
+<pre><code>
+namespace pf_net {                                                                                             
+                                                                                                               
+namespace socket {                                                                                             
+                                                                                                               
+class PF_API Server { 
+</code></pre>
+
+<p><a name="server_close"></a></p>
+
+<h2>Server::close</h2>
+<blockquote>
+<p>void close(); </p>
+<p>描述：关闭函数。</p>
+<p>参数：无</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="server_accept"></a></p>
+
+<h2>Server::accept</h2>
+<blockquote>
+<p>bool accept(pf_net::socket::Base *socket); </p>
+<p>描述：接受函数。</p>
+<p>参数：</p>
+<p>pf_net::socket::Base *socket 套接字基础对象指针。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="server_getlinger"></a></p>
+
+<h2>Server::getlinger</h2>
+<blockquote>
+<p>uint32_t getlinger() const; </p>
+<p>描述：获得linger时间函数。</p>
+<p>参数：无</p>
+<p>返回：uint32_t</p>
+</blockquote>
+
+<p><a name="server_setlinger"></a></p>
+
+<h2>Server::setlinger</h2>
+<blockquote>
+<p>bool setlinger(uint32_t lingertime); </p>
+<p>描述：设置linger时间函数。</p>
+<p>参数：</p>
+<p>uint32_t lingertime 时间。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="server_is_nonblocking"></a></p>
+
+<h2>Server::is_nonblocking</h2>
+<blockquote>
+<p>bool is_nonblocking() const; </p>
+<p>描述：获得当前对象是否为非阻塞模式。</p>
+<p>参数：无</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="server_set_nonblocking"></a></p>
+
+<h2>Server::set_nonblocking</h2>
+<blockquote>
+<p>bool set_nonblocking(bool on = true); </p>
+<p>描述：设置当前对象是否为非阻塞模式。</p>
+<p>参数：</p>
+<p>bool on 开关。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="server_getreceive_buffersize"></a></p>
+
+<h2>Server::getreceive_buffersize</h2>
+<blockquote>
+<p>uint32_t getreceive_buffersize() const; </p>
+<p>描述：获取接收的数据长度。</p>
+<p>参数：无</p>
+<p>返回：uint32_t</p>
+</blockquote>
+
+<p><a name="server_setreceive_buffersize"></a></p>
+
+<h2>Server::setreceive_buffersize</h2>
+<blockquote>
+<p>bool setreceive_buffersize(uint32_t size); </p>
+<p>描述：设置接收的数据长度。</p>
+<p>参数：</p>
+<p>uint32_t size 长度。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="server_getsend_buffersize"></a></p>
+
+<h2>Server::getsend_buffersize</h2>
+<blockquote>
+<p>uint32_t getsend_buffersize() const; </p>
+<p>描述：获取发送的数据长度。</p>
+<p>参数：无</p>
+<p>返回：uint32_t</p>
+</blockquote>
+
+<p><a name="server_setsend_buffersize"></a></p>
+
+<h2>Server::setsend_buffersize</h2>
+<blockquote>
+<p>bool setsend_buffersize(uint32_t size); </p>
+<p>描述：设置发送的数据长度。</p>
+<p>参数：</p>
+<p>uint32_t size 长度大小。</p>
+<p>返回：uint32_t</p>
+</blockquote>
+
+<p><a name="server_getid"></a></p>
+
+<h2>Server::getid</h2>
+<blockquote>
+<p>int32_t getid() const; </p>
+<p>描述：获得当前对象的套接字ID。</p>
+<p>参数：无</p>
+<p>返回：int32_t</p>
+</blockquote>
+
+<p><a name="server_getport"></a></p>
+
+<h2>Server::getport</h2>
+<blockquote>
+<p>uint16_t getport() const; </p>
+<p>描述：获得当前对象的端口。</p>
+<p>参数：无</p>
+<p>返回：uint16_t</p>
+</blockquote>
+
+<p><a name="stream_define"></a></p>
+
+<h2>Stream定义</h2>
+<pre><code>
+namespace pf_net {                                                                                             
+                                                                                                               
+namespace socket {                                                                                             
+                                                                                                               
+class PF_API Stream { 
+</code></pre>
+
+<p><a name="stream_init"></a></p>
+
+<h2>Stream::init</h2>
+<blockquote>
+<p>void init(); </p>
+<p>描述：初始化函数。</p>
+<p>参数：无</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="stream_resize"></a></p>
+
+<h2>Stream::resize</h2>
+<blockquote>
+<p>bool resize(int32_t size); </p>
+<p>描述：重新分配数据大小函数。</p>
+<p>参数：</p>
+<p>int32_t size 大小。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="stream_reallength"></a></p>
+
+<h2>Stream::reallength</h2>
+<blockquote>
+<p>uint32_t reallength(); </p>
+<p>描述：获取当前流正确长度的函数。</p>
+<p>参数：无</p>
+<p>返回：uint32_t</p>
+</blockquote>
+
+<p><a name="stream_cleanup"></a></p>
+
+<h2>Stream::cleanup</h2>
+<blockquote>
+<p>void cleanup(); </p>
+<p>描述：清空函数。</p>
+<p>参数：无</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="stream_setkey"></a></p>
+
+<h2>Stream::setkey</h2>
+<blockquote>
+<p>void setkey(unsigned char const* key); </p>
+<p>描述：设置加密key函数。</p>
+<p>参数：</p>
+<p>unsigned char const* key 加密key。</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="stream_get_keylength"></a></p>
+
+<h2>Stream::get_keylength</h2>
+<blockquote>
+<p>int32_t get_keylength(); </p>
+<p>描述：获得加密key长度函数。</p>
+<p>参数：无</p>
+<p>返回：int32_t</p>
+</blockquote>
+
+<p><a name="stream_getsocket"></a></p>
+
+<h2>Stream::getsocket</h2>
+<blockquote>
+<p>Base *getsocket(); </p>
+<p>描述：获得当前的套接字对象指针函数。</p>
+<p>参数：无</p>
+<p>返回：Base *</p>
+</blockquote>
+
+<p><a name="inputstream_define"></a></p>
+
+<h2>InputStream定义</h2>
+<pre><code>
+namespace pf_net {                                                              
+                                                                                
+namespace socket {                                                              
+                                                                                
+class PF_API InputStream : public Stream {
+</code></pre>
+
+<p><a name="inputstream_read"></a></p>
+
+<h2>InputStream::read</h2>
+<blockquote>
+<p>uint32_t read(char *buffer, uint32_t length); </p>
+<p>描述：读取数据函数。</p>
+<p>参数：</p>
+<p>char *buffer 数据保存的指针。</p>
+<p>uint32_t length 数据保存的长度。</p>
+<p>返回：uint32_t</p>
+</blockquote>
+
+<p><a name="inputstream_readpacket"></a></p>
+
+<h2>InputStream::readpacket</h2>
+<blockquote>
+<p>bool readpacket(packet::Base *packet); </p>
+<p>描述：数据包读取函数。</p>
+<p>参数：</p>
+<p>packet::Base *packet 数据包指针。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="inputstream_peek"></a></p>
+
+<h2>InputStream::peek</h2>
+<blockquote>
+<p>bool peek(char *buffer, uint32_t length); </p>
+<p>描述：数据拆分函数。</p>
+<p>参数：</p>
+<p>char *buffer 拆分数据保存的指针。</p>
+<p>uint32_t length 拆分数据保存的长度。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="inputstream_skip"></a></p>
+
+<h2>InputStream::skip</h2>
+<blockquote>
+<p>bool skip(uint32_t length); </p>
+<p>描述：跳过一段数据函数。</p>
+<p>参数：</p>
+<p>uint32_t length 需要跳过的长度。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="inputstream_fill"></a></p>
+
+<h2>InputStream::fill</h2>
+<blockquote>
+<p>int32_t fill(); </p>
+<p>描述：数据修复函数。</p>
+<p>参数：无</p>
+<p>返回：int32_t</p>
+</blockquote>
+
+<p><a name="inputstream_read_int8"></a></p>
+
+<h2>InputStream::read_int8</h2>
+<blockquote>
+<p>int8_t read_int8(); </p>
+<p>描述：从流中读取类型为int8数据的函数。</p>
+<p>参数：无</p>
+<p>返回：int8_t</p>
+</blockquote>
+
+<p><a name="inputstream_read_uint8"></a></p>
+
+<h2>InputStream::read_uint8</h2>
+<blockquote>
+<p>uint8_t read_uint8(); </p>
+<p>描述：从流中读取类型为uint8数据的函数。</p>
+<p>参数：无</p>
+<p>返回：uint8_t</p>
+</blockquote>
+
+<p><a name="inputstream_read_int16"></a></p>
+
+<h2>InputStream::read_int16</h2>
+<blockquote>
+<p>int16_t read_int16(); </p>
+<p>描述：从流中读取类型为int16数据的函数。</p>
+<p>参数：无</p>
+<p>返回：int16_t</p>
+</blockquote>
+
+<p><a name="inputstream_read_uint16"></a></p>
+
+<h2>InputStream::read_uint16</h2>
+<blockquote>
+<p>uint16_t read_uint16(); </p>
+<p>描述：从流中读取类型为uint16数据的函数。</p>
+<p>参数：无</p>
+<p>返回：uint16_t</p>
+</blockquote>
+
+<p><a name="inputstream_read_int32"></a></p>
+
+<h2>InputStream::read_int32</h2>
+<blockquote>
+<p>int32_t read_int32(); </p>
+<p>描述：从流中读取类型为int32数据的函数。</p>
+<p>参数：无</p>
+<p>返回：int32_t</p>
+</blockquote>
+
+<p><a name="inputstream_read_uint32"></a></p>
+
+<h2>InputStream::read_uint32</h2>
+<blockquote>
+<p>uint32_t read_uint32(); </p>
+<p>描述：从流中读取类型为uint32数据的函数。</p>
+<p>参数：无</p>
+<p>返回：uint32_t</p>
+</blockquote>
+
+<p><a name="inputstream_read_int64"></a></p>
+
+<h2>InputStream::read_int64</h2>
+<blockquote>
+<p>int64_t read_int64(); </p>
+<p>描述：从流中读取类型为int64数据的函数。</p>
+<p>参数：无</p>
+<p>返回：int64_t</p>
+</blockquote>
+
+<p><a name="inputstream_read_uint64"></a></p>
+
+<h2>InputStream::read_uint64</h2>
+<blockquote>
+<p>uint64_t read_uint64(); </p>
+<p>描述：从流中读取类型为uint64数据的函数。</p>
+<p>参数：无</p>
+<p>返回：uint64_t</p>
+</blockquote>
+
+<p><a name="inputstream_read_string"></a></p>
+
+<h2>InputStream::read_string</h2>
+<blockquote>
+<p>void read_string(char *buffer, size_t size); </p>
+<p>描述：从流中读取类型为字符串数据的函数。</p>
+<p>参数：</p>
+<p>char *buffer 保存的字符串指针。</p>
+<p>size_t size 需要读取的长度（必须对应write_string，否则数据错乱）。</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="inputstream_read_float"></a></p>
+
+<h2>InputStream::read_float</h2>
+<blockquote>
+<p>float read_float(); </p>
+<p>描述：从流中读取类型为浮点数据的函数。</p>
+<p>参数：无</p>
+<p>返回：float</p>
+</blockquote>
+
+<p><a name="inputstream_read_double"></a></p>
+
+<h2>InputStream::read_double</h2>
+<blockquote>
+<p>double read_double(); </p>
+<p>描述：从流中读取类型为double数据的函数。</p>
+<p>参数：无</p>
+<p>返回：double</p>
+</blockquote>
+
+<p><a name="outputstream_define"></a></p>
+
+<h2>OutputStream定义</h2>
+<pre><code>
+namespace pf_net {                                                              
+                                                                                
+namespace socket {                                                              
+                                                                                
+class PF_API OutputStream : public Stream {
+</code></pre>
+
+<p><a name="outputstream_write"></a></p>
+
+<h2>InputStream::write</h2>
+<blockquote>
+<p>uint32_t write(const char *buffer, uint32_t length); </p>
+<p>描述：写入函数。</p>
+<p>参数：</p>
+<p>const char *buffer 写入的数据指针。</p>
+<p>uint32_t length 写入的数据长度。</p>
+<p>返回：uint32_t</p>
+</blockquote>
+
+<p><a name="outputstream_writepacket"></a></p>
+
+<h2>InputStream::writepacket</h2>
+<blockquote>
+<p>bool writepacket(const packet::Base *packet); </p>
+<p>描述：写入数据包函数。</p>
+<p>参数：</p>
+<p>const packet::Base *packet 数据包指针。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="outputstream_flush"></a></p>
+
+<h2>InputStream::flush</h2>
+<blockquote>
+<p>int32_t flush(); </p>
+<p>描述：刷新（数据发送）函数。</p>
+<p>参数：无</p>
+<p>返回：int32_t</p>
+</blockquote>
+
+<p><a name="outputstream_write_int8"></a></p>
+
+<h2>InputStream::write_int8</h2>
+<blockquote>
+<p>bool write_int8(int8_t value); </p>
+<p>描述：写入int8类型的数据函数。</p>
+<p>参数：int8_t value 数据。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="outputstream_write_uint8"></a></p>
+
+<h2>InputStream::write_uint8</h2>
+<blockquote>
+<p>bool write_uint8(uint8_t value); </p>
+<p>描述：写入uint8类型的数据函数。</p>
+<p>参数：uint8_t value 数据。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="outputstream_write_int16"></a></p>
+
+<h2>InputStream::write_int16</h2>
+<blockquote>
+<p>bool write_int16(int16_t value); </p>
+<p>描述：写入int16类型的数据函数。</p>
+<p>参数：int16_t value 数据。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="outputstream_write_uint16"></a></p>
+
+<h2>InputStream::write_uint16</h2>
+<blockquote>
+<p>bool write_uint16(uint16_t value); </p>
+<p>描述：写入uint16类型的数据函数。</p>
+<p>参数：uint16_t value 数据。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="outputstream_write_int32"></a></p>
+
+<h2>InputStream::write_int32</h2>
+<blockquote>
+<p>bool write_int32(int32_t value); </p>
+<p>描述：写入int32类型的数据函数。</p>
+<p>参数：int32_t value 数据。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="outputstream_write_uint32"></a></p>
+
+<h2>InputStream::write_uint32</h2>
+<blockquote>
+<p>bool write_uint32(uint32_t value); </p>
+<p>写入uint32类型的数据函数。</p>
+<p>参数：uint32_t value 数据。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="outputstream_write_int64"></a></p>
+
+<h2>InputStream::write_int64</h2>
+<blockquote>
+<p>bool write_int64(int64_t value); </p>
+<p>写入int64类型的数据函数。</p>
+<p>参数：int64_t value 数据。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="outputstream_write_uint64"></a></p>
+
+<h2>InputStream::write_uint64</h2>
+<blockquote>
+<p>bool write_uint64(uint64_t value); </p>
+<p>写入uint64类型的数据函数。</p>
+<p>参数：uint64_t value 数据。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="outputstream_write_string"></a></p>
+
+<h2>InputStream::write_string</h2>
+<blockquote>
+<p>bool write_string(const char *value); </p>
+<p>写入字符串类型的数据函数。</p>
+<p>参数：const char *value 数据。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="outputstream_write_float"></a></p>
+
+<h2>InputStream::write_float</h2>
+<blockquote>
+<p>bool write_float(float value); </p>
+<p>描述：写入浮点类型的数据函数。</p>
+<p>参数：float value 数据。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="outputstream_write_dobule"></a></p>
+
+<h2>InputStream::write_dobule</h2>
+<blockquote>
+<p>bool write_dobule(dobule value); </p>
+<p>描述：写入dobule类型的数据函数。</p>
+<p>参数：dobule value 数据。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<nav>
+	<a href="net.packet.htm">包</a> |
+	<a href="net.manager.htm">管理器 </a>
+</nav>
+<footer>
+    <p><a href="#">Dayle Rees</a>.</p>
+</footer>
+            
+            
+</section>
+  <div class="clearfix"></div>
+</div>
+
+        <script src="../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="../js/vendor/jquery-1.8.2.min.js"><\/script>')</script>
+        <script src="../../checkout.stripe.com/v2/checkout.js"></script>
+        <script src="../js/vendor/prettify.js"></script>
+        <script src="../js/plugins.js"></script>
+        <script src="../js/main.js"></script>
+
+        <script type="text/javascript">
+
+          var _gaq = _gaq || [];
+          _gaq.push(['_setAccount', 'UA-37898177-1']);
+          _gaq.push(['_trackPageview']);
+
+          (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www/') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+          })();
+
+        </script>
+    </body>
+</html>

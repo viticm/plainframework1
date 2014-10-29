@@ -8,7 +8,6 @@
  * @date 2014/06/18 13:41
  * @uses your description
  */
-#include "pf/base/config.h"
 
 PF_API void baseio_perror(const char *format, ...);
 PF_API void baseio_pwarn(const char *format, ...);

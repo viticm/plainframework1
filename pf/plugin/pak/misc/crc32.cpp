@@ -65,7 +65,7 @@ void CRC32_Update(crc32_context * ctx, unsigned char * input, int ilen)
     ctx->value = value;
 }
 
-void CRC32_Finish(crc32_context * ctx, unsigned long * value)
+void CRC32_Finish(crc32_context * ctx, uint64_t * value)
 {
     *value = ctx->value ^ 0xFFFFFFFF;
 }

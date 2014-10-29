@@ -25,7 +25,10 @@ void Thread::start() {
   __ENTER_FUNCTION
     if (status_ != kReady) return;
 #if __LINUX__
-    int32_t result = pthread_create(&id_, NULL, ps_thread_process, this);
+    int32_t result = pthread_create(reinterpret_cast<pthread_t *>(&id_), 
+                                    NULL, 
+                                    ps_thread_process, 
+                                    this);
     if (result != 0) {
       char msg[32] = {0};
       snprintf(msg, 
@@ -91,11 +94,11 @@ DWORD Thread::get_id() {
   return id_;
 }
 
-Thread::enum_thread_status Thread::get_status() {
+Thread::status_t Thread::get_status() {
   return status_;
 }
 
-void Thread::set_status(enum_thread_status status) {
+void Thread::set_status(status_t status) {
   __ENTER_FUNCTION
     status_ = status;
   __LEAVE_FUNCTION

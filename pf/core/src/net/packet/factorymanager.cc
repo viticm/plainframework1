@@ -94,7 +94,7 @@ void FactoryManager::set_function_isvalid_packetid(
   function_isvalid_packetid_ = function;
 }
 
-Base* FactoryManager::createpacket(uint16_t packetid) {
+Base *FactoryManager::createpacket(uint16_t packetid) {
   __ENTER_FUNCTION
     bool isfind = idindexs_.isfind(packetid);
     uint16_t index = idindexs_.get(packetid);

@@ -560,7 +560,7 @@ bool get_process_page_info(process_page_info_t &process_page_info) {
     if (NULL == linep) return false;
 
     return (sscanf(line,
-                   "%ld%ld%ld%ld%ld%ld",
+                   "%"PRIu64"%"PRIu64"%"PRIu64"%"PRIu64"%"PRIu64"%"PRIu64"",
                    &process_page_info.size,
                    &process_page_info.resident,
                    &process_page_info.share,
@@ -630,10 +630,10 @@ bool do_get_net_info_array(const char *interface_name,
       net_info_t net_info;
       if (sscanf(line_p,
               "%s"
-               "%lu%lu%lu%lu%lu"
-               "%lu%lu%lu%lu%lu"
-               "%lu%lu%lu%lu%lu"
-               "%lu", 
+               "%"PRIu64"%"PRIu64"%"PRIu64"%"PRIu64"%"PRIu64""
+               "%"PRIu64"%"PRIu64"%"PRIu64"%"PRIu64"%"PRIu64""
+               "%"PRIu64"%"PRIu64"%"PRIu64"%"PRIu64"%"PRIu64""
+               "%"PRIu64"", 
                net_info.interface_name,
                &net_info.receive_bytes,
                &net_info.receive_packets,

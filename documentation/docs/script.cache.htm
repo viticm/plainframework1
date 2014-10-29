@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset=UTF-8"utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>简约框架参考手册</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" href="../css/style.css">
+        <script src="../js/vendor/modernizr-2.6.2.min.js"></script>
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="#">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+
+        <div class="wrapper">
+            <header>
+                <h1>简约框架参考手册</h1>
+            </header>
+            <aside class="sidebar">
+<ul>
+<li>入门指引
+
+<ul>
+<li><a href="../index.htm">简介</a></li>
+<li><a href="simpletutorials.htm">简明教程</a></li>
+<li><a href="style-guide.htm">代码风格</a></li>
+<li><a href="module.htm">模块</a></li>
+<li><a href="license.htm">许可</a></li>
+</ul></li>
+
+<li>基础模块
+<ul>
+<li><a href="base.macro.htm">宏</a></li>
+<li><a href="base.global.htm">全局变量</a></li>
+<li><a href="base.log.htm">日志</a></li>
+<li><a href="base.string.htm">字符串</a></li>
+<li><a href="base.hashmap.htm">hash map</a></li>
+<li><a href="base.timemanager.htm">时间管理器</a></li>
+<li><a href="base.tinytimer.htm">小型定时器</a></li>
+<li><a href="base.util.htm">工具集</a></li>
+</ul></li>
+
+<li>数据库模块
+<ul>
+<li><a href="db.manager.htm">管理器</a></li>
+<li><a href="db.odbc.htm">ODBC</a></li>
+</ul></li>
+
+<li>引擎模块
+<ul>
+<li><a href="engine.kernel.htm">核心</a></li>
+<li><a href="engine.thread.htm">线程</a></li>
+</ul></li>
+
+<li>事件模块
+<ul>
+<li><a href="event.manager.htm">管理器</a></li>
+</ul></li>
+
+<li>文件模块
+<ul>
+<li><a href="file.api.htm">系统API</a></li>
+<li><a href="file.database.htm">文件数据库</a></li>
+<li><a href="file.ini.htm">ini文件</a></li>
+</ul></li>
+
+<li>网络模块
+<ul>
+<li><a href="net.connection.htm">连接</a></li>
+<li><a href="net.packet.htm">包</a></li>
+<li><a href="net.socket.htm">套接字</a></li>
+<li><a href="net.manager.htm">管理器</a></li>
+</ul></li>
+
+<li>性能模块
+<ul>
+<li><a href="performance.eyes.htm">监视器</a></li>
+</ul></li>
+
+<li>脚本模块
+<ul>
+<li><a href="script.cache.htm">缓存</a></li>
+<li><a href="script.lua.htm">lua</a></li>
+</ul></li>
+
+<li>系统模块
+<ul>
+<li><a href="sys.memory.htm">内存</a></li>
+<li><a href="sys.info.htm">系统信息</a></li>
+<li><a href="sys.process.htm">进程</a></li>
+<li><a href="sys.thread.htm">线程</a></li>
+<li><a href="sys.util.htm">工具集</a></li>
+</ul></li>
+
+<li>工具模块
+<ul>
+<li><a href="util.compressor.htm">压缩模块</a></li>
+</ul></li>
+
+</ul>
+</aside>
+
+<section class="content">
+
+<h1>script module cache</h1>
+
+<ul>
+<li><a href="#total">总述</a></li>
+<li><a href="#base_define">Base定义</a></li>
+<li><a href="#base_init">Base::init</a></li>
+<li><a href="#base_clear">Base::clear</a></li>
+<li><a href="#base_getid">Base::getid</a></li>
+<li><a href="#base_get_filename">Base::get_filename</a></li>
+<li><a href="#manager_define">Manager定义</a></li>
+<li><a href="#manager_getsingleton_pointer">Manager::getsingleton_pointer</a></li>
+<li><a href="#manager_getsingleton">Manager::getsingleton</a></li>
+<li><a href="#manager_init">Manager::init</a></li>
+<li><a href="#manager_clear">Manager::clear</a></li>
+<li><a href="#manager_get_filedata">Manager::get_filedata</a></li>
+<li><a href="#manager_get_const_filedata">Manager::get_const_filedata</a></li>
+<li><a href="#manager_getcount">Manager::getcount</a></li>
+<li><a href="#manager_get_filedata_byindex">Manager::get_filedata_byindex</a></li>
+<li><a href="#manager_isinit">Manager::isinit</a></li>
+</ul>
+
+<p><a name="total"></a></p>
+
+<h2>总述</h2>
+
+<p>脚本缓存模块提供了脚本文件的缓存数据操作的接口，方便脚本运行时无需重新加载文件数据。</p>
+
+<p><a name="base_define"></a></p>
+
+<h2>Base定义</h2>
+<pre><code>
+namespace pf_script {                                                                                          
+                                                                                                               
+namespace cache {                                                                                              
+                                                                                                               
+class PF_API Base {
+</code></pre>
+
+<p><a name="base_init"></a></p>
+
+<h2>Base::init</h2>
+<blockquote>
+<p>virtual bool init(int32_t id, const char *filename, FILE *fp); </p>
+<p>描述：初始化函数。</p>
+<p>参数：</p>
+<p>int32_t id ID。</p>
+<p>const char *filename 文件名。</p>
+<p>FILE *fp 文件指针。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="base_clear"></a></p>
+
+<h2>Base::clear</h2>
+<blockquote>
+<p>virtual void clear(); </p>
+<p>描述：清理函数。</p>
+<p>参数：无</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="base_getid"></a></p>
+
+<h2>Base::getid</h2>
+<blockquote>
+<p>int32_t getid() const; </p>
+<p>描述：获得ID。</p>
+<p>参数：无</p>
+<p>返回：int32_t</p>
+</blockquote>
+
+<p><a name="base_get_filename"></a></p>
+
+<h2>Base::get_filename</h2>
+<blockquote>
+<p>const char *get_filename() const; </p>
+<p>描述：获得文件名。</p>
+<p>参数：无</p>
+<p>返回：const char *</p>
+</blockquote>
+
+<p><a name="manager_define"></a></p>
+
+<h2>Manager定义</h2>
+<pre><code>
+namespace pf_script {                                                           
+                                                                                
+namespace cache {                                                               
+                                                                                
+class PF_API Manager : public pf_base::Singleton< Manager> {
+</code></pre>
+
+<p><a name="manager_getsingleton_pointer"></a></p>
+
+<h2>Manager::getsingleton_pointer</h2>
+<blockquote>
+<p>static Manager *getsingleton_pointer(); </p>
+<p>描述：获得单例管理器对象指针。</p>
+<p>参数：无</p>
+<p>返回：Manager *</p>
+</blockquote>
+
+<p><a name="manager_getsingleton"></a></p>
+
+<h2>Manager::getsingleton</h2>
+<blockquote>
+<p>static Manager &getsingleton(); </p>
+<p>描述：获得单例管理器对象。</p>
+<p>参数：无</p>
+<p>返回：Manager &</p>
+</blockquote>
+
+<p><a name="manager_init"></a></p>
+
+<h2>Manager::init</h2>
+<blockquote>
+<p>bool init(const char *filename, bool force_arraymode); </p>
+<p>描述：初始化函数。</p>
+<p>参数：</p>
+<p>const char *filename 文件名。</p>
+<p>bool force_arraymode 数组模式（废弃）。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="manager_clear"></a></p>
+
+<h2>Manager::clear</h2>
+<blockquote>
+<p>void clear(); </p>
+<p>描述：数据清空函数。</p>
+<p>参数：无</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="manager_get_filedata"></a></p>
+
+<h2>Manager::get_filedata</h2>
+<blockquote>
+<p>Base *get_filedata(uint32_t id); </p>
+<p>描述：获得文件数据函数。</p>
+<p>参数：</p>
+<p>uint32_t id ID。</p>
+<p>返回：Base *</p>
+</blockquote>
+
+<p><a name="manager_get_const_filedata"></a></p>
+
+<h2>Manager::get_const_filedata</h2>
+<blockquote>
+<p>const Base *get_const_filedata(uint32_t id) const; </p>
+<p>描述：获得文件数据常量函数。</p>
+<p>参数：</p>
+<p>uint32_t id ID。</p>
+<p>返回：const Base *</p>
+</blockquote>
+
+<p><a name="manager_getcount"></a></p>
+
+<h2>Manager::getcount</h2>
+<blockquote>
+<p>int32_t getcount() const; </p>
+<p>描述：获得文件数量函数。</p>
+<p>参数：无</p>
+<p>返回：int32_t</p>
+</blockquote>
+
+<p><a name="manager_get_filedata_byindex"></a></p>
+
+<h2>Manager::get_filedata_byindex</h2>
+<blockquote>
+<p>Base *get_filedata_byindex(int32_t index); </p>
+<p>描述：获得文件数据函数。</p>
+<p>参数：</p>
+<p>int32_t index 索引。</p>
+<p>返回：Base *</p>
+</blockquote>
+
+<p><a name="manager_isinit"></a></p>
+
+<h2>Manager::isinit</h2>
+<blockquote>
+<p>bool isinit() const; </p>
+<p>描述：管理器是否初始化。</p>
+<p>参数：无</p>
+<p>返回：bool</p>
+</blockquote>
+
+<nav>
+	<a href="script.lua.htm">lua </a>
+</nav>
+<footer>
+    <p><a href="#">Dayle Rees</a>.</p>
+</footer>
+            
+            
+</section>
+  <div class="clearfix"></div>
+</div>
+
+        <script src="../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="../js/vendor/jquery-1.8.2.min.js"><\/script>')</script>
+        <script src="../../checkout.stripe.com/v2/checkout.js"></script>
+        <script src="../js/vendor/prettify.js"></script>
+        <script src="../js/plugins.js"></script>
+        <script src="../js/main.js"></script>
+
+        <script type="text/javascript">
+
+          var _gaq = _gaq || [];
+          _gaq.push(['_setAccount', 'UA-37898177-1']);
+          _gaq.push(['_trackPageview']);
+
+          (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www/') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+          })();
+
+        </script>
+    </body>
+</html>

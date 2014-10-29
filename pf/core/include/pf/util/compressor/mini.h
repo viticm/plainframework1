@@ -48,7 +48,7 @@ class PF_API Mini {
    bool compress(const unsigned char *in,
                  uint32_t insize,
                  unsigned char *out,
-                 uint64_t& outsize);
+                 uint64_t &outsize);
    bool compress_andescape(const unsigned char *in,
                            uint32_t insize,
                            unsigned char *out,

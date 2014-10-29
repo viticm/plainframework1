@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset=UTF-8"utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>简约框架参考手册</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" href="../css/style.css">
+        <script src="../js/vendor/modernizr-2.6.2.min.js"></script>
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="#">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+
+        <div class="wrapper">
+            <header>
+                <h1>简约框架参考手册</h1>
+            </header>
+            <aside class="sidebar">
+<ul>
+<li>入门指引
+
+<ul>
+<li><a href="../index.htm">简介</a></li>
+<li><a href="simpletutorials.htm">简明教程</a></li>
+<li><a href="style-guide.htm">代码风格</a></li>
+<li><a href="module.htm">模块</a></li>
+<li><a href="license.htm">许可</a></li>
+</ul></li>
+
+<li>基础模块
+<ul>
+<li><a href="base.macro.htm">宏</a></li>
+<li><a href="base.global.htm">全局变量</a></li>
+<li><a href="base.log.htm">日志</a></li>
+<li><a href="base.string.htm">字符串</a></li>
+<li><a href="base.hashmap.htm">hash map</a></li>
+<li><a href="base.timemanager.htm">时间管理器</a></li>
+<li><a href="base.tinytimer.htm">小型定时器</a></li>
+<li><a href="base.util.htm">工具集</a></li>
+</ul></li>
+
+<li>数据库模块
+<ul>
+<li><a href="db.manager.htm">管理器</a></li>
+<li><a href="db.odbc.htm">ODBC</a></li>
+</ul></li>
+
+<li>引擎模块
+<ul>
+<li><a href="engine.kernel.htm">核心</a></li>
+<li><a href="engine.thread.htm">线程</a></li>
+</ul></li>
+
+<li>事件模块
+<ul>
+<li><a href="event.manager.htm">管理器</a></li>
+</ul></li>
+
+<li>文件模块
+<ul>
+<li><a href="file.api.htm">系统API</a></li>
+<li><a href="file.database.htm">文件数据库</a></li>
+<li><a href="file.ini.htm">ini文件</a></li>
+</ul></li>
+
+<li>网络模块
+<ul>
+<li><a href="net.connection.htm">连接</a></li>
+<li><a href="net.packet.htm">包</a></li>
+<li><a href="net.socket.htm">套接字</a></li>
+<li><a href="net.manager.htm">管理器</a></li>
+</ul></li>
+
+<li>性能模块
+<ul>
+<li><a href="performance.eyes.htm">监视器</a></li>
+</ul></li>
+
+<li>脚本模块
+<ul>
+<li><a href="script.cache.htm">缓存</a></li>
+<li><a href="script.lua.htm">lua</a></li>
+</ul></li>
+
+<li>系统模块
+<ul>
+<li><a href="sys.memory.htm">内存</a></li>
+<li><a href="sys.info.htm">系统信息</a></li>
+<li><a href="sys.process.htm">进程</a></li>
+<li><a href="sys.thread.htm">线程</a></li>
+<li><a href="sys.util.htm">工具集</a></li>
+</ul></li>
+
+<li>工具模块
+<ul>
+<li><a href="util.compressor.htm">压缩模块</a></li>
+</ul></li>
+
+</ul>
+</aside>
+
+<section class="content">
+
+<h1>net module packet</h1>
+
+<ul>
+<li><a href="#total">总述</a></li>
+<li><a href="#base_define">Base定义</a></li>
+<li><a href="#base_cleanup">Base::cleanup</a></li>
+<li><a href="#base_read">Base::read</a></li>
+<li><a href="#base_write">Base::write</a></li>
+<li><a href="#base_execute">Base::execute</a></li>
+<li><a href="#base_getid">Base::getid</a></li>
+<li><a href="#base_getsize">Base::getsize</a></li>
+<li><a href="#base_getindex">Base::getindex</a></li>
+<li><a href="#base_getstatus">Base::getstatus</a></li>
+<li><a href="#base_setstatus">Base::setstatus</a></li>
+<li><a href="#factory_define">Factory定义</a></li>
+<li><a href="#factory_createpacket">Factory::createpacket</a></li>
+<li><a href="#factory_get_packetid">Factory::get_packetid</a></li>
+<li><a href="#factory_get_packet_maxsize">Factory::get_packet_maxsize</a></li>
+<li><a href="#factory_manager_define">FactoryManager定义</a></li>
+<li><a href="#factory_manager_getsingleton">FactoryManager::getsingleton</a></li>
+<li><a href="#factory_manager_getsingleton_pointer">FactoryManager::getsingleton_pointer</a></li>
+<li><a href="#factory_manager_init">FactoryManager::init</a></li>
+<li><a href="#factory_manager_createpacket">FactoryManager::createpacket</a></li>
+<li><a href="#factory_manager_getpacket_maxsize">FactoryManager::getpacket_maxsize</a></li>
+<li><a href="#factory_manager_lock">FactoryManager::lock</a></li>
+<li><a href="#factory_manager_unlock">FactoryManager::unlock</a></li>
+<li><a href="#factory_manager_isvalid_packetid">FactoryManager::isvalid_packetid</a></li>
+<li><a href="#factory_manager_setsize">FactoryManager::setsize</a></li>
+<li><a href="#factory_manager_getsize">FactoryManager::getsize</a></li>
+<li><a href="#factory_manager_addfactory">FactoryManager::addfactory</a></li>
+<li><a href="#factory_manager_set_function_registerfactories">FactoryManager::set_function_registerfactories</a></li>
+<li><a href="#factory_manager_set_function_isvalid_packetid">FactoryManager::set_function_isvalid_packetid</a></li>
+<li><a href="#factory_manager_isinit">FactoryManager::isinit</a></li>
+</ul>
+
+<p><a name="total"></a></p>
+
+<h2>总述</h2>
+
+<p>网络包即是一种特定结构的数据，该模块提供了包的基本读取操作，以及工厂的基础接口。</p>
+
+<p><a name="base_define"></a></p>
+
+<h2>Base定义</h2>
+<pre><code>
+namespace pf_net {                                                                 
+                                                                                   
+namespace packet {                                                                 
+                                                                                   
+class PF_API Base { 
+</code></pre>
+
+<p><a name="base_cleanup"></a></p>
+
+<h2>Base::cleanup</h2>
+<blockquote>
+<p>virtual void cleanup(); </p>
+<p>描述：网络包清空。</p>
+<p>参数：无</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="base_read"></a></p>
+
+<h2>Base::read</h2>
+<blockquote>
+<p>virtual bool read(socket::InputStream &inputstream) = 0; </p>
+<p>描述：网络包读取函数，从套接字对象中读取到包中（纯虚函数，子类中实现）。</p>
+<p>参数：</p>
+<p>socket::InputStream &inputstream 套接字输入流对象。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="base_write"></a></p>
+
+<h2>Base::write</h2>
+<blockquote>
+<p>virtual bool write(socket::OutputStream &outputstream) const = 0; </p>
+<p>描述：网络包写入函数，向套接字对象写入数据（纯虚函数，子类中实现）。</p>
+<p>参数：</p>
+<p>socket::OutputStream &outputstream 套接字输出流对象。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="base_execute"></a></p>
+
+<h2>Base::execute</h2>
+<blockquote>
+<p>virtual uint32_t execute(connection::Base *connection) = 0; </p>
+<p>描述：网络包执行函数（纯虚函数，子类中实现）。</p>
+<p>参数：</p>
+<p>connection::Base *connection 网络连接指针。</p>
+<p>返回：uint32_t</p>
+</blockquote>
+
+<p><a name="base_getid"></a></p>
+
+<h2>Base::getid</h2>
+<blockquote>
+<p>virtual uint16_t getid() const = 0; </p>
+<p>描述：获得包ID（纯虚函数，子类中实现）。</p>
+<p>参数：无</p>
+<p>返回：uint16_t</p>
+</blockquote>
+
+<p><a name="base_getsize"></a></p>
+
+<h2>Base::getsize</h2>
+<blockquote>
+<p>virtual uint32_t getsize() const = 0; </p>
+<p>描述：获得包长度大小（纯虚函数，子类中实现）。</p>
+<p>参数：无</p>
+<p>返回：uint32_t</p>
+</blockquote>
+
+<p><a name="base_getindex"></a></p>
+
+<h2>Base::getindex</h2>
+<blockquote>
+<p>int8_t getindex() const; </p>
+<p>描述：获得包的索引。</p>
+<p>参数：无</p>
+<p>返回：int8_t</p>
+</blockquote>
+
+<p><a name="base_setindex"></a></p>
+
+<h2>Base::setindex</h2>
+<blockquote>
+<p>void setindex(int8_t index); </p>
+<p>描述：获得包的索引。</p>
+<p>参数：</p>
+<p>int8_t index 索引值。</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="base_getstatus"></a></p>
+
+<h2>Base::getstatus</h2>
+<blockquote>
+<p>uint8_t getstatus() const; </p>
+<p>描述：获得包的状态。</p>
+<p>参数：无</p>
+<p>返回：uint8_t</p>
+</blockquote>
+
+<p><a name="base_setstatus"></a></p>
+
+<h2>Base::setstatus</h2>
+<blockquote>
+<p>void setstatus(uint8_t status); </p>
+<p>描述：设置包的状态。</p>
+<p>参数：</p>
+<p>uint8_t status 状态。</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="factory_define"></a></p>
+
+<h2>Factory定义</h2>
+<pre><code>
+namespace pf_net {                                                                                             
+                                                                                                               
+namespace packet {                                                                                             
+                                                                                                               
+class PF_API Factory {  
+</code></pre>
+
+<p><a name="base_createpacket"></a></p>
+
+<h2>Base::createpacket</h2>
+<blockquote>
+<p>virtual Base *createpacket() = 0; </p>
+<p>描述：创建包（纯虚函数，子类实现）。</p>
+<p>参数：无</p>
+<p>返回：Base *</p>
+</blockquote>
+
+<p><a name="base_get_packetid"></a></p>
+
+<h2>Base::get_packetid</h2>
+<blockquote>
+<p>virtual uint16_t get_packetid() const = 0; </p>
+<p>描述：获取网络包ID（纯虚函数，子类实现）。</p>
+<p>参数：无</p>
+<p>返回：uint16_t</p>
+</blockquote>
+
+<p><a name="base_get_packet_maxsize"></a></p>
+
+<h2>Base::get_packet_maxsize</h2>
+<blockquote>
+<p>virtual uint32_t get_packet_maxsize() const = 0; </p>
+<p>描述：获取网络包最大大小（纯虚函数，子类实现）。</p>
+<p>参数：无</p>
+<p>返回：uint32_t</p>
+</blockquote>
+
+<p><a name="factory_manager_define"></a></p>
+
+<h2>FactoryManager定义</h2>
+<pre><code>
+namespace pf_net {                                                              
+                                                                                
+namespace packet {                                                              
+                                                                                
+typedef bool (__stdcall *function_registerfactories)();                         
+typedef bool (__stdcall *function_isvalid_packetid)(uint16_t id);               
+                                                                                
+class PF_API FactoryManager : public pf_base::Singleton< FactoryManager> { 
+</code></pre>
+
+<p><a name="factory_manager_getsingleton"></a></p>
+
+<h2>FactoryManager::getsingleton</h2>
+<blockquote>
+<p>static FactoryManager &getsingleton(); </p>
+<p>描述：获取单例网络包工厂管理器对象。</p>
+<p>参数：无</p>
+<p>返回：FactoryManager &</p>
+</blockquote>
+
+<p><a name="factory_manager_getsingleton_pointer"></a></p>
+
+<h2>FactoryManager::getsingleton_pointer</h2>
+<blockquote>
+<p>static FactoryManager *getsingleton_pointer(); </p>
+<p>描述：获取单例网络包工厂管理器对象指针。</p>
+<p>参数：无</p>
+<p>返回：FactoryManager *</p>
+</blockquote>
+
+<p><a name="factory_manager_createpacket"></a></p>
+
+<h2>FactoryManager::createpacket</h2>
+<blockquote>
+<p>Base *createpacket(uint16_t pakcetid); </p>
+<p>描述：根据消息类型从内存里分配消息实体数据。</p>
+<p>参数：</p>
+<p>uint16_t pakcetid 包ID。</p>
+<p>返回：Base *</p>
+</blockquote>
+
+<p><a name="factory_manager_getpacket_maxsize"></a></p>
+
+<h2>FactoryManager::getpacket_maxsize</h2>
+<blockquote>
+<p>uint32_t getpacket_maxsize(uint16_t packetid); </p>
+<p>描述：据消息类型取得对应消息的最大尺寸。</p>
+<p>参数：</p>
+<p>uint16_t pakcetid 包ID。</p>
+<p>返回：uint32_t</p>
+</blockquote>
+
+<p><a name="factory_manager_removepacket"></a></p>
+
+<h2>FactoryManager::removepacket</h2>
+<blockquote>
+<p>void removepacket(Base *packet); </p>
+<p>描述：删除消息实体。</p>
+<p>参数：</p>
+<p>Base *packet 包对象指针。</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="factory_manager_lock"></a></p>
+
+<h2>FactoryManager::lock</h2>
+<blockquote>
+<p>void lock(); </p>
+<p>描述：锁住（线程）。</p>
+<p>参数：无</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="factory_manager_unlock"></a></p>
+
+<h2>FactoryManager::unlock</h2>
+<blockquote>
+<p>void unlock(); </p>
+<p>描述：释放（线程）。</p>
+<p>参数：无</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="factory_manager_isvalid_packetid"></a></p>
+
+<h2>FactoryManager::isvalid_packetid</h2>
+<blockquote>
+<p>bool isvalid_packetid(uint16_t id); </p>
+<p>描述：网络包ID是否有效。</p>
+<p>参数：</p>
+<p>uint16_t id 包ID。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="factory_manager_setsize"></a></p>
+
+<h2>FactoryManager::setsize</h2>
+<blockquote>
+<p>void setsize(uint16_t size); </p>
+<p>描述：设置网络包工厂管理器大小。</p>
+<p>参数：</p>
+<p>uint16_t size 大小。</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="factory_manager_getsize"></a></p>
+
+<h2>FactoryManager::getsize</h2>
+<blockquote>
+<p>uint16_t getsize() const; </p>
+<p>描述：获得网络包工厂管理器当前的大小。</p>
+<p>参数：无</p>
+<p>返回：uint16_t</p>
+</blockquote>
+
+<p><a name="factory_manager_addfactory"></a></p>
+
+<h2>FactoryManager::addfactory</h2>
+<blockquote>
+<p>void addfactory(Factory *factory); </p>
+<p>描述：增加网络包工厂到管理器中。</p>
+<p>参数：</p>
+<p>Factory *factory 网络包工厂指针。</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="factory_manager_set_function_registerfactories"></a></p>
+
+<h2>FactoryManager::set_function_registerfactories</h2>
+<blockquote>
+<p>void set_function_registerfactories(function_registerfactories function); </p>
+<p>描述：设置注册网络包工厂方法。</p>
+<p>参数：</p>
+<p>function_registerfactories function 注册网络包工厂方法指针。</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="factory_manager_set_function_isvalid_packetid"></a></p>
+
+<h2>FactoryManager::set_function_isvalid_packetid</h2>
+<blockquote>
+<p>void set_function_isvalid_packetid(function_isvalid_packetid function); </p>
+<p>描述：设置网络包ID是否有效方法。</p>
+<p>参数：</p>
+<p>function_isvalid_packetid function 网络包ID是否有效方法指针。</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="factory_manager_isinit"></a></p>
+
+<h2>FactoryManager::isinit</h2>
+<blockquote>
+<p>bool isinit() const; </p>
+<p>描述：网络包工厂管理器是否初始化。</p>
+<p>参数：无</p>
+<p>返回：bool</p>
+</blockquote>
+
+<nav>
+	<a href="net.connection.htm">连接</a> |
+	<a href="net.socket.htm">套接字 </a>
+</nav>
+<footer>
+    <p><a href="#">Dayle Rees</a>.</p>
+</footer>
+            
+            
+</section>
+  <div class="clearfix"></div>
+</div>
+
+        <script src="../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="../js/vendor/jquery-1.8.2.min.js"><\/script>')</script>
+        <script src="../../checkout.stripe.com/v2/checkout.js"></script>
+        <script src="../js/vendor/prettify.js"></script>
+        <script src="../js/plugins.js"></script>
+        <script src="../js/main.js"></script>
+
+        <script type="text/javascript">
+
+          var _gaq = _gaq || [];
+          _gaq.push(['_setAccount', 'UA-37898177-1']);
+          _gaq.push(['_trackPageview']);
+
+          (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www/') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+          })();
+
+        </script>
+    </body>
+</html>

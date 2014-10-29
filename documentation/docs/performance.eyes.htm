@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset=UTF-8"utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>简约框架参考手册</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" href="../css/style.css">
+        <script src="../js/vendor/modernizr-2.6.2.min.js"></script>
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="#">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+
+        <div class="wrapper">
+            <header>
+                <h1>简约框架参考手册</h1>
+            </header>
+            <aside class="sidebar">
+<ul>
+<li>入门指引
+
+<ul>
+<li><a href="../index.htm">简介</a></li>
+<li><a href="simpletutorials.htm">简明教程</a></li>
+<li><a href="style-guide.htm">代码风格</a></li>
+<li><a href="module.htm">模块</a></li>
+<li><a href="license.htm">许可</a></li>
+</ul></li>
+
+<li>基础模块
+<ul>
+<li><a href="base.macro.htm">宏</a></li>
+<li><a href="base.global.htm">全局变量</a></li>
+<li><a href="base.log.htm">日志</a></li>
+<li><a href="base.string.htm">字符串</a></li>
+<li><a href="base.hashmap.htm">hash map</a></li>
+<li><a href="base.timemanager.htm">时间管理器</a></li>
+<li><a href="base.tinytimer.htm">小型定时器</a></li>
+<li><a href="base.util.htm">工具集</a></li>
+</ul></li>
+
+<li>数据库模块
+<ul>
+<li><a href="db.manager.htm">管理器</a></li>
+<li><a href="db.odbc.htm">ODBC</a></li>
+</ul></li>
+
+<li>引擎模块
+<ul>
+<li><a href="engine.kernel.htm">核心</a></li>
+<li><a href="engine.thread.htm">线程</a></li>
+</ul></li>
+
+<li>事件模块
+<ul>
+<li><a href="event.manager.htm">管理器</a></li>
+</ul></li>
+
+<li>文件模块
+<ul>
+<li><a href="file.api.htm">系统API</a></li>
+<li><a href="file.database.htm">文件数据库</a></li>
+<li><a href="file.ini.htm">ini文件</a></li>
+</ul></li>
+
+<li>网络模块
+<ul>
+<li><a href="net.connection.htm">连接</a></li>
+<li><a href="net.packet.htm">包</a></li>
+<li><a href="net.socket.htm">套接字</a></li>
+<li><a href="net.manager.htm">管理器</a></li>
+</ul></li>
+
+<li>性能模块
+<ul>
+<li><a href="performance.eyes.htm">监视器</a></li>
+</ul></li>
+
+<li>脚本模块
+<ul>
+<li><a href="script.cache.htm">缓存</a></li>
+<li><a href="script.lua.htm">lua</a></li>
+</ul></li>
+
+<li>系统模块
+<ul>
+<li><a href="sys.memory.htm">内存</a></li>
+<li><a href="sys.info.htm">系统信息</a></li>
+<li><a href="sys.process.htm">进程</a></li>
+<li><a href="sys.thread.htm">线程</a></li>
+<li><a href="sys.util.htm">工具集</a></li>
+</ul></li>
+
+<li>工具模块
+<ul>
+<li><a href="util.compressor.htm">压缩模块</a></li>
+</ul></li>
+
+</ul>
+</aside>
+
+<section class="content">
+
+<h1>performance module eyes</h1>
+
+<ul>
+<li><a href="#total">总述</a></li>
+<li><a href="#define">定义</a></li>
+<li><a href="#getsingleton_pointer">::getsingleton_pointer</a></li>
+<li><a href="#getsingleton">::getsingleton</a></li>
+<li><a href="#printinfo">::printinfo</a></li>
+<li><a href="#activate">::activate</a></li>
+<li><a href="#tick_forFPS">::tick_forFPS</a></li>
+<li><a href="#get_onlinecount">::get_onlinecount</a></li>
+<li><a href="#get_connectioncount">::get_connectioncount</a></li>
+<li><a href="#get_uptraffic">::get_uptraffic</a></li>
+<li><a href="#get_downtraffic">::get_downtraffic</a></li>
+<li><a href="#get_downtraffic">::get_downtraffic</a></li>
+<li><a href="#set_sendbytes">::set_sendbytes</a></li>
+<li><a href="#set_receivebytes">::set_receivebytes</a></li>
+<li><a href="#set_printinfo_interval">::set_printinfo_interval</a></li>
+<li><a href="#set_onlinecount">::set_onlinecount</a></li>
+<li><a href="#set_connectioncount">::set_connectioncount</a></li>
+<li><a href="#set_fps">::set_fps</a></li>
+</ul>
+
+<p><a name="total"></a></p>
+
+<h2>总述</h2>
+
+<p>性能监视器提供了常用的获取各种性能参数的接口。</p>
+
+<p><a name="define"></a></p>
+
+<h2>定义</h2>
+<pre><code>
+namespace pf_performance {                                                      
+                                                                                
+class PF_API Eyes : public pf_base::Singleton< Eyes> {
+</code></pre>
+
+<p><a name="getsingleton_pointer"></a></p>
+
+<h2>::getsingleton_pointer</h2>
+<blockquote>
+<p>static Eyes *getsingleton_pointer(); </p>
+<p>描述：获得监视器单例指针。</p>
+<p>参数：无</p>
+<p>返回：Eyes *</p>
+</blockquote>
+
+<p><a name="getsingleton"></a></p>
+
+<h2>::getsingleton</h2>
+<blockquote>
+<p>static Eyes &getsingleton(); </p>
+<p>描述：获得监视器单例对象。</p>
+<p>参数：无</p>
+<p>返回：Eyes &</p>
+</blockquote>
+
+<p><a name="printinfo"></a></p>
+
+<h2>::printinfo</h2>
+<blockquote>
+<p>void printinfo(); </p>
+<p>描述：性能信息打印函数。</p>
+<p>参数：无</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="activate"></a></p>
+
+<h2>::activate</h2>
+<blockquote>
+<p>void activate(); </p>
+<p>描述：监视器激活（轮询）函数。</p>
+<p>参数：无</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="tick_forFPS"></a></p>
+
+<h2>::tick_forFPS</h2>
+<blockquote>
+<p>void tick_forFPS(); </p>
+<p>描述：为计算帧率的轮询函数（已废弃）。</p>
+<p>参数：无</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="get_onlinecount"></a></p>
+
+<h2>::get_onlinecount</h2>
+<blockquote>
+<p>uint32_t get_onlinecount() const; </p>
+<p>描述：获得在线数量。</p>
+<p>参数：无</p>
+<p>返回：uint32_t</p>
+</blockquote>
+
+<p><a name="get_connectioncount"></a></p>
+
+<h2>::get_connectioncount</h2>
+<blockquote>
+<p>uint32_t get_connectioncount() const; </p>
+<p>描述：获得连接数量。</p>
+<p>参数：无</p>
+<p>返回：uint32_t</p>
+</blockquote>
+
+<p><a name="get_uptraffic"></a></p>
+
+<h2>::get_uptraffic</h2>
+<blockquote>
+<p>uint64_t get_uptraffic() const; </p>
+<p>描述：获得上行（发送）网络数据数量。</p>
+<p>参数：无</p>
+<p>返回：uint64_t</p>
+</blockquote>
+
+<p><a name="get_downtraffic"></a></p>
+
+<h2>::get_downtraffic</h2>
+<blockquote>
+<p>uint64_t get_downtraffic() const; </p>
+<p>描述：获得下行（接收）网络数据数量。</p>
+<p>参数：无</p>
+<p>返回：uint64_t</p>
+</blockquote>
+
+<p><a name="set_sendbytes"></a></p>
+
+<h2>::set_sendbytes</h2>
+<blockquote>
+<p>void set_sendbytes(uint64_t bytes); </p>
+<p>描述：设置发送的网络数据数量（当前秒）。</p>
+<p>参数：</p>
+<p>uint64_t bytes 数据量。</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="set_receivebytes"></a></p>
+
+<h2>::set_receivebytes</h2>
+<blockquote>
+<p>void set_receivebytes(uint64_t bytes); </p>
+<p>描述：设置接收的网络数据数量（当前秒）。</p>
+<p>参数：</p>
+<p>uint64_t bytes 数据量。</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="set_printinfo_interval"></a></p>
+
+<h2>::set_printinfo_interval</h2>
+<blockquote>
+<p>void set_printinfo_interval(uint32_t interval); </p>
+<p>描述：设置打印信息的时间间隔（秒）。</p>
+<p>参数：</p>
+<p>uint32_t interval 间隔时间。</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="set_onlinecount"></a></p>
+
+<h2>::set_onlinecount</h2>
+<blockquote>
+<p>void set_onlinecount(uint32_t count); </p>
+<p>描述：设置在线数量。</p>
+<p>参数：</p>
+<p>uint32_t count 在线人数。</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="set_connectioncount"></a></p>
+
+<h2>::set_connectioncount</h2>
+<blockquote>
+<p>void set_connectioncount(uint32_t count); </p>
+<p>描述：设置连接数量。</p>
+<p>参数：</p>
+<p>uint32_t count 连接数量。</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="set_fps"></a></p>
+
+<h2>::set_fps</h2>
+<blockquote>
+<p>void set_fps(float value); </p>
+<p>描述：设置帧率（外部接口可以调用）。</p>
+<p>参数：</p>
+<p>float value 帧率。</p>
+<p>返回：无</p>
+</blockquote>
+
+<footer>
+    <p><a href="#">Dayle Rees</a></p>
+</footer>
+            
+            
+</section>
+  <div class="clearfix"></div>
+</div>
+
+        <script src="../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="../js/vendor/jquery-1.8.2.min.js"><\/script>')</script>
+        <script src="../../checkout.stripe.com/v2/checkout.js"></script>
+        <script src="../js/vendor/prettify.js"></script>
+        <script src="../js/plugins.js"></script>
+        <script src="../js/main.js"></script>
+
+        <script type="text/javascript">
+
+          var _gaq = _gaq || [];
+          _gaq.push(['_setAccount', 'UA-37898177-1']);
+          _gaq.push(['_trackPageview']);
+
+          (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www/') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+          })();
+
+        </script>
+    </body>
+</html>

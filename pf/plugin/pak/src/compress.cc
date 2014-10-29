@@ -118,7 +118,7 @@ int32_t de_pklib(char *out, int32_t *outsize, char *in, int32_t insize) {
       reinterpret_cast<char *>(malloc(sizeof(char) * CMP_BUFFER_SIZE));
     Assert(workbuffer);
     memset(workbuffer, 0, CMP_BUFFER_SIZE);
-    uint32_t dictionarysize;
+    //uint32_t dictionarysize;
     datainfo.in = in;
     datainfo.insize = insize;
     datainfo.inposition = 0;
@@ -281,13 +281,19 @@ int32_t zlib(char *out,
     z.avail_in = static_cast<uInt>(insize);
     z.total_in = insize;
     z.next_out = (Bytef *)out;
+    z.avail_out = *outsize; //contorl the outsize, 
+                            //if the size more than max size, 
+                            //then outsize will changed to max size
     z.total_out = 0;
     z.zalloc = NULL;
     z.zfree = NULL;
-    if (0 == (result = inflateInit(&z))) {
-      result = inflate(&z, Z_FINISH);
-      *outsize = z.total_out;
-      inflateEnd(&z);
+    //Initialize the compression structure. Storm.dll uses zlib version 1.1.3
+    if (0 == (result = deflateInit(&z, Z_DEFAULT_COMPRESSION))) {
+      // Call zlib to compress the data
+      result = deflate(&z, Z_FINISH);
+      if (Z_OK == result || Z_STREAM_END == result)
+        *outsize = z.total_out;
+      deflateEnd(&z);
     }
     return result;
   __LEAVE_FUNCTION
@@ -396,16 +402,16 @@ int32_t smart(char *out,
   __ENTER_FUNCTION
     char *tempbuffer = NULL;
     char *output = out;
-    char *input;
+    char *input = NULL;
     int32_t compressions2;
     int32_t compresscount = 0;
     int32_t downcount = 0;
     int32_t _outsize = 0;
     int32_t _insize = insize;
-    int32_t entries = (sizeof(compress_table) / sizeof(compress_function));
+    int32_t entries = (sizeof(compress_table) / sizeof(compress_table_t));
     int32_t result = 1;
     int32_t i;
-    if (!_outsize || *outsize < insize || !out || !in) {
+    if (!outsize || *outsize < insize || !out || !in) {
       util::set_lasterror(PAK_ERROR_INVALID_PARAMETER);
       return 0;
     }
@@ -417,8 +423,19 @@ int32_t smart(char *out,
       util::set_lasterror(PAK_ERROR_INVALID_PARAMETER);
       return 0;
     }
+    //If more that one compression, allocate intermediate buffer 
+    if (compresscount >= 2) {
+      tempbuffer = (char *)malloc(sizeof(char) * (*outsize + 1));
+      Assert(tempbuffer);
+      if (tempbuffer) {
+        memset(tempbuffer, 0, *outsize + 1);
+      } else {
+        return 0;
+      }
+    }
     //Perform the compressions
     input = in;
+    _insize = insize;
     for (i = 0, compressions2 = compressions; i < entries; ++i) {
       if (compressions2 & compress_table[i].mask) {
         --compresscount;
@@ -469,30 +486,27 @@ int32_t smart(char *out,
 }
 
 static decompress_table_t decompress_table[] = {
-  {PAK_COMPRESSION_WAVE_MONO, de_wave_mono},
-  {PAK_COMPRESSION_WAVE_STEREO, de_wave_stereo},
-  {PAK_COMPRESSION_HUFFMANN, de_huff},
-  {PAK_COMPRESSION_ZLIB, de_zlib},
+  {PAK_COMPRESSION_BZIP2, de_bzip2},
   {PAK_COMPRESSION_PKWARE, de_pklib},
-  {PAK_COMPRESSION_BZIP2, de_bzip2}
+  {PAK_COMPRESSION_ZLIB, de_zlib},
+  {PAK_COMPRESSION_HUFFMANN, de_huff},
+  {PAK_COMPRESSION_WAVE_STEREO, de_wave_stereo},
+  {PAK_COMPRESSION_WAVE_MONO, de_wave_mono},
 };
 
 int32_t de_smart(char *out, 
                  int32_t *outsize, 
                  char *in, 
-                 int32_t insize, 
-                 int32_t compressions,
-                 int32_t *type, 
-                 int32_t level) {
+                 int32_t insize) {
   __ENTER_FUNCTION
     char *tempbuffer = NULL;
     char *workbuffer = NULL;
     int32_t _outsize = *outsize;
-    uint8_t decompressions1;
-    uint8_t decompressions2;
-    int32_t count;
-    int32_t entries = (sizeof(decompress_table) / sizeof(decompress_function));
-    int32_t result;
+    uint8_t decompressions1 = 0;
+    uint8_t decompressions2 = 0;
+    int32_t count = 0;
+    int32_t entries = (sizeof(decompress_table) / sizeof(decompress_table_t));
+    int32_t result = 1;
     int32_t i;
     //If the input length is the same as output, do nothing.
     if (insize == _outsize) {
@@ -539,7 +553,7 @@ int32_t de_smart(char *out,
       if (workbuffer != out) memcpy(out, in, _outsize);
     }
     //Delete temporary buffer, if necessary
-    if (tempbuffer != NULL) SAFE_FREE(tempbuffer);
+    SAFE_FREE(tempbuffer);
     *outsize = _outsize;
     return result;
   __LEAVE_FUNCTION

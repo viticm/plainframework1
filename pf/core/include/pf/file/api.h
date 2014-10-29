@@ -43,6 +43,7 @@ PF_API uint32_t availableex(int32_t fd);
 PF_API int32_t dupex(int32_t fd);
 PF_API int64_t lseekex(int32_t fd, uint64_t offset, int32_t whence);
 PF_API int64_t tellex(int32_t fd);
+PF_API bool truncate(const char *filename);
 
 }; //namespace api
 

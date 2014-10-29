@@ -69,6 +69,7 @@ bool Base::init(uint16_t maxcount, uint16_t listenport, const char *listenip) {
 
 bool Base::init_pool(uint16_t connectionmax) {
   __ENTER_FUNCTION
+    if (!pool_) return false;
     connectionmax_ = connectionmax;
     if (!pool_->init(connectionmax_)) return false;
     return true;
@@ -212,8 +213,8 @@ connection::Base *Base::accept() {
     newconnection = pool_->create();
     if (NULL == newconnection) return false;
     step = 5;
-    newconnection->cleanup(); //清理一次
     newconnection->init();
+    newconnection->cleanup();
     int32_t socketid = SOCKET_INVALID;
     step = 10;
     try {
@@ -266,7 +267,10 @@ connection::Base *Base::accept() {
       step += 100000;
     }
     FAST_LOG(kNetLogFile,
-             "[net.connection.manager] (Base::accept) socketid: %d",
+             "[net.connection.manager] (Base::accept)"
+             " host: %s id: %d socketid: %d",
+             newconnection->getsocket()->host_,
+             newconnection->getid(),
              newconnection->getsocket()->getid());
     return newconnection;
 EXCEPTION:
@@ -292,7 +296,7 @@ int16_t* Base::get_idset() {
   return connection_idset_;
 }
 
-uint16_t Base::getcount() {
+uint16_t Base::getcount() const {
   return count_;
 }
 

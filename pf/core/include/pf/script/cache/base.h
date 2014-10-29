@@ -24,7 +24,7 @@ class PF_API Base {
    ~Base();
    
  public:
-   virtual bool init(int32_t id, const char *filename, FILE* fp);
+   virtual bool init(int32_t id, const char *filename, FILE *fp);
    virtual void clear();
 
  public:

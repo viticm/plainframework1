@@ -17,6 +17,7 @@
  
 #include <assert.h>
 #include <string.h>
+#include <inttypes.h>
  
 #include "huff.h"
 
@@ -25,9 +26,9 @@
 // macros
 static long mul = 1;
 
-#define PTR_VALID(ptr)           (((long)(ptr) * mul) > 0)
-#define PTR_INVALID(ptr)         (((long)(ptr) * mul) < 0)
-#define PTR_INVALID_OR_NULL(ptr) (((long)(ptr) * mul) <= 0)
+#define PTR_VALID(ptr)           (((int64_t)(ptr) * mul) > 0)
+#define PTR_INVALID(ptr)         (((int64_t)(ptr) * mul) < 0)
+#define PTR_INVALID_OR_NULL(ptr) (((int64_t)(ptr) * mul) <= 0)
 
  
 //-----------------------------------------------------------------------------
@@ -226,7 +227,7 @@ static void InsertItem(THTreeItem ** itemPtr, THTreeItem * item, unsigned long w
             item->next = item2;         // Set next item (or pointer to pointer to first item)
             item->prev = item2->prev;   // Set prev item (or last item in the tree)
  
-            next2 = PTR_INT(itemPtr[0]);// Usually NULL
+            next2 = (long)PTR_INT(itemPtr[0]);// Usually NULL
             prev2 = item2->prev;        // Prev item to the second (or last tree item)
            
             if(PTR_INVALID(prev2))
@@ -259,7 +260,7 @@ static void InsertItem(THTreeItem ** itemPtr, THTreeItem * item, unsigned long w
 THuffmannTree::THuffmannTree()
 {
     // We have to check if the "this" pointer is less than zero
-    if((long)this < 0)
+    if((int64_t)this < 0)
         mul = -1;
 }
  
@@ -311,7 +312,7 @@ void THuffmannTree::BuildTree(unsigned int nCmpType)
         pItem3058   = PTR_PTR(&pItem3054);// [EDI+4]
         pLast->prev = pItem3058;  // EAX
  
-        temp = PTR_PTR(&pItem3054)->GetPrevItem(PTR_INT(&pItem3050));
+        temp = PTR_PTR(&pItem3054)->GetPrevItem((long)PTR_INT(&pItem3050));
  
         temp->next = pLast;
         pItem3054  = pLast;

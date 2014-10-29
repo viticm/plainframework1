@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset=UTF-8"utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>简约框架参考手册</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" href="../css/style.css">
+        <script src="../js/vendor/modernizr-2.6.2.min.js"></script>
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="#">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+
+        <div class="wrapper">
+            <header>
+                <h1>简约框架参考手册</h1>
+            </header>
+            <aside class="sidebar">
+<ul>
+<li>入门指引
+
+<ul>
+<li><a href="../index.htm">简介</a></li>
+<li><a href="simpletutorials.htm">简明教程</a></li>
+<li><a href="style-guide.htm">代码风格</a></li>
+<li><a href="module.htm">模块</a></li>
+<li><a href="license.htm">许可</a></li>
+</ul></li>
+
+<li>基础模块
+<ul>
+<li><a href="base.macro.htm">宏</a></li>
+<li><a href="base.global.htm">全局变量</a></li>
+<li><a href="base.log.htm">日志</a></li>
+<li><a href="base.string.htm">字符串</a></li>
+<li><a href="base.hashmap.htm">hash map</a></li>
+<li><a href="base.timemanager.htm">时间管理器</a></li>
+<li><a href="base.tinytimer.htm">小型定时器</a></li>
+<li><a href="base.util.htm">工具集</a></li>
+</ul></li>
+
+<li>数据库模块
+<ul>
+<li><a href="db.manager.htm">管理器</a></li>
+<li><a href="db.odbc.htm">ODBC</a></li>
+</ul></li>
+
+<li>引擎模块
+<ul>
+<li><a href="engine.kernel.htm">核心</a></li>
+<li><a href="engine.thread.htm">线程</a></li>
+</ul></li>
+
+<li>事件模块
+<ul>
+<li><a href="event.manager.htm">管理器</a></li>
+</ul></li>
+
+<li>文件模块
+<ul>
+<li><a href="file.api.htm">系统API</a></li>
+<li><a href="file.database.htm">文件数据库</a></li>
+<li><a href="file.ini.htm">ini文件</a></li>
+</ul></li>
+
+<li>网络模块
+<ul>
+<li><a href="net.connection.htm">连接</a></li>
+<li><a href="net.packet.htm">包</a></li>
+<li><a href="net.socket.htm">套接字</a></li>
+<li><a href="net.manager.htm">管理器</a></li>
+</ul></li>
+
+<li>性能模块
+<ul>
+<li><a href="performance.eyes.htm">监视器</a></li>
+</ul></li>
+
+<li>脚本模块
+<ul>
+<li><a href="script.cache.htm">缓存</a></li>
+<li><a href="script.lua.htm">lua</a></li>
+</ul></li>
+
+<li>系统模块
+<ul>
+<li><a href="sys.memory.htm">内存</a></li>
+<li><a href="sys.info.htm">系统信息</a></li>
+<li><a href="sys.process.htm">进程</a></li>
+<li><a href="sys.thread.htm">线程</a></li>
+<li><a href="sys.util.htm">工具集</a></li>
+</ul></li>
+
+<li>工具模块
+<ul>
+<li><a href="util.compressor.htm">压缩模块</a></li>
+</ul></li>
+
+</ul>
+</aside>
+
+<section class="content">
+
+<h1>system module info</h1>
+
+<ul>
+<li><a href="#total">总述</a></li>
+<li><a href="#info_get_sys_info">info::get_sys_info</a></li>
+<li><a href="#info_get_mem_info">info::get_mem_info</a></li>
+<li><a href="#info_get_cpu_info">info::get_cpu_info</a></li>
+<li><a href="#info_get_cpu_info_array">info::get_cpu_info_array</a></li>
+<li><a href="#info_get_kernel_version">info::get_kernel_version</a></li>
+<li><a href="#info_get_process_info">info::get_process_info</a></li>
+<li><a href="#info_get_process_page_info">info::get_process_page_info</a></li>
+<li><a href="#info_get_process_times">info::get_process_times</a></li>
+<li><a href="#info_get_net_info">info::get_net_info</a></li>
+<li><a href="#info_get_net_info_array">info::get_net_info_array</a></li>
+<li><a href="#info_do_get_net_info_array">info::do_get_net_info_array</a></li>
+<li><a href="#info_get_ip">info::get_ip</a></li>
+<li><a href="#info_get_loadaverage">info::get_loadaverage</a></li>
+</ul>
+
+<p><a name="total"></a></p>
+
+<h2>总述</h2>
+
+<p>系统系统提供了与系统有关的常用接口，这些包括内存、进程、网络、CPU等信息获取的接口。</p>
+
+<p><a name="info_get_sys_info"></a></p>
+
+<h2>info::get_sys_info</h2>
+<blockquote>
+<p>PF_API bool get_sys_info(sys_info_t &sys_info); </p>
+<p>描述：获取系统信息。</p>
+<p>参数：</p>
+<p>sys_info_t &sys_info 系统信息结构体对象。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="info_get_mem_info"></a></p>
+
+<h2>info::get_mem_info</h2>
+<blockquote>
+<p>PF_API bool get_mem_info(memory_info_t &mem_info); </p>
+<p>描述：获取系统内存信息。</p>
+<p>参数：</p>
+<p>memory_info_t &mem_info 内存信息结构体对象。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="info_get_cpu_info"></a></p>
+
+<h2>info::get_cpu_info</h2>
+<blockquote>
+<p>PF_API bool get_cpu_info(cpu_info_t &cpu_info); </p>
+<p>描述：获取系统CPU信息。</p>
+<p>参数：</p>
+<p>cpu_info_t &cpu_info CPU信息结构体对象。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="info_get_cpu_info_array"></a></p>
+
+<h2>info::get_cpu_info_array</h2>
+<blockquote>
+<p>int32_t get_cpu_info_array(std::vector< cpu_info_t> &cpu_info_array); </p>
+<p>描述：获取系统CPU（所有）信息。</p>
+<p>参数：</p>
+<p>std::vector< cpu_info_t> &cpu_info_array CPU信息结构体对象容器。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="info_get_kernel_version"></a></p>
+
+<h2>info::get_kernel_version</h2>
+<blockquote>
+<p>PF_API bool get_kernel_version(kernel_version_t &kernel_version); </p>
+<p>描述：获取系统核心版本信息。</p>
+<p>参数：</p>
+<p>kernel_version_t &kernel_version 核心版本信息结构体对象。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="info_get_process_info"></a></p>
+
+<h2>info::get_process_info</h2>
+<blockquote>
+<p>PF_API bool get_process_info(process_info_t &process_info); </p>
+<p>描述：获取系统进程信息。</p>
+<p>参数：</p>
+<p>process_info_t &process_info 进程信息结构体对象。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="info_get_process_page_info"></a></p>
+
+<h2>info::get_process_page_info</h2>
+<blockquote>
+<p>PF_API bool get_process_page_info(process_page_info_t &process_page_info); </p>
+<p>描述：获取系统进程页信息。</p>
+<p>参数：</p>
+<p>process_page_info_t &process_page_info 进程页信息结构体对象。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="info_get_process_times"></a></p>
+
+<h2>info::get_process_times</h2>
+<blockquote>
+<p>PF_API bool get_process_times(process_time_t &process_time); </p>
+<p>描述：获取系统进程时间信息。</p>
+<p>参数：</p>
+<p>process_time_t &process_time 进程时间信息结构体对象。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="info_get_net_info"></a></p>
+
+<h2>info::get_net_info</h2>
+<blockquote>
+<p>PF_API bool get_net_info(const char *interface_name, net_info_t &net_info); </p>
+<p>描述：获取系统网络信息。</p>
+<p>参数：</p>
+<p>const char *interface_name 网卡名。</p>
+<p>net_info_t &net_info 网络信息结构体对象。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="info_get_net_info_array"></a></p>
+
+<h2>info::get_net_info_array</h2>
+<blockquote>
+<p>PF_API bool get_net_info_array(std::vector< net_info_t> &net_info_array); </p>
+<p>描述：获取系统网络信息（全部）。</p>
+<p>参数：</p>
+<p>std::vector< net_info_t> &net_info_array 网络信息结构体对象容器。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="info_do_get_net_info_array"></a></p>
+
+<h2>info::do_get_net_info_array</h2>
+<blockquote>
+<p>PF_API bool do_get_net_info_array(const char *interface_name,                   
+                                  std::vector< net_info_t> &net_info_array); </p>
+<p>描述：获取系统网络信息（单网卡全部）。</p>
+<p>参数：</p>
+<p>const char *interface_name 网卡名。</p>
+<p>std::vector< net_info_t> &net_info_array 网络信息结构体对象容器。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="info_get_ip"></a></p>
+
+<h2>info::get_ip</h2>
+<blockquote>
+<p>PF_API bool get_ip(char *&ip, const char *interface_name = NULL); </p>
+<p>描述：获取当前的IP。</p>
+<p>参数：</p>
+<p>char *&ip 保存IP的指针。</p>
+<p>const char *interface_name 网卡名。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="info_get_loadaverage"></a></p>
+
+<h2>info::get_loadaverage</h2>
+<blockquote>
+<p>PF_API bool get_loadaverage(loadaverage_t &loadaverage); </p>
+<p>描述：获取当前的系统负载信息。</p>
+<p>参数：</p>
+<p>loadaverage_t &loadaverage 系统负载的结构体对象。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<nav>
+	<a href="sys.memory.htm">内存</a> |
+	<a href="sys.process.htm">进程 </a>
+</nav>
+<footer>
+    <p><a href="#">Dayle Rees</a>.</p>
+</footer>
+            
+            
+</section>
+  <div class="clearfix"></div>
+</div>
+
+        <script src="../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="../js/vendor/jquery-1.8.2.min.js"><\/script>')</script>
+        <script src="../../checkout.stripe.com/v2/checkout.js"></script>
+        <script src="../js/vendor/prettify.js"></script>
+        <script src="../js/plugins.js"></script>
+        <script src="../js/main.js"></script>
+
+        <script type="text/javascript">
+
+          var _gaq = _gaq || [];
+          _gaq.push(['_setAccount', 'UA-37898177-1']);
+          _gaq.push(['_trackPageview']);
+
+          (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www/') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+          })();
+
+        </script>
+    </body>
+</html>

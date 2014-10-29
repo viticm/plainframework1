@@ -37,16 +37,16 @@ class PF_API FileBridge {
    const char *get_rootpath();
    
  public:
-   bool open(const char*);
+   bool open(const char *);
    void close();
-   uint64_t read(void*, uint64_t);
-   uint64_t write(void*, uint64_t);
+   uint64_t read(void *, uint64_t);
+   uint64_t write(void *, uint64_t);
    int64_t seek(int64_t, file_accessmode);
    int64_t tell();
    uint64_t size();
 
  private:
-   FILE* fp_;
+   FILE *fp_;
    uint64_t length_;
    int64_t position_;
    char rootpath_[FILENAME_MAX];

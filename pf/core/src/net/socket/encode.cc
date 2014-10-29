@@ -6,12 +6,12 @@ namespace socket {
 
 namespace encode {
 
-bool make(encodeparam_t& encodeparam) {
-  unsigned char const* in;
+bool make(encodeparam_t &encodeparam) {
+  unsigned char const *in;
   uint32_t insize;
   unsigned char *out;
   uint32_t outsize;
-  unsigned char const* key;
+  unsigned char const *key;
   uint32_t keysize;
   int32_t keyindex;
   int32_t index;
@@ -51,7 +51,7 @@ bool make(encodeparam_t& encodeparam) {
   return true;
 }
 
-bool skip(encodeparam_t& encodeparam, int32_t length) {
+bool skip(encodeparam_t &encodeparam, int32_t length) {
   uint32_t keysize = 0;
   int32_t keyindex = 0;
   int32_t index = 0;

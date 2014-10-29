@@ -216,7 +216,7 @@ bool VM::callfunction(const char *function) {
                        static_cast<lua_Number>(atof(value)));
       }
     }
-    int32_t call_result = lua_pcall(lua_state_, array.size() - 1, result, NULL);
+    int32_t call_result = lua_pcall(lua_state_, (int)array.size() - 1, result, NULL);
     if (call_result != 0) {
       on_scripterror(kErrorCodeExecute, result);
       return false;

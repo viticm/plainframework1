@@ -21,7 +21,7 @@ class PF_API Factory {
 
  public:
    virtual ~Factory() {};
-   virtual Base* createpacket() = 0;
+   virtual Base *createpacket() = 0;
    virtual uint16_t get_packetid() const = 0;
    virtual uint32_t get_packet_maxsize() const = 0;
 

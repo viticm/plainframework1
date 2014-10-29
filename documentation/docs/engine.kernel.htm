@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset=UTF-8"utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>简约框架参考手册</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" href="../css/style.css">
+        <script src="../js/vendor/modernizr-2.6.2.min.js"></script>
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="#">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+
+        <div class="wrapper">
+            <header>
+                <h1>简约框架参考手册</h1>
+            </header>
+            <aside class="sidebar">
+<ul>
+<li>入门指引
+
+<ul>
+<li><a href="../index.htm">简介</a></li>
+<li><a href="simpletutorials.htm">简明教程</a></li>
+<li><a href="style-guide.htm">代码风格</a></li>
+<li><a href="module.htm">模块</a></li>
+<li><a href="license.htm">许可</a></li>
+</ul></li>
+
+<li>基础模块
+<ul>
+<li><a href="base.macro.htm">宏</a></li>
+<li><a href="base.global.htm">全局变量</a></li>
+<li><a href="base.log.htm">日志</a></li>
+<li><a href="base.string.htm">字符串</a></li>
+<li><a href="base.hashmap.htm">hash map</a></li>
+<li><a href="base.timemanager.htm">时间管理器</a></li>
+<li><a href="base.tinytimer.htm">小型定时器</a></li>
+<li><a href="base.util.htm">工具集</a></li>
+</ul></li>
+
+<li>数据库模块
+<ul>
+<li><a href="db.manager.htm">管理器</a></li>
+<li><a href="db.odbc.htm">ODBC</a></li>
+</ul></li>
+
+<li>引擎模块
+<ul>
+<li><a href="engine.kernel.htm">核心</a></li>
+<li><a href="engine.thread.htm">线程</a></li>
+</ul></li>
+
+<li>事件模块
+<ul>
+<li><a href="event.manager.htm">管理器</a></li>
+</ul></li>
+
+<li>文件模块
+<ul>
+<li><a href="file.api.htm">系统API</a></li>
+<li><a href="file.database.htm">文件数据库</a></li>
+<li><a href="file.ini.htm">ini文件</a></li>
+</ul></li>
+
+<li>网络模块
+<ul>
+<li><a href="net.connection.htm">连接</a></li>
+<li><a href="net.packet.htm">包</a></li>
+<li><a href="net.socket.htm">套接字</a></li>
+<li><a href="net.manager.htm">管理器</a></li>
+</ul></li>
+
+<li>性能模块
+<ul>
+<li><a href="performance.eyes.htm">监视器</a></li>
+</ul></li>
+
+<li>脚本模块
+<ul>
+<li><a href="script.cache.htm">缓存</a></li>
+<li><a href="script.lua.htm">lua</a></li>
+</ul></li>
+
+<li>系统模块
+<ul>
+<li><a href="sys.memory.htm">内存</a></li>
+<li><a href="sys.info.htm">系统信息</a></li>
+<li><a href="sys.process.htm">进程</a></li>
+<li><a href="sys.thread.htm">线程</a></li>
+<li><a href="sys.util.htm">工具集</a></li>
+</ul></li>
+
+<li>工具模块
+<ul>
+<li><a href="util.compressor.htm">压缩模块</a></li>
+</ul></li>
+
+</ul>
+</aside>
+
+<section class="content">
+
+<h1>engine module kernel</h1>
+
+<ul>
+<li><a href="#total">总述</a></li>
+<li><a href="#define">定义</a></li>
+<li><a href="#init">::init</a></li>
+<li><a href="#run">::run</a></li>
+<li><a href="#stop">::stop</a></li>
+<li><a href="#registerconfig">::registerconfig*</a></li>
+<li><a href="#setconfig">::setconfig*</a></li>
+<li><a href="#getconfig_int32value">::getconfig_int32value</a></li>
+<li><a href="#getconfig_boolvalue">::getconfig_boolvalue</a></li>
+<li><a href="#getconfig_stringvalue">::getconfig_stringvalue</a></li>
+</ul>
+
+<p><a name="total"></a></p>
+
+<h2>总述</h2>
+
+<p>引擎核心提供了对外的常用模块的操作接口，这块模块包括基础、数据库、网络等。</p>
+
+<p><a name="define"></a></p>
+
+<h2>定义</h2>
+<pre><code>
+namespace pf_engine {                                                              
+                                                                                   
+class PF_API Kernel {                                                              
+</code></pre>
+
+<p><a name="init"></a></p>
+
+<h2>::init</h2>
+
+<blockquote>
+<p>virtual bool init(); </p>
+<p>描述：</p>                                                                            
+<p>引擎核心初始化函数。</p>                      
+<p>参数：</p>
+<p>无</p>
+<p>返回值：bool</p>
+</blockquote>
+
+<p><b>Example #1 init 范例</b></p>
+
+<pre><code>
+#include "pf/engine/kernel.h"                                                      
+#include "main.h"                                                                  
+                                                                                   
+pf_engine::Kernel g_engine_kernel;                                                 
+int32_t main(int32_t argc, char * argv[]) {                                        
+  g_engine_kernel.init();                                                          
+  return 0;                                                                        
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">(###) engine for (unknown) start...</font> <br />
+11:47:39 (140200368912160 0.0000) [engine] (Kernel::init) base module success
+</p>
+
+<p><a name="run"></a></p>
+
+<h2>::run</h2>
+
+<blockquote>
+<p>virtual bool run(); </p>
+<p>描述：</p>                                                                            
+<p>引擎核心运行函数，该函数运行后进入线程阻塞，除非退出阻塞否则后面的函数不会执行。</p>                      
+<p>参数：</p>
+<p>无</p>
+<p>返回值：bool</p>
+</blockquote>
+
+<p><b>Example #1 run 范例</b></p>
+
+<pre><code>
+#include "pf/engine/kernel.h"                                                      
+#include "main.h"                                                                  
+                                                                                   
+pf_engine::Kernel g_engine_kernel;                                                 
+int32_t main(int32_t argc, char * argv[]) {                                        
+  g_engine_kernel.init();
+  g_engine_kernel.run();                                                          
+  return 0;                                                                        
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">(###) engine for (unknown) start...</font> <br />
+12:00:08 (140200368912160 0.0000) [engine] (Kernel::init) base module success <br />
+12:00:08 (140106604631840 0.0000) [engine] (Kernel::run) base module
+</p>
+
+<p><a name="stop"></a></p>
+
+<h2>::stop</h2>
+
+<blockquote>
+<p>virtual bool stop(); </p>
+<p>描述：</p>                                                                            
+<p>引擎核心停止函数，会进行模块内存释放。</p>                      
+<p>参数：</p>
+<p>无</p>
+<p>返回值：bool</p>
+</blockquote>
+
+<p><b>Example #1 stop 范例</b></p>
+
+<pre><code>
+#include "pf/engine/kernel.h"                                                      
+#include "main.h"                                                                  
+                                                                                   
+pf_engine::Kernel g_engine_kernel;                                                 
+int32_t main(int32_t argc, char * argv[]) {                                        
+  g_engine_kernel.init();
+  //g_engine_kernel.run();
+  g_engine_kernel.stop();                                                          
+  return 0;                                                                        
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">(###) engine for (unknown) start...</font> <br />
+12:04:46 (140151862306592 0.0000) [engine] (Kernel::init) base module success <br />
+12:04:46 (140151862306592 0.0010) [engine] (Kernel::stop) base module
+</p>
+
+<h2>配置宏</h2>
+
+<blockquote>
+<p>ENGINE_CONFIG_DB_ISACTIVE //数据库模块是否激活（bool）</p>
+<p>ENGINE_CONFIG_NET_ISACTIVE //网络模块是否激活（bool）</p>
+<p>ENGINE_CONFIG_SCRIPT_ISACTIVE //脚本模块是否激活（bool）</p>
+<p>ENGINE_CONFIG_PERFORMANCE_ISACTIVE //性能模块是否激活（bool）</p>
+<p>ENGINE_CONFIG_DB_RUN_ASTHREAD //数据库模块是否以线程方式运行（bool）</p>
+<p>ENGINE_CONFIG_NET_RUN_ASTHREAD //网络模块是否以线程方式运行（bool）</p>
+<p>ENGINE_CONFIG_SCRIPT_RUN_ASTHREAD //脚本模块是否以线程方式运行（bool）</p>
+<p>ENGINE_CONFIG_PERFORMANCE_RUN_ASTHREAD //性能模块是否以线程方式运行（bool）</p>
+<p>ENGINE_CONFIG_BASEMODULE_HAS_INIT //基础模块是否已经初始化（bool）</p>
+<p>ENGINE_CONFIG_DB_CONNECTOR_TYPE //数据库连接类型（int32_t）</p>
+<p>ENGINE_CONFIG_NET_LISTEN_PORT //网络监听端口（int32_t）</p>
+<p>ENGINE_CONFIG_NET_CONNECTION_MAX //网络连接数量（int32_t）</p>
+<p>ENGINE_CONFIG_DB_CONNECTION_OR_DBNAME //数据库连接的名称或数据库名称（string）</p>
+<p>ENGINE_CONFIG_DB_USERNAME //数据库连接的用户（string）</p>
+<p>ENGINE_CONFIG_DB_PASSWORD //数据库连接的密码（string）</p>
+<p>ENGINE_CONFIG_SCRIPT_ROOTPATH //脚本的基础路径（string）</p>
+<p>ENGINE_CONFIG_SCRIPT_WORKPATH //脚本的工作路径（string）</p>
+<p>ENGINE_CONFIG_SCRIPT_GLOBALFILE //脚本的全局文件路径（string）</p>
+<p>ENGINE_CONFIG_NET_LISTEN_IP //网络监听IP（string）</p>
+</blockquote>
+
+<p><a name="registerconfig"></a></p>
+
+<h2>::registerconfig*</h2>
+
+<blockquote>
+<p>void registerconfig(int32_t key, int32_t value); </p>
+<p>描述：</p>                                                                            
+<p>注册一个int32类型的配置变量，并设置初始值。</p>                      
+<p>参数：</p>
+<p>int32_t key 配置变量的键。</p>
+<p>int32_t value 配置变量的值。</p>
+<p>返回值：无</p>
+<p>-----------------------------------------------------------------------------</p>
+<p>void registerconfig(int32_t key, bool value); </p>
+<p>描述：</p>                                                                            
+<p>注册一个bool类型的配置变量，并设置初始值。</p>                      
+<p>参数：</p>
+<p>int32_t key 配置变量的键。</p>
+<p>bool value 配置变量的值。</p>
+<p>返回值：无</p>
+<p>-----------------------------------------------------------------------------</p>
+<p>void registerconfig(int32_t key, const char *value); </p>
+<p>描述：</p>                                                                            
+<p>注册一个字符串类型的配置变量，并设置初始值。</p>                      
+<p>参数：</p>
+<p>int32_t key 配置变量的键。</p>
+<p>const char *value 配置变量的值。</p>
+<p>返回值：无</p>
+</blockquote>
+
+<p><b>Example #1 registerconfig 范例</b></p>
+
+<pre><code>
+#include "pf/engine/kernel.h"                                                   
+#include "main.h"                                                               
+                                                                                
+#define TEST_CONFIG_BOOL ENGINE_CONFIG_BOOL_MAX + 1                             
+#define TEST_CONFIG_INT32 ENGINE_CONFIG_INT32_MAX + 1                           
+#define TEST_CONFIG_STRING ENGINE_CONFIG_STRING_MAX + 1                         
+                                                                                
+pf_engine::Kernel g_engine_kernel;                                              
+int32_t main(int32_t argc, char * argv[]) {                                     
+  g_engine_kernel.init();                                                       
+  g_engine_kernel.registerconfig(TEST_CONFIG_BOOL, false);                      
+  g_engine_kernel.registerconfig(TEST_CONFIG_INT32, 1);                         
+  g_engine_kernel.registerconfig(TEST_CONFIG_STRING, "test");                   
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">(###) engine for (unknown) start...</font> <br />
+14:04:07 (140226440738592 0.0010) [engine] (Kernel::init) base module success
+</p>
+
+<p><a name="setconfig"></a></p>
+
+<h2>::setconfig*</h2>
+
+<blockquote>
+<p>bool setconfig(int32_t key, int32_t value); </p>
+<p>描述：</p>                                                                            
+<p>设置int32类型变量的值，前提是变量必须注册，否则失败。</p>                      
+<p>参数：</p>
+<p>int32_t key 配置变量的键。</p>
+<p>int32_t value 配置变量的值。</p>
+<p>返回值：bool</p>
+<p>-----------------------------------------------------------------------------</p>
+<p>bool setconfig(int32_t key, bool value); </p>
+<p>描述：</p>                                                                            
+<p>设置bool类型变量的值，前提是变量必须注册，否则失败。</p>                      
+<p>参数：</p>
+<p>int32_t key 配置变量的键。</p>
+<p>bool value 配置变量的值。</p>
+<p>返回值：bool</p>
+<p>-----------------------------------------------------------------------------</p>
+<p>bool setconfig(int32_t key, const char *value); </p>
+<p>描述：</p>                                                                            
+<p>设置字符串类型变量的值，前提是变量必须注册，否则失败。</p>                      
+<p>参数：</p>
+<p>int32_t key 配置变量的键。</p>
+<p>const char *value 配置变量的值。</p>
+<p>返回值：bool</p>
+</blockquote>
+
+<p><b>Example #1 setconfig 范例</b></p>
+
+<pre><code>
+#include "pf/engine/kernel.h"                                                   
+#include "main.h"                                                               
+                                                                                
+#define TEST_CONFIG_BOOL ENGINE_CONFIG_BOOL_MAX + 1                             
+#define TEST_CONFIG_INT32 ENGINE_CONFIG_INT32_MAX + 1                           
+#define TEST_CONFIG_STRING ENGINE_CONFIG_STRING_MAX + 1                         
+                                                                                
+pf_engine::Kernel g_engine_kernel;                                              
+int32_t main(int32_t argc, char * argv[]) {                                     
+  g_engine_kernel.init();                                                       
+  g_engine_kernel.registerconfig(TEST_CONFIG_BOOL, false);                      
+  //g_engine_kernel.registerconfig(TEST_CONFIG_INT32, 1);                       
+  g_engine_kernel.registerconfig(TEST_CONFIG_STRING, "test");                   
+  bool result = true;                                                           
+  result = g_engine_kernel.setconfig(TEST_CONFIG_BOOL, true);                   
+  DEBUGPRINTF("TEST_CONFIG_BOOL set: %s", result ? "success" : "failed");       
+  result = g_engine_kernel.setconfig(TEST_CONFIG_INT32, 30);                    
+  DEBUGPRINTF("TEST_CONFIG_INT32 set: %s", result ? "success" : "failed");      
+  result = g_engine_kernel.setconfig(TEST_CONFIG_STRING, "tests");              
+  DEBUGPRINTF("TEST_CONFIG_STRING set: %s", result ? "success" : "failed");     
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">(###) engine for (unknown) start...</font> <br />
+14:28:39 (140099225065248 0.0010) [engine] (Kernel::init) base module success <br />
+<font color="green">TEST_CONFIG_BOOL set: success</font> <br />
+<font color="green">TEST_CONFIG_INT32 set: failed</font> <br />
+<font color="green">TEST_CONFIG_STRING set: success</font>
+</p>
+
+<p><a name="getconfig_int32value"></a></p>
+
+<h2>::getconfig_int32value</h2>
+
+<blockquote>
+<p>int32_t getconfig_int32value(int32_t key); </p>
+<p>描述：</p>                                                                            
+<p>获取int32类型的变量值。</p>                      
+<p>参数：</p>
+<p>无</p>
+<p>返回值：int32_t</p>
+</blockquote>
+
+<p><b>Example #1 getconfig_int32value 范例</b></p>
+
+<pre><code>
+#include "pf/engine/kernel.h"                                                   
+#include "main.h"                                                               
+                                                                                
+#define TEST_CONFIG_BOOL ENGINE_CONFIG_BOOL_MAX + 1                             
+#define TEST_CONFIG_INT32 ENGINE_CONFIG_INT32_MAX + 1                           
+#define TEST_CONFIG_STRING ENGINE_CONFIG_STRING_MAX + 1                         
+                                                                                
+pf_engine::Kernel g_engine_kernel;                                              
+int32_t main(int32_t argc, char * argv[]) {                                     
+  g_engine_kernel.init();                                                       
+  g_engine_kernel.registerconfig(TEST_CONFIG_INT32, 1);                         
+  g_engine_kernel.setconfig(TEST_CONFIG_INT32, 30);                             
+  DEBUGPRINTF("TEST_CONFIG_INT32: %d",                                          
+              g_engine_kernel.getconfig_int32value(TEST_CONFIG_INT32));         
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">(###) engine for (unknown) start...</font> <br />
+15:01:12 (139715471705888 0.0000) [engine] (Kernel::init) base module success <br />
+<font color="green">TEST_CONFIG_INT32: 30</font>
+</p>
+
+<p><a name="getconfig_boolvalue"></a></p>
+
+<h2>::getconfig_boolvalue</h2>
+
+<blockquote>
+<p>bool getconfig_boolvalue(int32_t key); </p>
+<p>描述：</p>                                                                            
+<p>获取bool类型的变量值。</p>                      
+<p>参数：</p>
+<p>无</p>
+<p>返回值：bool</p>
+</blockquote>
+
+<p><b>Example #1 getconfig_boolvalue 范例</b></p>
+
+<pre><code>
+#include "pf/engine/kernel.h"                                                   
+#include "main.h"                                                               
+                                                                                
+#define TEST_CONFIG_BOOL ENGINE_CONFIG_BOOL_MAX + 1                             
+#define TEST_CONFIG_INT32 ENGINE_CONFIG_INT32_MAX + 1                           
+#define TEST_CONFIG_STRING ENGINE_CONFIG_STRING_MAX + 1                         
+                                                                                
+pf_engine::Kernel g_engine_kernel;                                              
+int32_t main(int32_t argc, char * argv[]) {                                     
+  g_engine_kernel.init();                                                       
+  g_engine_kernel.registerconfig(TEST_CONFIG_BOOL, false);                      
+  DEBUGPRINTF("TEST_CONFIG_BOOL: %d",                                           
+              g_engine_kernel.getconfig_boolvalue(TEST_CONFIG_BOOL));           
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">(###) engine for (unknown) start...</font> <br />
+15:04:04 (140039207175968 0.0000) [engine] (Kernel::init) base module success <br />
+<font color="green">TEST_CONFIG_BOOL: 0</font>
+</p>
+
+<p><a name="getconfig_stringvalue"></a></p>
+
+<h2>::getconfig_stringvalue</h2>
+
+<blockquote>
+<p>const char *getconfig_stringvalue(int32_t key); </p>
+<p>描述：</p>                                                                            
+<p>获取字符串类型的变量值。</p>                      
+<p>参数：</p>
+<p>无</p>
+<p>返回值：const char *</p>
+</blockquote>
+
+<p><b>Example #1 getconfig_stringvalue 范例</b></p>
+
+<pre><code>
+#include "pf/engine/kernel.h"                                                   
+#include "main.h"                                                               
+                                                                                
+#define TEST_CONFIG_BOOL ENGINE_CONFIG_BOOL_MAX + 1                             
+#define TEST_CONFIG_INT32 ENGINE_CONFIG_INT32_MAX + 1                           
+#define TEST_CONFIG_STRING ENGINE_CONFIG_STRING_MAX + 1                         
+                                                                                
+pf_engine::Kernel g_engine_kernel;                                              
+int32_t main(int32_t argc, char * argv[]) {                                     
+  g_engine_kernel.init();                                                       
+  g_engine_kernel.registerconfig(TEST_CONFIG_STRING, "test");                   
+  DEBUGPRINTF("TEST_CONFIG_STRING: %s",                                         
+              g_engine_kernel.getconfig_stringvalue(TEST_CONFIG_STRING));       
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">(###) engine for (unknown) start...</font> <br />
+15:07:55 (140726503008032 0.0000) [engine] (Kernel::init) base module success <br />
+<font color="green">TEST_CONFIG_STRING: test</font>
+</p>
+
+<nav>
+	<a href="engine.thread.htm">线程</a>
+</nav>
+<footer>
+    <p><a href="#">Dayle Rees</a>.</p>
+</footer>
+            
+            
+</section>
+  <div class="clearfix"></div>
+</div>
+
+        <script src="../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="../js/vendor/jquery-1.8.2.min.js"><\/script>')</script>
+        <script src="../../checkout.stripe.com/v2/checkout.js"></script>
+        <script src="../js/vendor/prettify.js"></script>
+        <script src="../js/plugins.js"></script>
+        <script src="../js/main.js"></script>
+
+        <script type="text/javascript">
+
+          var _gaq = _gaq || [];
+          _gaq.push(['_setAccount', 'UA-37898177-1']);
+          _gaq.push(['_trackPageview']);
+
+          (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www/') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+          })();
+
+        </script>
+    </body>
+</html>

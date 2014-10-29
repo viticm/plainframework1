@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset=UTF-8"utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>简约框架参考手册</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" href="../css/style.css">
+        <script src="../js/vendor/modernizr-2.6.2.min.js"></script>
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="#">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+
+        <div class="wrapper">
+            <header>
+                <h1>简约框架参考手册</h1>
+            </header>
+            <aside class="sidebar">
+<ul>
+<li>入门指引
+
+<ul>
+<li><a href="../index.htm">简介</a></li>
+<li><a href="simpletutorials.htm">简明教程</a></li>
+<li><a href="style-guide.htm">代码风格</a></li>
+<li><a href="module.htm">模块</a></li>
+<li><a href="license.htm">许可</a></li>
+</ul></li>
+
+<li>基础模块
+<ul>
+<li><a href="base.macro.htm">宏</a></li>
+<li><a href="base.global.htm">全局变量</a></li>
+<li><a href="base.log.htm">日志</a></li>
+<li><a href="base.string.htm">字符串</a></li>
+<li><a href="base.hashmap.htm">hash map</a></li>
+<li><a href="base.timemanager.htm">时间管理器</a></li>
+<li><a href="base.tinytimer.htm">小型定时器</a></li>
+<li><a href="base.util.htm">工具集</a></li>
+</ul></li>
+
+<li>数据库模块
+<ul>
+<li><a href="db.manager.htm">管理器</a></li>
+<li><a href="db.odbc.htm">ODBC</a></li>
+</ul></li>
+
+<li>引擎模块
+<ul>
+<li><a href="engine.kernel.htm">核心</a></li>
+<li><a href="engine.thread.htm">线程</a></li>
+</ul></li>
+
+<li>事件模块
+<ul>
+<li><a href="event.manager.htm">管理器</a></li>
+</ul></li>
+
+<li>文件模块
+<ul>
+<li><a href="file.api.htm">系统API</a></li>
+<li><a href="file.database.htm">文件数据库</a></li>
+<li><a href="file.ini.htm">ini文件</a></li>
+</ul></li>
+
+<li>网络模块
+<ul>
+<li><a href="net.connection.htm">连接</a></li>
+<li><a href="net.packet.htm">包</a></li>
+<li><a href="net.socket.htm">套接字</a></li>
+<li><a href="net.manager.htm">管理器</a></li>
+</ul></li>
+
+<li>性能模块
+<ul>
+<li><a href="performance.eyes.htm">监视器</a></li>
+</ul></li>
+
+<li>脚本模块
+<ul>
+<li><a href="script.cache.htm">缓存</a></li>
+<li><a href="script.lua.htm">lua</a></li>
+</ul></li>
+
+<li>系统模块
+<ul>
+<li><a href="sys.memory.htm">内存</a></li>
+<li><a href="sys.info.htm">系统信息</a></li>
+<li><a href="sys.process.htm">进程</a></li>
+<li><a href="sys.thread.htm">线程</a></li>
+<li><a href="sys.util.htm">工具集</a></li>
+</ul></li>
+
+<li>工具模块
+<ul>
+<li><a href="util.compressor.htm">压缩模块</a></li>
+</ul></li>
+
+</ul>
+</aside>
+
+<section class="content">
+
+<h1>file module database</h1>
+
+<ul>
+<li><a href="#total">总述</a></li>
+<li><a href="#define">定义</a></li>
+<li><a href="#download">下载</a>
+<li><a href="#open_from_txt">::open_from_txt</a></li>
+<li><a href="#open_from_memory">::open_from_memory</a></li>
+<li><a href="#search_index_equal">::search_index_equal</a></li>
+<li><a href="#search_position">::search_position</a></li>
+<li><a href="#search_first_column_equal">::search_first_column_equal</a></li>
+<li><a href="#get_id">::get_id</a></li>
+<li><a href="#get_field_number">::get_field_number</a></li>
+<li><a href="#get_record_number">::get_record_number</a></li>
+<li><a href="#get_fieldname">::get_fieldname</a></li>
+<li><a href="#get_fieldindex">::get_fieldindex</a></li>
+<li><a href="#get_fieldtype">::get_fieldtype</a></li>
+</ul>
+
+<p><a name="total"></a></p>
+
+<h2>总述</h2>
+
+<p>文件数据库提供了一系列操作文本数据的接口，而所谓的文件数据库即可以用excel编辑的类似与csv的数据文件，一般作为应用的数据配置。</p>
+
+<p><a name="define"></a></p>
+
+<h2>定义</h2>
+<pre><code>
+namespace pf_file {                                                                
+                                                                                   
+class PF_API Database { 
+</code></pre>
+
+<p><a name="download"></a></p>
+
+<h2>下载</h2>
+<blockquote>
+<p><a href="hairstyle.txt">hairstyle.txt</a></p>
+</blockquote>
+
+<h2>::open_from_txt</h2>
+<p><a name="open_from_txt"></a></p>
+
+<blockquote>
+<p>bool open_from_txt(const char *filename); </p>
+<p>描述：</p>                                                                            
+<p>打开一个文本文件。</p>                      
+<p>参数：</p>
+<p>const char *filename 文件名称。</p>
+<p>返回值：bool</p>
+</blockquote>
+
+<p><b>Example #1 open_from_txt 范例</b></p>
+
+<pre><code>
+#include "pf/file/database.h"                                                      
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_file::Database filedb(0); //析构函数参数为当前数据文件的ID                    
+  bool result = false;                                                             
+  result = filedb.open_from_txt("hairstyle.txt");                                  
+  if (!result) return 1;                                                           
+  DEBUGPRINTF("hairstyle.txt open success");                                       
+  return 0;                                                                        
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">hairstyle.txt open success</font>
+</p>
+
+<h2>::open_from_memory</h2>
+<p><a name="open_from_memory"></a></p>
+
+<blockquote>
+<p>bool open_from_memory(const char *memory,                                       
+                         const char *end,                                          
+                         const char *filename = NULL); </p>
+<p>描述：</p>                                                                            
+<p>从内存中打开文件数据。</p>                      
+<p>参数：</p>
+<p>const char *memory 起始的数据指针。</p>
+<p>const char *end 结束的数据指针。</p>
+<p>const char *filename 文件名。</p>
+<p>返回值：bool</p>
+</blockquote>
+
+<h2>::search_index_equal</h2>
+<p><a name="search_index_equal"></a></p>
+
+<blockquote>
+<p>const field_data* search_index_equal(int32_t index) const; </p>
+<p>描述：</p>                                                                            
+<p>从指定索引中取出一个值。</p>                      
+<p>参数：</p>
+<p>int32_t index 索引。</p>
+<p>返回值：const field_data*</p>
+</blockquote>
+
+<p><b>Example #1 search_index_equal 范例</b></p>
+
+<pre><code>
+#include "pf/file/database.h"                                                      
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_file::Database filedb(0); //析构函数参数为当前数据文件的ID                    
+  bool result = false;                                                             
+  result = filedb.open_from_txt("hairstyle.txt");                                  
+  if (!result) return 1;                                                           
+  DEBUGPRINTF("value: %d", filedb.search_index_equal(0)->int_value);            
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">value: 0</font>
+</p>
+
+<h2>::search_position</h2>
+<p><a name="search_position"></a></p>
+
+<blockquote>
+<p>virtual const field_data* search_position(int32_t line,                         
+                                             int32_t column) const; </p>
+<p>描述：</p>                                                                            
+<p>从指定行与列中取出一个值。</p>                      
+<p>参数：</p>
+<p>int32_t line 指定行（实际的行数-1）。</p>
+<p>int32_t column 指定列（实际的列数-1）。</p>
+<p>返回值：const field_data*</p>
+</blockquote>
+
+<p><b>Example #1 search_position 范例</b></p>
+
+<pre><code>
+#include "pf/file/database.h"                                                      
+#include "main.h"                                                                  
+                                                                                
+typedef struct {                                                                
+  int32_t index;                                                                
+  int32_t raceid;                                                               
+  int32_t cost_itemid;                                                          
+  int32_t cost_itemcount;                                                       
+} hairstyle_t;                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_file::Database filedb(0); //析构函数参数为当前数据文件的ID                    
+  bool result = false;                                                             
+  result = filedb.open_from_txt("hairstyle.txt");                                  
+  if (!result) return 1;                                                           
+  DEBUGPRINTF("value: %d", filedb.search_position(0, 2)->int_value);            
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">value: 20307104</font>
+</p>
+
+<h2>::search_first_column_equal</h2>
+<p><a name="search_first_column_equal"></a></p>
+
+<blockquote>
+<p>virtual const field_data* search_first_column_equal(                         
+       int32_t column,                                                                                         
+       const field_data &value) const; </p>
+<p>描述：</p>                                                                            
+<p>搜索第一个等于指定列上值的数据。</p>                      
+<p>参数：</p>
+<p>int32_t column 指定列（实际的列数-1）。</p>
+<p>const field_data &value 指定的值。</p>
+<p>返回值：const field_data*</p>
+</blockquote>
+
+<p><b>Example #1 search_first_column_equal 范例</b></p>
+
+<pre><code>
+#include "pf/file/database.h"                                                      
+#include "main.h"                                                                  
+                                                                                
+typedef struct {                                                                
+  int32_t index;                                                                
+  int32_t raceid;                                                               
+  int32_t cost_itemid;                                                          
+  int32_t cost_itemcount;                                                       
+} hairstyle_t;                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_file::Database filedb(0); //析构函数参数为当前数据文件的ID                    
+  bool result = false;                                                             
+  result = filedb.open_from_txt("hairstyle.txt");                                  
+  if (!result) return 1;                                                           
+  const hairstyle_t *line = reinterpret_cast<const hairstyle_t *>(              
+      filedb.search_first_column_equal(0, 1)); //指定第一行，注意结构体对齐     
+  DEBUGPRINTF("cost_itemcount: %d", line->cost_itemcount);                      
+  return 0;                                                                     
+} 
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">value: 0</font>
+</p>
+
+<h2>::get_id</h2>
+<p><a name="get_id"></a></p>
+
+<blockquote>
+<p>uint32_t get_id() const; </p>
+<p>描述：</p>                                                                            
+<p>获取文件ID。</p>                      
+<p>参数：</p>
+<p>无。</p>
+<p>返回值：uint32_t</p>
+</blockquote>
+
+<p><b>Example #1 get_id 范例</b></p>
+
+<pre><code>
+#include "pf/file/database.h"                                                      
+#include "main.h"                                                                  
+                                                                                
+typedef struct {                                                                
+  int32_t index;                                                                
+  int32_t raceid;                                                               
+  int32_t cost_itemid;                                                          
+  int32_t cost_itemcount;                                                       
+} hairstyle_t;                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_file::Database filedb(0); //析构函数参数为当前数据文件的ID                    
+  bool result = false;                                                             
+  result = filedb.open_from_txt("hairstyle.txt");                                  
+  if (!result) return 1;                                                           
+  DEBUGPRINTF("id: %d", filedb.get_id());                                       
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">id: 0</font>
+</p>
+
+<h2>::get_field_number</h2>
+<p><a name="get_field_number"></a></p>
+
+<blockquote>
+<p>int32_t get_field_number() const; </p>
+<p>描述：</p>                                                                            
+<p>获取字段数（列数）。</p>                      
+<p>参数：</p>
+<p>无。</p>
+<p>返回值：int32_t</p>
+</blockquote>
+
+<p><b>Example #1 get_field_number 范例</b></p>
+
+<pre><code>
+#include "pf/file/database.h"                                                      
+#include "main.h"                                                                  
+                                                                                
+typedef struct {                                                                
+  int32_t index;                                                                
+  int32_t raceid;                                                               
+  int32_t cost_itemid;                                                          
+  int32_t cost_itemcount;                                                       
+} hairstyle_t;                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_file::Database filedb(0); //析构函数参数为当前数据文件的ID                    
+  bool result = false;                                                             
+  result = filedb.open_from_txt("hairstyle.txt");                                  
+  if (!result) return 1;                                                           
+  DEBUGPRINTF("field number: %d", filedb.get_field_number());                   
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">field number: 4</font>
+</p>
+
+<h2>::get_record_number</h2>
+<p><a name="get_record_number"></a></p>
+
+<blockquote>
+<p>int32_t get_record_number() const; </p>
+<p>描述：</p>                                                                            
+<p>获取记录数（行数）。</p>                      
+<p>参数：</p>
+<p>无。</p>
+<p>返回值：int32_t</p>
+</blockquote>
+
+<p><b>Example #1 get_record_number 范例</b></p>
+
+<pre><code>
+#include "pf/file/database.h"                                                      
+#include "main.h"                                                                  
+                                                                                
+typedef struct {                                                                
+  int32_t index;                                                                
+  int32_t raceid;                                                               
+  int32_t cost_itemid;                                                          
+  int32_t cost_itemcount;                                                       
+} hairstyle_t;                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_file::Database filedb(0); //析构函数参数为当前数据文件的ID                    
+  bool result = false;                                                             
+  result = filedb.open_from_txt("hairstyle.txt");                                  
+  if (!result) return 1;                                                           
+  DEBUGPRINTF("recored number: %d", filedb.get_record_number());                                       
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">record number: 2</font>
+</p>
+
+<h2>::get_fieldname</h2>
+<p><a name="get_fieldname"></a></p>
+
+<blockquote>
+<p>const char *get_fieldname(int32_t index); </p>
+<p>描述：</p>                                                                            
+<p>根据列的索引获取字段名。</p>                      
+<p>参数：</p>
+<p>无。</p>
+<p>返回值：const char *</p>
+</blockquote>
+
+<p><b>Example #1 get_fieldname 范例</b></p>
+
+<pre><code>
+#include "pf/file/database.h"                                                      
+#include "main.h"                                                                  
+                                                                                
+typedef struct {                                                                
+  int32_t index;                                                                
+  int32_t raceid;                                                               
+  int32_t cost_itemid;                                                          
+  int32_t cost_itemcount;                                                       
+} hairstyle_t;                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_file::Database filedb(0); //析构函数参数为当前数据文件的ID                    
+  bool result = false;                                                             
+  result = filedb.open_from_txt("hairstyle.txt");                                  
+  if (!result) return 1;                                                           
+  DEBUGPRINTF("name: %s", filedb.get_fieldname(1));                                       
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">name: raceid</font>
+</p>
+
+<h2>::get_fieldindex</h2>
+<p><a name="get_fieldindex"></a></p>
+
+<blockquote>
+<p>int32_t get_fieldindex(const char *name); </p>
+<p>描述：</p>                                                                            
+<p>根据字段名获取索引，与<a href="#get_fieldname">get_fieldname</a>相反。</p>                      
+<p>参数：</p>
+<p>无。</p>
+<p>返回值：int32_t</p>
+</blockquote>
+
+<p><b>Example #1 get_fieldindex 范例</b></p>
+
+<pre><code>
+#include "pf/file/database.h"                                                      
+#include "main.h"                                                                  
+                                                                                
+typedef struct {                                                                
+  int32_t index;                                                                
+  int32_t raceid;                                                               
+  int32_t cost_itemid;                                                          
+  int32_t cost_itemcount;                                                       
+} hairstyle_t;                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_file::Database filedb(0); //析构函数参数为当前数据文件的ID                    
+  bool result = false;                                                             
+  result = filedb.open_from_txt("hairstyle.txt");                                  
+  if (!result) return 1;                                                           
+  DEBUGPRINTF("index: %d", filedb.get_fieldindex("raceid"));                                       
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">index: 1</font>
+</p>
+
+<h2>::get_fieldtype</h2>
+<p><a name="get_fieldtype"></a></p>
+
+<blockquote>
+<p>uint8_t get_fieldtype(int32_t index); </p>
+<p>描述：</p>                                                                            
+<p>根据索引获得字段的类型。</p>                      
+<p>参数：</p>
+<p>无。</p>
+<p>返回值：int32_t</p>
+</blockquote>
+
+<p><b>Example #1 get_fieldtype 范例</b></p>
+
+<pre><code>
+#include "pf/file/database.h"                                                      
+#include "main.h"                                                                  
+                                                                                
+typedef struct {                                                                
+  int32_t index;                                                                
+  int32_t raceid;                                                               
+  int32_t cost_itemid;                                                          
+  int32_t cost_itemcount;                                                       
+} hairstyle_t;                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_file::Database filedb(0); //析构函数参数为当前数据文件的ID                    
+  bool result = false;                                                             
+  result = filedb.open_from_txt("hairstyle.txt");                                  
+  if (!result) return 1;                                                           
+  DEBUGPRINTF("type: %d", filedb.get_fieldtype(1));                                       
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">type: 0</font>
+</p>
+
+<nav>
+	<a href="file.api.htm">系统API</a> |
+	<a href="file.ini.htm">ini文件 </a>
+</nav>
+<footer>
+    <p><a href="#">Dayle Rees</a>.</p>
+</footer>
+            
+            
+</section>
+  <div class="clearfix"></div>
+</div>
+
+        <script src="../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="../js/vendor/jquery-1.8.2.min.js"><\/script>')</script>
+        <script src="../../checkout.stripe.com/v2/checkout.js"></script>
+        <script src="../js/vendor/prettify.js"></script>
+        <script src="../js/plugins.js"></script>
+        <script src="../js/main.js"></script>
+
+        <script type="text/javascript">
+
+          var _gaq = _gaq || [];
+          _gaq.push(['_setAccount', 'UA-37898177-1']);
+          _gaq.push(['_trackPageview']);
+
+          (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www/') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+          })();
+
+        </script>
+    </body>
+</html>

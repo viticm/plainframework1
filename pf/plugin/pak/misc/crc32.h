@@ -11,6 +11,8 @@
 #ifndef __CRC32_H__
 #define __CRC32_H__
 
+#include <inttypes.h>
+
 struct crc32_context
 {
     unsigned long value;
@@ -18,6 +20,6 @@ struct crc32_context
 
 void CRC32_Init(crc32_context * ctx);
 void CRC32_Update(crc32_context * ctx, unsigned char *input, int ilen);
-void CRC32_Finish(crc32_context * ctx, unsigned long * value);
+void CRC32_Finish(crc32_context * ctx, uint64_t * value);
 
 #endif // __CRC32_H__

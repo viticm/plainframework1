@@ -356,6 +356,13 @@ int64_t tellex(int32_t fd) {
   return result ;
 }
 
+bool truncate(const char *filename) {
+  FILE *fp = fopen(filename, "w");
+  if (NULL == fp) return false;
+  fclose(fp);
+  return true;
+}
+
 } //namespace api
 
 } //namespace pf_file

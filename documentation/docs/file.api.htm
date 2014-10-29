@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset=UTF-8"utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>简约框架参考手册</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" href="../css/style.css">
+        <script src="../js/vendor/modernizr-2.6.2.min.js"></script>
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="#">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+
+        <div class="wrapper">
+            <header>
+                <h1>简约框架参考手册</h1>
+            </header>
+            <aside class="sidebar">
+<ul>
+<li>入门指引
+
+<ul>
+<li><a href="../index.htm">简介</a></li>
+<li><a href="simpletutorials.htm">简明教程</a></li>
+<li><a href="style-guide.htm">代码风格</a></li>
+<li><a href="module.htm">模块</a></li>
+<li><a href="license.htm">许可</a></li>
+</ul></li>
+
+<li>基础模块
+<ul>
+<li><a href="base.macro.htm">宏</a></li>
+<li><a href="base.global.htm">全局变量</a></li>
+<li><a href="base.log.htm">日志</a></li>
+<li><a href="base.string.htm">字符串</a></li>
+<li><a href="base.hashmap.htm">hash map</a></li>
+<li><a href="base.timemanager.htm">时间管理器</a></li>
+<li><a href="base.tinytimer.htm">小型定时器</a></li>
+<li><a href="base.util.htm">工具集</a></li>
+</ul></li>
+
+<li>数据库模块
+<ul>
+<li><a href="db.manager.htm">管理器</a></li>
+<li><a href="db.odbc.htm">ODBC</a></li>
+</ul></li>
+
+<li>引擎模块
+<ul>
+<li><a href="engine.kernel.htm">核心</a></li>
+<li><a href="engine.thread.htm">线程</a></li>
+</ul></li>
+
+<li>事件模块
+<ul>
+<li><a href="event.manager.htm">管理器</a></li>
+</ul></li>
+
+<li>文件模块
+<ul>
+<li><a href="file.api.htm">系统API</a></li>
+<li><a href="file.database.htm">文件数据库</a></li>
+<li><a href="file.ini.htm">ini文件</a></li>
+</ul></li>
+
+<li>网络模块
+<ul>
+<li><a href="net.connection.htm">连接</a></li>
+<li><a href="net.packet.htm">包</a></li>
+<li><a href="net.socket.htm">套接字</a></li>
+<li><a href="net.manager.htm">管理器</a></li>
+</ul></li>
+
+<li>性能模块
+<ul>
+<li><a href="performance.eyes.htm">监视器</a></li>
+</ul></li>
+
+<li>脚本模块
+<ul>
+<li><a href="script.cache.htm">缓存</a></li>
+<li><a href="script.lua.htm">lua</a></li>
+</ul></li>
+
+<li>系统模块
+<ul>
+<li><a href="sys.memory.htm">内存</a></li>
+<li><a href="sys.info.htm">系统信息</a></li>
+<li><a href="sys.process.htm">进程</a></li>
+<li><a href="sys.thread.htm">线程</a></li>
+<li><a href="sys.util.htm">工具集</a></li>
+</ul></li>
+
+<li>工具模块
+<ul>
+<li><a href="util.compressor.htm">压缩模块</a></li>
+</ul></li>
+
+</ul>
+</aside>
+
+<section class="content">
+
+<h1>file module api</h1>
+
+<ul>
+<li><a href="#total">总述</a></li>
+<li><a href="#openex">pf_file::api::openex</a></li>
+<li><a href="#openmode_ex">pf_file::api::openmode_ex</a></li>
+<li><a href="#closeex">pf_file::api::closeex</a></li>
+<li><a href="#readex">pf_file::api::readex</a></li>
+<li><a href="#writeex">pf_file::api::writeex</a></li>
+<li><a href="#fcntlex">pf_file::api::fcntlex</a></li>
+<li><a href="#fcntlarg_ex">pf_file::api::fcntlarg_ex</a></li>
+<li><a href="#get_nonblocking_ex">pf_file::api::get_nonblocking_ex</a></li>
+<li><a href="#ioctlex">pf_file::api::ioctlex</a></li>
+<li><a href="#availableex">pf_file::api::availableex</a></li>
+<li><a href="#dupex">pf_file::api::dupex</a></li>
+<li><a href="#lseekex">pf_file::api::lseekex</a></li>
+<li><a href="#tellex">pf_file::api::tellex</a></li>
+</ul>
+
+<p><a name="total"></a></p>
+
+<h2>总述</h2>
+
+<p>文件API封装了跨平台下的文件操作函数，用法与系统函数一致，故此暂不提供具体示例。</p>
+
+<p><a name="openex"></a></p>
+
+<h2>pf_file::api::openex</h2>
+
+<blockquote>
+<p>int32_t openex(const char *filename, int32_t flag);                     
+</p>
+<p>描述：打开文件函数。</p>
+<p>参数：</p>
+<p>const char *filename 文件名。</p>
+<p>int32_t flag 标记。</p>
+<p>返回值：int32_t</p>
+</blockquote>
+
+<p><a name="openmode_ex"></a></p>
+
+<h2>pf_file::api::openmode_ex</h2>
+
+<blockquote>
+<p>int32_t openmode_ex(const char *filename, int32_t flag, int32_t mode);                     
+</p>
+<p>描述：以不同模式打开文件函数。</p>
+<p>参数：</p>
+<p>const char *filename 文件名。</p>
+<p>int32_t flag 标记。</p>
+<p>int32_t mode 模式。</p>
+<p>返回值：int32_t</p>
+</blockquote>
+
+<p><a name="closeex"></a></p>
+
+<h2>pf_file::api::closeex</h2>
+
+<blockquote>
+<p>void closeex(int32_t fd);                     
+</p>
+<p>描述：关闭文件。</p>
+<p>参数：</p>
+<p>int32_t fd 文件描述符。</p>
+<p>返回值：void</p>
+</blockquote>
+
+<p><a name="readex"></a></p>
+
+<h2>pf_file::api::readex</h2>
+
+<blockquote>
+<p>uint32_t readex(int32_t fd, void *buffer, uint32_t length);                     
+</p>
+<p>描述：文件读取。</p>
+<p>参数：</p>
+<p>int32_t fd 文件描述符。</p>
+<p>void *buffer 读取的内容保存指针。</p>
+<p>uint32_t length 需读取的长度。</p>
+<p>返回值：uint32_t</p>
+</blockquote>
+
+<p><a name="writeex"></a></p>
+
+<h2>pf_file::api::writeex</h2>
+
+<blockquote>
+<p>uint32_t writeex(int32_t fd, const void *buffer, uint32_t length);                    
+</p>
+<p>描述：文件写入。</p>
+<p>参数：</p>
+<p>int32_t fd 文件描述符。</p>
+<p>const void *buffer 需要写入的内容指针。</p>
+<p>uint32_t length 需写入的长度。</p>
+<p>返回值：uint32_t</p>
+</blockquote>
+
+<p><a name="fcntlex"></a></p>
+
+<h2>pf_file::api::fcntlex</h2>
+
+<blockquote>
+<p>int32_t fcntlex(int32_t fd, int32_t cmd);                    
+</p>
+<p>描述：改变已打开的文件性质。</p>
+<p>参数：</p>
+<p>int32_t fd 文件描述符。</p>
+<p>int32_t cmd 命令。</p>
+<p>返回值：int32_t</p>
+</blockquote>
+
+<p><a name="fcntlarg_ex"></a></p>
+
+<h2>pf_file::api::fcntlarg_ex</h2>
+
+<blockquote>
+<p>int32_t fcntlarg_ex(int32_t fd, int32_t cmd, int32_t arg);                    
+</p>
+<p>描述：改变已打开的文件性质。</p>
+<p>参数：</p>
+<p>int32_t fd 文件描述符。</p>
+<p>int32_t cmd 命令。</p>
+<p>int32_t arg 参数。</p>
+<p>返回值：int32_t</p>
+</blockquote>
+
+<p><a name="get_nonblocking_ex"></a></p>
+
+<h2>pf_file::api::get_nonblocking_ex</h2>
+
+<blockquote>
+<p>bool get_nonblocking_ex(int32_t socketid);                    
+</p>
+<p>描述：获取套接字是否为不阻塞的。</p>
+<p>参数：</p>
+<p>int32_t socketid 套接字描述符。</p>
+<p>返回值：bool</p>
+</blockquote>
+
+<p><a name="set_nonblocking_ex"></a></p>
+
+<h2>pf_file::api::set_nonblocking_ex</h2>
+
+<blockquote>
+<p>void set_nonblocking_ex(int32_t socketid, bool on);                    
+</p>
+<p>描述：设置套接字阻塞状态。</p>
+<p>参数：</p>
+<p>int32_t socketid 套接字描述符。</p>
+<p>bool on 开/关。</p>
+<p>返回值：无</p>
+</blockquote>
+
+<p><a name="ioctlex"></a></p>
+
+<h2>pf_file::api::ioctlex</h2>
+
+<blockquote>
+<p>void ioctlex(int32_t fd, int32_t request, void *argp);                    
+</p>
+<p>描述：I/O通道进行管理的函数。</p>
+<p>参数：</p>
+<p>int32_t fd 文件描述符。</p>
+<p>int32_t request 命令。</p>
+<p>void *argp 指针参数。</p>
+<p>返回值：无</p>
+</blockquote>
+
+<p><a name="availableex"></a></p>
+
+<h2>pf_file::api::availableex</h2>
+
+<blockquote>
+<p>uint32_t availableex(int32_t fd);                    
+</p>
+<p>描述：激活一个文件。</p>
+<p>参数：</p>
+<p>int32_t fd 文件描述符。</p>
+<p>返回值：uint32_t</p>
+</blockquote>
+
+<p><a name="dupex"></a></p>
+
+<h2>pf_file::api::dupex</h2>
+
+<blockquote>
+<p>int32_t dupex(int32_t fd);                    
+</p>
+<p>描述：复制文件句柄。</p>
+<p>参数：</p>
+<p>int32_t fd 文件描述符。</p>
+<p>返回值：int32_t</p>
+</blockquote>
+
+<p><a name="lseekex"></a></p>
+
+<h2>pf_file::api::lseekex</h2>
+
+<blockquote>
+<p>int64_t lseekex(int32_t fd, uint64_t offset, int32_t whence);                    
+</p>
+<p>描述：lseek扩展。</p>
+<p>参数：</p>
+<p>int32_t fd 文件描述符。</p>
+<p>uint64_t offset 偏移。</p>
+<p>int32_t whence 起始位置。</p>
+<p>返回值：int64_t</p>
+</blockquote>
+
+<p><a name="tellex"></a></p>
+
+<h2>pf_file::api::tellex</h2>
+
+<blockquote>
+<p>int64_t tellex(int32_t fd);                   
+</p>
+<p>描述：tell扩展。</p>
+<p>参数：</p>
+<p>int32_t fd 文件描述符。</p>
+<p>返回值：int64_t</p>
+</blockquote>
+
+<nav>
+	<a href="file.database.htm">文件数据库</a>
+</nav>
+<footer>
+    <p><a href="#">Dayle Rees</a>.</p>
+</footer>
+            
+            
+</section>
+  <div class="clearfix"></div>
+</div>
+
+        <script src="../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="../js/vendor/jquery-1.8.2.min.js"><\/script>')</script>
+        <script src="../../checkout.stripe.com/v2/checkout.js"></script>
+        <script src="../js/vendor/prettify.js"></script>
+        <script src="../js/plugins.js"></script>
+        <script src="../js/main.js"></script>
+
+        <script type="text/javascript">
+
+          var _gaq = _gaq || [];
+          _gaq.push(['_setAccount', 'UA-37898177-1']);
+          _gaq.push(['_trackPageview']);
+
+          (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www/') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+          })();
+
+        </script>
+    </body>
+</html>

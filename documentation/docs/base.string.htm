@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset=UTF-8"utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>简约框架参考手册</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" href="../css/style.css">
+        <script src="../js/vendor/modernizr-2.6.2.min.js"></script>
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="#">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+
+        <div class="wrapper">
+            <header>
+                <h1>简约框架参考手册</h1>
+            </header>
+            <aside class="sidebar">
+<ul>
+<li>入门指引
+
+<ul>
+<li><a href="../index.htm">简介</a></li>
+<li><a href="simpletutorials.htm">简明教程</a></li>
+<li><a href="style-guide.htm">代码风格</a></li>
+<li><a href="module.htm">模块</a></li>
+<li><a href="license.htm">许可</a></li>
+</ul></li>
+
+<li>基础模块
+<ul>
+<li><a href="base.macro.htm">宏</a></li>
+<li><a href="base.global.htm">全局变量</a></li>
+<li><a href="base.log.htm">日志</a></li>
+<li><a href="base.string.htm">字符串</a></li>
+<li><a href="base.hashmap.htm">hash map</a></li>
+<li><a href="base.timemanager.htm">时间管理器</a></li>
+<li><a href="base.tinytimer.htm">小型定时器</a></li>
+<li><a href="base.util.htm">工具集</a></li>
+</ul></li>
+
+<li>数据库模块
+<ul>
+<li><a href="db.manager.htm">管理器</a></li>
+<li><a href="db.odbc.htm">ODBC</a></li>
+</ul></li>
+
+<li>引擎模块
+<ul>
+<li><a href="engine.kernel.htm">核心</a></li>
+<li><a href="engine.thread.htm">线程</a></li>
+</ul></li>
+
+<li>事件模块
+<ul>
+<li><a href="event.manager.htm">管理器</a></li>
+</ul></li>
+
+<li>文件模块
+<ul>
+<li><a href="file.api.htm">系统API</a></li>
+<li><a href="file.database.htm">文件数据库</a></li>
+<li><a href="file.ini.htm">ini文件</a></li>
+</ul></li>
+
+<li>网络模块
+<ul>
+<li><a href="net.connection.htm">连接</a></li>
+<li><a href="net.packet.htm">包</a></li>
+<li><a href="net.socket.htm">套接字</a></li>
+<li><a href="net.manager.htm">管理器</a></li>
+</ul></li>
+
+<li>性能模块
+<ul>
+<li><a href="performance.eyes.htm">监视器</a></li>
+</ul></li>
+
+<li>脚本模块
+<ul>
+<li><a href="script.cache.htm">缓存</a></li>
+<li><a href="script.lua.htm">lua</a></li>
+</ul></li>
+
+<li>系统模块
+<ul>
+<li><a href="sys.memory.htm">内存</a></li>
+<li><a href="sys.info.htm">系统信息</a></li>
+<li><a href="sys.process.htm">进程</a></li>
+<li><a href="sys.thread.htm">线程</a></li>
+<li><a href="sys.util.htm">工具集</a></li>
+</ul></li>
+
+<li>工具模块
+<ul>
+<li><a href="util.compressor.htm">压缩模块</a></li>
+</ul></li>
+
+</ul>
+</aside>
+
+<section class="content">
+
+<h1>base module string</h1>
+
+<ul>
+<li><a href="#total">总述</a></li>
+<li><a href="#replace_all">pf_base::string::replace_all</a></li>
+<li><a href="#toint64">pf_base::string::toint64</a></li>
+<li><a href="#touint64">pf_base::string::touint64</a></li>
+<li><a href="#encrypt">pf_base::string::encrypt</a></li>
+<li><a href="#decrypt">pf_base::string::decrypt</a></li>
+<li><a href="#safecopy">pf_base::string::safecopy</a></li>
+<li><a href="#charset_convert">pf_base::string::charset_convert</a></li>
+</ul>
+
+<p><a name="total"></a></p>
+
+<h2>总述</h2>
+
+<p>基础字符串模块提供了基本的字符串常用操作方法，如字符串的拷贝、替换等。</p>
+
+<p><a name="replace_all"></a></p>
+
+<h2>pf_base::string::replace_all</h2>
+
+<blockquote>
+<p>void replace_all(std::string &str,                                          
+                    const std::string source,                                  
+                    const std::string destination); </p>
+<p>描述：使用指定的字符串替换目标字符串中的指定字符串。</p>
+<p>参数：</p>
+<p>std::string &str 操作的字符串。</p>
+<p>const std::string source 需要替换的字符串。</p>
+<p>const std::string destination 替换的字符串将被该字符串替换。</p>
+<p>返回值：无</p>
+</blockquote>
+
+<p><b>Example #1 replace_all 范例</b></p>
+
+<pre><code>
+#include "pf/base/string.h"                                                        
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  std::string str = "abc123456abcd";                                            
+  DEBUGPRINTF("str: %s", str.c_str());                                          
+  pf_base::string::replace_all(str, "abc", "well");                             
+  DEBUGPRINTF("str: %s", str.c_str());                                          
+  return 0;                                                                     
+}        
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">str: abc123456abcd</font> <br />
+<font color="green">str: well123456welld</font>
+</p>
+
+<p><a name="toint64"></a></p>
+
+<h2>pf_base::string::toint64</h2>
+
+<blockquote>
+<p>int64_t toint64(const char *str); </p>
+<p>描述：使用指定的字符串转换为int64类型。</p>
+<p>参数：</p>
+<p>const char *str 需要转换的字符串。</p>
+<p>返回值：int64_t</p>
+</blockquote>
+
+<p><b>Example #1 toint64 范例</b></p>
+
+<pre><code>
+#include "pf/base/string.h"                                                        
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                     
+  int64_t number = pf_base::string::toint64("-1999999999999");                  
+  DEBUGPRINTF("number: %"PRId64"", number);                                     
+  return 0;                                                                     
+}      
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">number: -1999999999999</font>
+</p>
+
+<p><a name="touint64"></a></p>
+
+<h2>pf_base::string::touint64</h2>
+
+<blockquote>
+<p>uint64_t touint64(const char *str); </p>
+<p>描述：使用指定的字符串转换为uint64类型。</p>
+<p>参数：</p>
+<p>const char *str 需要转换的字符串。</p>
+<p>返回值：uint64_t</p>
+</blockquote>
+
+<p><b>Example #1 toint64 范例</b></p>
+
+<pre><code>
+#include "pf/base/string.h"                                                        
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                     
+  uint64_t number = pf_base::string::touint64("1999999999999");                  
+  DEBUGPRINTF("number: %"PRIu64"", number);                                     
+  return 0;                                                                     
+}      
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">number: 1999999999999</font>
+</p>
+
+<p><a name="encrypt"></a></p>
+
+<h2>pf_base::string::encrypt</h2>
+
+<blockquote>
+<p>void encrypt(const char *in, char *out, int32_t out_length); </p>
+<p>描述：加密字符串，加密后的字符串比原字符串长，需保证加密保存的字符串大小足够。
+该加密最佳的用途是作为密码的加解密，如需加密文本，可以考虑其他方式。
+而且每次加密的结果可能不相同，但是解密的结果一致。
+</p>
+<p>参数：</p>
+<p>const char *in 需要加密的字符串。</p>
+<p>char *out 加密后存储的字符串。</p>
+<p>int32_t out_length 加密后存储字符串的长度，超过此值的部分加密将被省略。</p>
+<p>返回值：无</p>
+</blockquote>
+
+<p><b>Example #1 encrypt 范例</b></p>
+
+<pre><code>
+#include "pf/base/string.h"                                                        
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                     
+  char encrypt[64] = {0};                                                       
+  pf_base::string::encrypt("viticm", encrypt, sizeof(encrypt) - 1);             
+  DEBUGPRINTF("encrypt: %s", encrypt);                                          
+  return 0;                                                                     
+}   
+</code></pre>
+<p>以上例程的输出类似于（运行三次）：</p>
+<p>
+<font color="green">encrypt: R0t2bT1VaXRpY216</font> <br />
+<font color="green">encrypt: PVl2PUg9aXRpY209</font> <br />
+<font color="green">encrypt: ZER2bT09aXRpY21P</font>
+</p>
+
+<p><a name="decrypt"></a></p>
+
+<h2>pf_base::string::decrypt</h2>
+
+<blockquote>
+<p>void encrypt(const char *in, char *out, int32_t out_length); </p>
+<p>描述：解密字符串，解密后的字符串比原字符串小，需保证解密保存的字符串大小足够。
+解密由encrypt加密的字符串。
+</p>
+<p>参数：</p>
+<p>const char *in 需要解密的字符串。</p>
+<p>char *out 解密后存储的字符串。</p>
+<p>int32_t out_length 解密后存储字符串的长度，超过此值的部分将被省略。</p>
+<p>返回值：无</p>
+</blockquote>
+
+<p><b>Example #1 decrypt 范例</b></p>
+
+<pre><code>
+#include "pf/base/string.h"                                                        
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                     
+  char decrypt[64] = {0};                                                       
+  pf_base::string::decrypt("R0t2bT1VaXRpY216", decrypt, sizeof(decrypt) - 1);   
+  DEBUGPRINTF("decrypt: %s", decrypt);                                          
+  pf_base::string::decrypt("PVl2PUg9aXRpY209", decrypt, sizeof(decrypt) - 1);   
+  DEBUGPRINTF("decrypt: %s", decrypt);                                          
+  pf_base::string::decrypt("ZER2bT09aXRpY21P", decrypt, sizeof(decrypt) - 1);   
+  DEBUGPRINTF("decrypt: %s", decrypt);                                          
+  return 0;                                                                     
+}   
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">decrypt: viticm</font> <br />
+<font color="green">decrypt: viticm</font> <br />
+<font color="green">decrypt: viticm</font>
+</p>
+
+<p><a name="safecopy"></a></p>
+
+<h2>pf_base::string::safecopy</h2>
+
+<blockquote>
+<p>char *safecopy(char *dest, const char *src, size_t size); </p>
+<p>描述：字符串安全拷贝函数。
+</p>
+<p>参数：</p>
+<p>char *dest 目标字符串。</p>
+<p>const char *src 需拷贝的字符串。</p>
+<p>size_t size 需拷贝的长度。</p>
+<p>返回值：目的字符串指针。</p>
+</blockquote>
+
+<p><b>Example #1 safecopy 范例</b></p>
+
+<pre><code>
+#include "pf/base/string.h"                                                        
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  char dest[64] = {0};                                                             
+  const char src[] = "this is a test string";                                      
+  pf_base::string::safecopy(dest, src, sizeof(dest));                              
+  DEBUGPRINTF("str: %s", dest);                                                    
+  return 0;                                                                        
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">str: this is a test string</font>
+</p>
+
+<p><a name="charset_convert"></a></p>
+
+<h2>pf_base::string::charset_convert</h2>
+
+<blockquote>
+<p>int32_t charset_convert(const char *from,                                   
+                           const char *to,                                     
+                           char *save,                                         
+                           int32_t save_length,                                
+                           const char *src,                                    
+                           int32_t src_length) ; </p>
+<p>描述：字符串编码转换函数（基于iconv）。
+</p>
+<p>参数：</p>
+<p>const char *from 原编码。</p>
+<p>const char *to 新编码。</p>
+<p>char *save 转换后字符串保存的指针。</p>
+<p>int32_t save_length 转换字符串保存的长度。</p>
+<p>const char *src 需要转换的字符串指针。</p>
+<p>int32_t src_length 需要转换的字符串长度。</p>
+<p>返回值：int32_t 0 成功 -1 失败</p>
+</blockquote>
+
+<p><b>Example #1 charset_convert 范例</b></p>
+
+<pre><code>
+#include "pf/base/string.h"                                                        
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  char dest[64] = {0};                                                             
+  const char src[] = "测试转换的编码";                                             
+  pf_base::string::charset_convert(                                                
+      "UTF-8", "GBK", dest, sizeof(dest) - 1, src, strlen(src));                   
+  DEBUGPRINTF("str: %s", dest);                                                    
+  return 0;                                                                        
+}
+</code></pre>
+<p>以上例程的输出类似于（只有在输出环境为GBK编码才正常显示，否则为乱码）：</p>
+<p>
+<font color="green">str: 测试转换的编码</font>
+</p>
+
+<nav>
+	<a href="base.log.htm">日志</a> |
+	<a href="base.hashmap.htm">hash map </a>
+</nav>
+<footer>
+    <p><a href="#">Dayle Rees</a>.</p>
+</footer>
+            
+            
+</section>
+  <div class="clearfix"></div>
+</div>
+
+        <script src="../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="../js/vendor/jquery-1.8.2.min.js"><\/script>')</script>
+        <script src="../../checkout.stripe.com/v2/checkout.js"></script>
+        <script src="../js/vendor/prettify.js"></script>
+        <script src="../js/plugins.js"></script>
+        <script src="../js/main.js"></script>
+
+        <script type="text/javascript">
+
+          var _gaq = _gaq || [];
+          _gaq.push(['_setAccount', 'UA-37898177-1']);
+          _gaq.push(['_trackPageview']);
+
+          (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www/') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+          })();
+
+        </script>
+    </body>
+</html>

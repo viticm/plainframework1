@@ -40,7 +40,7 @@ class PF_API FactoryManager : public pf_base::Singleton<FactoryManager> {
  public:
    bool init();
    //根据消息类型从内存里分配消息实体数据（允许多线程同时调用）
-   Base* createpacket(uint16_t pakcetid);
+   Base *createpacket(uint16_t pakcetid);
    //根据消息类型取得对应消息的最大尺寸（允许多线程同时调用）
    uint32_t getpacket_maxsize(uint16_t packetid);
    //删除消息实体（允许多线程同时调用）
@@ -61,7 +61,7 @@ class PF_API FactoryManager : public pf_base::Singleton<FactoryManager> {
    uint16_t size_;
    uint16_t factorycount_;
    pf_sys::ThreadLock lock_;
-   bool isinit_; //凡是有内存的初始化都需加上这个标记，已检测再次初始化的情况
+   bool isinit_; //凡是有内存的初始化都需加上这个标记，以检测再次初始化的情况
    function_registerfactories function_registerfactories_;
    function_isvalid_packetid function_isvalid_packetid_;
 

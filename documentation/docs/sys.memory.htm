@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset=UTF-8"utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>简约框架参考手册</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" href="../css/style.css">
+        <script src="../js/vendor/modernizr-2.6.2.min.js"></script>
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="#">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+
+        <div class="wrapper">
+            <header>
+                <h1>简约框架参考手册</h1>
+            </header>
+            <aside class="sidebar">
+<ul>
+<li>入门指引
+
+<ul>
+<li><a href="../index.htm">简介</a></li>
+<li><a href="simpletutorials.htm">简明教程</a></li>
+<li><a href="style-guide.htm">代码风格</a></li>
+<li><a href="module.htm">模块</a></li>
+<li><a href="license.htm">许可</a></li>
+</ul></li>
+
+<li>基础模块
+<ul>
+<li><a href="base.macro.htm">宏</a></li>
+<li><a href="base.global.htm">全局变量</a></li>
+<li><a href="base.log.htm">日志</a></li>
+<li><a href="base.string.htm">字符串</a></li>
+<li><a href="base.hashmap.htm">hash map</a></li>
+<li><a href="base.timemanager.htm">时间管理器</a></li>
+<li><a href="base.tinytimer.htm">小型定时器</a></li>
+<li><a href="base.util.htm">工具集</a></li>
+</ul></li>
+
+<li>数据库模块
+<ul>
+<li><a href="db.manager.htm">管理器</a></li>
+<li><a href="db.odbc.htm">ODBC</a></li>
+</ul></li>
+
+<li>引擎模块
+<ul>
+<li><a href="engine.kernel.htm">核心</a></li>
+<li><a href="engine.thread.htm">线程</a></li>
+</ul></li>
+
+<li>事件模块
+<ul>
+<li><a href="event.manager.htm">管理器</a></li>
+</ul></li>
+
+<li>文件模块
+<ul>
+<li><a href="file.api.htm">系统API</a></li>
+<li><a href="file.database.htm">文件数据库</a></li>
+<li><a href="file.ini.htm">ini文件</a></li>
+</ul></li>
+
+<li>网络模块
+<ul>
+<li><a href="net.connection.htm">连接</a></li>
+<li><a href="net.packet.htm">包</a></li>
+<li><a href="net.socket.htm">套接字</a></li>
+<li><a href="net.manager.htm">管理器</a></li>
+</ul></li>
+
+<li>性能模块
+<ul>
+<li><a href="performance.eyes.htm">监视器</a></li>
+</ul></li>
+
+<li>脚本模块
+<ul>
+<li><a href="script.cache.htm">缓存</a></li>
+<li><a href="script.lua.htm">lua</a></li>
+</ul></li>
+
+<li>系统模块
+<ul>
+<li><a href="sys.memory.htm">内存</a></li>
+<li><a href="sys.info.htm">系统信息</a></li>
+<li><a href="sys.process.htm">进程</a></li>
+<li><a href="sys.thread.htm">线程</a></li>
+<li><a href="sys.util.htm">工具集</a></li>
+</ul></li>
+
+<li>工具模块
+<ul>
+<li><a href="util.compressor.htm">压缩模块</a></li>
+</ul></li>
+
+</ul>
+</aside>
+
+<section class="content">
+
+<h1>system module memory</h1>
+
+<ul>
+<li><a href="#total">总述</a></li>
+<li><a href="#dynamicallocator_define">DynamicAllocator定义</a></li>
+<li><a href="#dynamicallocator_malloc">DynamicAllocator::malloc</a></li>
+<li><a href="#dynamicallocator_free">DynamicAllocator::free</a></li>
+<li><a href="#dynamicallocator_getpointer">DynamicAllocator::getpointer</a></li>
+<li><a href="#dynamicallocator_getlength">DynamicAllocator::getlength</a></li>
+<li><a href="#staticallocator_define">StaticAllocator定义</a></li>
+<li><a href="#staticallocator_init">StaticAllocator::init</a></li>
+<li><a href="#staticallocator_clear">StaticAllocator::clear</a></li>
+<li><a href="#staticallocator_malloc">StaticAllocator::malloc</a></li>
+<li><a href="#staticallocator_calloc">StaticAllocator::calloc</a></li>
+<li><a href="#staticallocator_realloc">StaticAllocator::realloc</a></li>
+<li><a href="#staticallocator_free">StaticAllocator::free</a></li>
+<li><a href="#share_base_define">share::Base定义</a></li>
+<li><a href="#share_base_create">share::Base::create</a></li>
+<li><a href="#share_base_destory">share::Base::destory</a></li>
+<li><a href="#share_base_attach">share::Base::attach</a></li>
+<li><a href="#share_base_get_data_pointer">share::Base::get_data_pointer</a></li>
+<li><a href="#share_base_get_data">share::Base::get_data</a></li>
+<li><a href="#share_base_get_size">share::Base::get_size</a></li>
+<li><a href="#share_base_dump">share::Base::dump</a></li>
+<li><a href="#share_base_merge_from_file">share::Base::merge_from_file</a></li>
+<li><a href="#share_base_set_head_version">share::Base::set_head_version</a></li>
+<li><a href="#share_base_get_head_version">share::Base::get_head_version</a></li>
+<li><a href="#share_lock">share::lock</a></li>
+<li><a href="#share_unlock">share::unlock</a></li>
+</ul>
+
+<p><a name="total"></a></p>
+
+<h2>总述</h2>
+
+<p>系统内存模块提供了内存的一些封装，如动态内存和静态内存的封装以及共享内存的操作接口。</p>
+
+<p><a name="dynamicallocator_define"></a></p>
+
+<h2>DynamicAllocator定义</h2>
+<pre><code>
+namespace pf_sys {                                                                 
+                                                                                   
+namespace memory {                                                                 
+                                                                                   
+class PF_API DynamicAllocator {
+</code></pre>
+
+<p><a name="dynamicallocator_malloc"></a></p>
+
+<h2>DynamicAllocator::malloc</h2>
+<blockquote>
+<p>void *malloc(int64_t length); </p>
+<p>描述：类似malloc方法分配一段内存。</p>
+<p>参数：</p>
+<p>int64_t length 内存大小。</p>
+<p>返回：void *</p>
+</blockquote>
+
+<p><a name="dynamicallocator_free"></a></p>
+
+<h2>DynamicAllocator::free</h2>
+<blockquote>
+<p>void free(); </p>
+<p>描述：内存释放。</p>
+<p>参数：无</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="dynamicallocator_getpointer"></a></p>
+
+<h2>DynamicAllocator::getpointer</h2>
+<blockquote>
+<p>void *getpointer(); </p>
+<p>描述：获得当前的内存指针。</p>
+<p>参数：无</p>
+<p>返回：void *</p>
+</blockquote>
+
+<p><a name="dynamicallocator_getlength"></a></p>
+
+<h2>DynamicAllocator::getlength</h2>
+<blockquote>
+<p>int64_t getlength(); </p>
+<p>描述：获得当前的内存大小。</p>
+<p>参数：无</p>
+<p>返回：int64_t</p>
+</blockquote>
+
+<p><a name="staticallocator_define"></a></p>
+
+<h2>StaticAllocator定义</h2>
+<pre><code>
+namespace pf_sys {                                                                 
+                                                                                   
+namespace memory {                                                                 
+                                                                                   
+class PF_API StaticAllocator {
+</code></pre>
+
+<p><a name="staticallocator_getlength"></a></p>
+
+<h2>StaticAllocator::init</h2>
+<blockquote>
+<p>void init(char *buffer, size_t size); </p>
+<p>描述：初始化。</p>
+<p>参数：</p>
+<p>char *buffer 需要分配的静态内存指针。</p>
+<p>size_t size 内存大小。</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="staticallocator_clear"></a></p>
+
+<h2>StaticAllocator::clear</h2>
+<blockquote>
+<p>void clear(); </p>
+<p>描述：清空函数。</p>
+<p>参数：无</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="staticallocator_malloc"></a></p>
+
+<h2>StaticAllocator::malloc</h2>
+<blockquote>
+<p>void *malloc(size_t size); </p>
+<p>描述：类似malloc分配内存。</p>
+<p>参数：</p>
+<p>size_t size 大小。</p>
+<p>返回：void *</p>
+</blockquote>
+
+<p><a name="staticallocator_calloc"></a></p>
+
+<h2>StaticAllocator::calloc</h2>
+<blockquote>
+<p>void *calloc(size_t count, size_t size); </p>
+<p>描述：类似calloc分配内存。</p>
+<p>参数：</p>
+<p>size_t count 单位数量。</p>
+<p>size_t size 大小。</p>
+<p>返回：void *</p>
+</blockquote>
+
+<p><a name="staticallocator_realloc"></a></p>
+
+<h2>StaticAllocator::realloc</h2>
+<blockquote>
+<p>void *realloc(void *data, size_t newsize); </p>
+<p>描述：类似realloc重新分配内存。</p>
+<p>参数：</p>
+<p>void *data 数据指针。</p>
+<p>size_t newsize 新的大小。</p>
+<p>返回：void *</p>
+</blockquote>
+
+<p><a name="staticallocator_free"></a></p>
+
+<h2>StaticAllocator::free</h2>
+<blockquote>
+<p>void free(void *data); </p>
+<p>描述：内存释放。</p>
+<p>参数：</p>
+<p>void *data 数据指针。</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="share_base_define"></a></p>
+
+<h2>share::Base定义</h2>
+<pre><code>
+namespace pf_sys {                                                              
+                                                                                
+namespace memory {                                                              
+                                                                                
+namespace share {
+
+class PF_API Base {
+</code></pre>
+
+<p><a name="share_base_create"></a></p>
+
+<h2>share::Base::create</h2>
+<blockquote>
+<p>bool create(uint32_t key, uint32_t size); </p>
+<p>描述：共享内存创建。</p>
+<p>参数：</p>
+<p>uint32_t key 键。</p>
+<p>uint32_t size 内存大小。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="share_base_destory"></a></p>
+
+<h2>share::Base::destory</h2>
+<blockquote>
+<p>void destory(); </p>
+<p>描述：共享内存销毁函数。</p>
+<p>参数：无</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="share_base_attach"></a></p>
+
+<h2>share::Base::attach</h2>
+<blockquote>
+<p>bool attach(uint32_t key, uint32_t size); </p>
+<p>描述：共享内存访问。</p>
+<p>参数：</p>
+<p>uint32_t key 键。</p>
+<p>uint32_t size 大小。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="share_base_get_data_pointer"></a></p>
+
+<h2>share::Base::get_data_pointer</h2>
+<blockquote>
+<p>char *get_data_pointer(); </p>
+<p>描述：获得数据（内存）指针。</p>
+<p>参数：无</p>
+<p>返回：char *</p>
+</blockquote>
+
+<p><a name="share_base_get_data"></a></p>
+
+<h2>share::Base::get_data</h2>
+<blockquote>
+<p>char *get_data(uint32_t size, uint32_t index); </p>
+<p>描述：获得数据。</p>
+<p>参数：</p>
+<p>uint32_t size 大小。</p>
+<p>uint32_t index 索引。</p>
+<p>返回：char *</p>
+</blockquote>
+
+<p><a name="share_base_get_size"></a></p>
+
+<h2>share::Base::get_size</h2>
+<blockquote>
+<p>uint32_t get_size() const; </p>
+<p>描述：获得内存大小。</p>
+<p>参数：无</p>
+<p>返回：uint32_t</p>
+</blockquote>
+
+<p><a name="share_base_dump"></a></p>
+
+<h2>share::Base::dump</h2>
+<blockquote>
+<p>bool dump(const char *filename); </p>
+<p>描述：导出信息到文件。</p>
+<p>参数：</p>
+<p>const char *filename 文件名。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="share_base_merge_from_file"></a></p>
+
+<h2>share::Base::merge_from_file</h2>
+<blockquote>
+<p>bool merge_from_file(const char *filename); </p>
+<p>描述：从文件中导入数据。</p>
+<p>参数：</p>
+<p>const char *filename 文件名。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="share_base_set_head_version"></a></p>
+
+<h2>share::Base::set_head_version</h2>
+<blockquote>
+<p>void set_head_version(uint32_t version); </p>
+<p>描述：设置当前版本。</p>
+<p>参数：</p>
+<p>uint32_t version 版本号。</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="share_base_get_head_version"></a></p>
+
+<h2>share::Base::get_head_version</h2>
+<blockquote>
+<p>uint32_t get_head_version() const; </p>
+<p>描述：获得当前版本。</p>
+<p>参数：无</p>
+<p>返回：uint32_t</p>
+</blockquote>
+
+<p><a name="share_lock"></a></p>
+
+<h2>share::lock</h2>
+<blockquote>
+<p>PF_API void lock(atword_t *flag, int8_t type); </p>
+<p>描述：共享内存锁（锁住）。</p>
+<p>参数：</p>
+<p>atword_t *flag 标记指针。</p>
+<p>int8_t type 类型。</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="share_unlock"></a></p>
+
+<h2>share::unlock</h2>
+<blockquote>
+<p>PF_API void unlock(atword_t *flag, int8_t type); </p>
+<p>描述：共享内存锁（释放）。</p>
+<p>参数：</p>
+<p>atword_t *flag 标记指针。</p>
+<p>int8_t type 类型。</p>
+<p>返回：无</p>
+</blockquote>
+
+<nav>
+	<a href="sys.info.htm">系统信息 </a>
+</nav>
+<footer>
+    <p><a href="#">Dayle Rees</a>.</p>
+</footer>
+            
+            
+</section>
+  <div class="clearfix"></div>
+</div>
+
+        <script src="../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="../js/vendor/jquery-1.8.2.min.js"><\/script>')</script>
+        <script src="../../checkout.stripe.com/v2/checkout.js"></script>
+        <script src="../js/vendor/prettify.js"></script>
+        <script src="../js/plugins.js"></script>
+        <script src="../js/main.js"></script>
+
+        <script type="text/javascript">
+
+          var _gaq = _gaq || [];
+          _gaq.push(['_setAccount', 'UA-37898177-1']);
+          _gaq.push(['_trackPageview']);
+
+          (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www/') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+          })();
+
+        </script>
+    </body>
+</html>

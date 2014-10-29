@@ -57,7 +57,7 @@ class PF_API Base {
 
  public:
    int16_t *get_idset();
-   uint16_t getcount();
+   uint16_t getcount() const;
    uint16_t get_maxcount() const { return maxcount_; }
    bool hash();
    uint16_t get_listenport() const;

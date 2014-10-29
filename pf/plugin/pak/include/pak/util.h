@@ -14,6 +14,7 @@
 #include "pak/config.h"
 
 extern int32_t g_pakerror;
+extern int32_t g_pak_data_compressiontype;
 
 namespace pak {
 
@@ -40,9 +41,8 @@ int32_t addfile_toarchive(archive_t *archive,
                           int32_t filetype, 
                           bool *replace);
 int32_t addfile_toarchive(archive_t *archive, 
-                          void *fp, 
-                          const char *filename, 
-                          uint64_t filelength,
+                          const char *content, 
+                          uint64_t size,
                           const char *archivedname,
                           uint64_t flag, 
                           uint64_t quality, 
@@ -56,6 +56,12 @@ int32_t internal_updatefile(archive_t *archive,
                             uint64_t quality, 
                             int32_t filetype,
                             bool *replace);
+uint64_t internal_addfile(archive_t *archive, const char *filename);
+uint64_t internal_readfile(file_t *file, 
+                           uint64_t fileposition, 
+                           char *buffer, 
+                           uint64_t toread);
+bool isvalid_searchpointer(search_t *search);
 
 }; //namespace util
 

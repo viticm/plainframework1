@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset=UTF-8"utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>简约框架参考手册</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" href="../css/style.css">
+        <script src="../js/vendor/modernizr-2.6.2.min.js"></script>
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="#">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+
+        <div class="wrapper">
+            <header>
+                <h1>简约框架参考手册</h1>
+            </header>
+            <aside class="sidebar">
+<ul>
+<li>入门指引
+
+<ul>
+<li><a href="../index.htm">简介</a></li>
+<li><a href="simpletutorials.htm">简明教程</a></li>
+<li><a href="style-guide.htm">代码风格</a></li>
+<li><a href="module.htm">模块</a></li>
+<li><a href="license.htm">许可</a></li>
+</ul></li>
+
+<li>基础模块
+<ul>
+<li><a href="base.macro.htm">宏</a></li>
+<li><a href="base.global.htm">全局变量</a></li>
+<li><a href="base.log.htm">日志</a></li>
+<li><a href="base.string.htm">字符串</a></li>
+<li><a href="base.hashmap.htm">hash map</a></li>
+<li><a href="base.timemanager.htm">时间管理器</a></li>
+<li><a href="base.tinytimer.htm">小型定时器</a></li>
+<li><a href="base.util.htm">工具集</a></li>
+</ul></li>
+
+<li>数据库模块
+<ul>
+<li><a href="db.manager.htm">管理器</a></li>
+<li><a href="db.odbc.htm">ODBC</a></li>
+</ul></li>
+
+<li>引擎模块
+<ul>
+<li><a href="engine.kernel.htm">核心</a></li>
+<li><a href="engine.thread.htm">线程</a></li>
+</ul></li>
+
+<li>事件模块
+<ul>
+<li><a href="event.manager.htm">管理器</a></li>
+</ul></li>
+
+<li>文件模块
+<ul>
+<li><a href="file.api.htm">系统API</a></li>
+<li><a href="file.database.htm">文件数据库</a></li>
+<li><a href="file.ini.htm">ini文件</a></li>
+</ul></li>
+
+<li>网络模块
+<ul>
+<li><a href="net.connection.htm">连接</a></li>
+<li><a href="net.packet.htm">包</a></li>
+<li><a href="net.socket.htm">套接字</a></li>
+<li><a href="net.manager.htm">管理器</a></li>
+</ul></li>
+
+<li>性能模块
+<ul>
+<li><a href="performance.eyes.htm">监视器</a></li>
+</ul></li>
+
+<li>脚本模块
+<ul>
+<li><a href="script.cache.htm">缓存</a></li>
+<li><a href="script.lua.htm">lua</a></li>
+</ul></li>
+
+<li>系统模块
+<ul>
+<li><a href="sys.memory.htm">内存</a></li>
+<li><a href="sys.info.htm">系统信息</a></li>
+<li><a href="sys.process.htm">进程</a></li>
+<li><a href="sys.thread.htm">线程</a></li>
+<li><a href="sys.util.htm">工具集</a></li>
+</ul></li>
+
+<li>工具模块
+<ul>
+<li><a href="util.compressor.htm">压缩模块</a></li>
+</ul></li>
+
+</ul>
+</aside>
+
+<section class="content">
+
+<h1>base module log</h1>
+
+<ul>
+<li><a href="#total">总述</a></li>
+<li><a href="#macro">宏</a></li>
+<li><a href="#function">方法</a></li>
+</ul>
+
+<p><a name="total"></a></p>
+
+<h2>总述</h2>
+
+<p>基础日志提供了基本的日志操作，包括日志的打印和保存，以及不同类型日志的操作，而这些操作都集中在日志模块提供的这些宏方法中。</p>
+
+<p><a name="macro"></a></p>
+
+<h2>宏</h2>
+
+<p>日志类提供了比较健全的操作接口宏，这些宏可以应用于绝大多数日志的操作。</p>
+<blockquote>
+<p>LOGSYSTEM_POINTER</p>
+<p>描述：日志系统指针，日志系统为单例，即整个过程中日志对象只存在一个，可以根据此指针来判断日志系统是否有初始化 ，也可以用此指针调用其成员函数。</p>
+</blockquote>
+
+<p><b>Example #1 LOGSYSTEM_POINTER 范例</b></p>
+
+<pre><code>
+#include "pf/base/log.h"                                                           
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  if (!LOGSYSTEM_POINTER) g_log = new pf_base::Log;                                
+  if (LOGSYSTEM_POINTER) printf("log system is active\n");                         
+  return 0;                                                                        
+}    
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>log system is active</p>
+
+<blockquote>
+<p>FAST_LOG(uint8_t logid, const char *format, ...)</p>
+<p>FAST_WARNINGLOG(uint8_t logid, const char *format, ...)</p>
+<p>FAST_ERRORLOG(uint8_t logid, const char *format, ...)</p>
+<p>FAST_DEBUGLOG(uint8_t logid, const char *format, ...)</p>
+<p>FAST_WRITELOG(uint8_t logid, const char *format, ...)</p>
+<p>描述：这几个宏用于快速日志，读写受控于变量：</p>
+<p>bool pf_base::g_command_logprint; //是否打印日志，默认为真true</p>
+<p>bool pf_base::g_command_logactive; //是否写入日志，默认为真true</p>
+<p>自上而下分别为普通日志、警告日志、错误日志、调试日志、只写日志。</p>
+<p><font color="red">注意这几个宏必须在日志系统指针有效的情况下才能调用，快速日志执行比较快I/O操作频率低。</font></p>
+</blockquote>
+
+<p>logid 的取值必须为（该枚举定义在<code>pf/base/config.h</code>）：</p>
+<pre><code>
+/* base log { */                                                                   
+enum {                                                                             
+  kDebugLogFile = 0,                                                               
+  kErrorLogFile = 1,                                                               
+  kNetLogFile = 2,                                                                 
+  kScriptLogFile = 3,                                                              
+  kEngineLogFile = 4,                                                              
+  kApplicationLogFile, //应用的日志记录ID                                          
+  kLogFileCount,                                                                   
+};                                                                                 
+/* } base log */  
+</code></pre>
+
+<p><b>Example #1 FAST_* 范例</b></p>
+
+<pre><code>
+#include "pf/base/log.h"                                                           
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  if (!LOGSYSTEM_POINTER) g_log = new pf_base::Log;                                
+  if (!LOGSYSTEM_POINTER) return 1;                                             
+  LOGSYSTEM_POINTER->init();                                                    
+  int32_t i = 0;                                                                
+  FAST_LOG(kDebugLogFile, "this test log: %d", ++i);                            
+  FAST_WARNINGLOG(kDebugLogFile, "this test log: %d", ++i);                     
+  FAST_ERRORLOG(kDebugLogFile, "this test log: %d", ++i);                       
+  FAST_DEBUGLOG(kDebugLogFile, "this test log: %d", ++i);                       
+  FAST_WRITELOG(kDebugLogFile, "this test log: %d", ++i);                       
+  return 0;                                                                     
+}        
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>00:00:00 (140701577881376 0.0000) this test log: 1 <br />
+<font color="yellow">00:00:00 (140701577881376 0.0000) this test log: 2</font> <br />
+<font color="red">00:00:00 (140701577881376 0.0000) this test log: 3</font> <br />
+<font color="green">00:00:00 (140701577881376 0.0000) this test log: 4</font></p>
+
+<p><b>Example #2 FAST_* 范例</b></p>
+
+<pre><code>
+#include "pf/base/log.h"                                                           
+#include "pf/base/time_manager.h"                                               
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  if (!TIME_MANAGER_POINTER) g_time_manager = new pf_base::TimeManager;         
+  if (!TIME_MANAGER_POINTER) return 1;                                          
+  TIME_MANAGER_POINTER->init();                                                 
+  if (!LOGSYSTEM_POINTER) g_log = new pf_base::Log;                             
+  if (!LOGSYSTEM_POINTER) return 1;                                             
+  LOGSYSTEM_POINTER->init();                                                    
+  int32_t i = 0;                                                                
+  FAST_LOG(kDebugLogFile, "this test log: %d", ++i);                            
+  FAST_WARNINGLOG(kDebugLogFile, "this test log: %d", ++i);                     
+  FAST_ERRORLOG(kDebugLogFile, "this test log: %d", ++i);                       
+  FAST_DEBUGLOG(kDebugLogFile, "this test log: %d", ++i);                       
+  FAST_WRITELOG(kDebugLogFile, "this test log: %d", ++i);                       
+  return 0;                                                                     
+}                  
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>14:56:19 (139667479324448 0.0000) this test log: 1 <br />
+<font color="yellow">14:56:19 (139667479324448 0.0000) this test log: 2</font> <br />
+<font color="red">14:56:19 (139667479324448 0.0000) this test log: 3</font> <br />
+<font color="green">14:56:19 (139667479324448 0.0000) this test log: 4</font></p>
+
+<blockquote>
+<p>SLOW_LOG(const char *filename_prefix, const char *format, ...)</p>
+<p>SLOW_WARNINGLOG(const char *filename_prefix, const char *format, ...)</p>
+<p>SLOW_ERRORLOG(const char *filename_prefix, const char *format, ...)</p>
+<p>SLOW_DEBUGLOG(const char *filename_prefix, const char *format, ...)</p>
+<p>SLOW_WRITELOG(const char *filename_prefix, const char *format, ...)</p>
+<p>描述：这几个宏用于慢速日志，读写受控于变量：</p>
+<p>bool pf_base::g_command_logprint; //是否打印日志，默认为真true</p>
+<p>bool pf_base::g_command_logactive; //是否写入日志，默认为真true</p>
+<p>自上而下分别为普通日志、警告日志、错误日志、调试日志、只写日志。</p>
+<p><font color="red">注意这几个宏在日志系统指针无效的情况下也能调用，慢速日志执行比慢I/O操作频率高。</font></p>
+</blockquote>
+
+<p>filename_prefix 为生成日志文件名的前缀。</p>
+
+<p><b>Example #1 SLOW_* 范例</b></p>
+
+<pre><code>
+#include "pf/base/log.h"                                                           
+#include "pf/base/time_manager.h"                                               
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  int32_t i = 0;                                                                
+  SLOW_LOG("debug", "this test log: %d", ++i);                                  
+  SLOW_WARNINGLOG("debug", "this test log: %d", ++i);                           
+  SLOW_ERRORLOG("debug", "this test log: %d", ++i);                             
+  SLOW_DEBUGLOG("debug", "this test log: %d", ++i);                             
+  SLOW_WRITELOG("debug", "this test log: %d", ++i);                             
+  return 0;                                                                     
+}          
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>00:00:00 (140701577881376 0.0000) this test log: 1 <br />
+<font color="yellow">00:00:00 (140701577881376 0.0000) this test log: 2</font> <br />
+<font color="red">00:00:00 (140701577881376 0.0000) this test log: 3</font> <br />
+<font color="green">00:00:00 (140701577881376 0.0000) this test log: 4</font></p>
+
+<p><b>Example #2 SLOW_* 范例</b></p>
+
+<pre><code>
+#include "pf/base/log.h"                                                           
+#include "pf/base/time_manager.h"                                               
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  int32_t i = 0;                                                                
+  if (!TIME_MANAGER_POINTER) g_time_manager = new pf_base::TimeManager;         
+  if (!TIME_MANAGER_POINTER) return 1;                                          
+  TIME_MANAGER_POINTER->init();                                                 
+  SLOW_LOG("debug", "this test log: %d", ++i);                                  
+  SLOW_WARNINGLOG("debug", "this test log: %d", ++i);                           
+  SLOW_ERRORLOG("debug", "this test log: %d", ++i);                             
+  SLOW_DEBUGLOG("debug", "this test log: %d", ++i);                             
+  SLOW_WRITELOG("debug", "this test log: %d", ++i);                             
+  return 0;                                                                     
+}                         
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>15:07:14 (140073675331360 0.0000) this test log: 1 <br />
+<font color="yellow">15:07:14 (140073675331360 0.0000) this test log: 2</font> <br />
+<font color="red">15:07:14 (140073675331360 0.0000) this test log: 3</font> <br />
+<font color="green">15:07:14 (140073675331360 0.0000) this test log: 4</font></p>
+
+<p><a name="function"></a></p>
+
+<h2>方法</h2>
+
+<p>日志系统对外直接需要执行的方法已经包含在宏中，这里介绍两个重要模板方法。</p>
+
+<pre><code>
+   //模板函数 type 0 普通日志 1 警告日志 2 错误日志 3 调试日志 9 只写日志          
+   template < uint8_t type>                                                      
+   void fast_savelog(uint8_t logid, const char *format, ...);
+   //模板函数 type 0 普通日志 1 警告日志 2 错误日志 3 调试日志 9 只写日志       
+   template < uint8_t type>                                                      
+   static void slow_savelog(const char *filename_prefix,                        
+                            const char *format, ...);
+</code></pre>
+
+<p>宏的定义：</p>
+
+<pre><code>
+//log sytem macros                                                              
+#define LOGSYSTEM_POINTER pf_base::Log::getsingleton_pointer()                  
+#define FAST_LOG LOGSYSTEM_POINTER->fast_savelog<0>                             
+#define FAST_WARNINGLOG LOGSYSTEM_POINTER->fast_savelog<1>                      
+#define FAST_ERRORLOG LOGSYSTEM_POINTER->fast_savelog<2>                        
+#define FAST_DEBUGLOG LOGSYSTEM_POINTER->fast_savelog<3>                        
+#define FAST_WRITELOG LOGSYSTEM_POINTER->fast_savelog<9>                        
+#define SLOW_LOG pf_base::Log::slow_savelog<0>                                  
+#define SLOW_WARNINGLOG pf_base::Log::slow_savelog<1>                           
+#define SLOW_ERRORLOG pf_base::Log::slow_savelog<2>                             
+#define SLOW_DEBUGLOG pf_base::Log::slow_savelog<3>                             
+#define SLOW_WRITELOG pf_base::Log::slow_savelog<9>   
+</code></pre>
+
+<nav>
+	<a href="base.global.htm">全局变量</a> |
+	<a href="base.string.htm">字符串 </a>
+</nav>
+<footer>
+    <p><a href="#">Dayle Rees</a>.</p>
+</footer>
+            
+            
+</section>
+  <div class="clearfix"></div>
+</div>
+
+        <script src="../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="../js/vendor/jquery-1.8.2.min.js"><\/script>')</script>
+        <script src="../../checkout.stripe.com/v2/checkout.js"></script>
+        <script src="../js/vendor/prettify.js"></script>
+        <script src="../js/plugins.js"></script>
+        <script src="../js/main.js"></script>
+
+        <script type="text/javascript">
+
+          var _gaq = _gaq || [];
+          _gaq.push(['_setAccount', 'UA-37898177-1']);
+          _gaq.push(['_trackPageview']);
+
+          (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www/') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+          })();
+
+        </script>
+    </body>
+</html>

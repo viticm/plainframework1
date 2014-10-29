@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset=UTF-8"utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>简约框架参考手册</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" href="../css/style.css">
+        <script src="../js/vendor/modernizr-2.6.2.min.js"></script>
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="#">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+
+        <div class="wrapper">
+            <header>
+                <h1>简约框架参考手册</h1>
+            </header>
+            <aside class="sidebar">
+<ul>
+<li>入门指引
+
+<ul>
+<li><a href="../index.htm">简介</a></li>
+<li><a href="simpletutorials.htm">简明教程</a></li>
+<li><a href="style-guide.htm">代码风格</a></li>
+<li><a href="module.htm">模块</a></li>
+<li><a href="license.htm">许可</a></li>
+</ul></li>
+
+<li>基础模块
+<ul>
+<li><a href="base.macro.htm">宏</a></li>
+<li><a href="base.global.htm">全局变量</a></li>
+<li><a href="base.log.htm">日志</a></li>
+<li><a href="base.string.htm">字符串</a></li>
+<li><a href="base.hashmap.htm">hash map</a></li>
+<li><a href="base.timemanager.htm">时间管理器</a></li>
+<li><a href="base.tinytimer.htm">小型定时器</a></li>
+<li><a href="base.util.htm">工具集</a></li>
+</ul></li>
+
+<li>数据库模块
+<ul>
+<li><a href="db.manager.htm">管理器</a></li>
+<li><a href="db.odbc.htm">ODBC</a></li>
+</ul></li>
+
+<li>引擎模块
+<ul>
+<li><a href="engine.kernel.htm">核心</a></li>
+<li><a href="engine.thread.htm">线程</a></li>
+</ul></li>
+
+<li>事件模块
+<ul>
+<li><a href="event.manager.htm">管理器</a></li>
+</ul></li>
+
+<li>文件模块
+<ul>
+<li><a href="file.api.htm">系统API</a></li>
+<li><a href="file.database.htm">文件数据库</a></li>
+<li><a href="file.ini.htm">ini文件</a></li>
+</ul></li>
+
+<li>网络模块
+<ul>
+<li><a href="net.connection.htm">连接</a></li>
+<li><a href="net.packet.htm">包</a></li>
+<li><a href="net.socket.htm">套接字</a></li>
+<li><a href="net.manager.htm">管理器</a></li>
+</ul></li>
+
+<li>性能模块
+<ul>
+<li><a href="performance.eyes.htm">监视器</a></li>
+</ul></li>
+
+<li>脚本模块
+<ul>
+<li><a href="script.cache.htm">缓存</a></li>
+<li><a href="script.lua.htm">lua</a></li>
+</ul></li>
+
+<li>系统模块
+<ul>
+<li><a href="sys.memory.htm">内存</a></li>
+<li><a href="sys.info.htm">系统信息</a></li>
+<li><a href="sys.process.htm">进程</a></li>
+<li><a href="sys.thread.htm">线程</a></li>
+<li><a href="sys.util.htm">工具集</a></li>
+</ul></li>
+
+<li>工具模块
+<ul>
+<li><a href="util.compressor.htm">压缩模块</a></li>
+</ul></li>
+
+</ul>
+</aside>
+
+<section class="content">
+
+<h1>base module macros</h1>
+
+<ul>
+<li><a href="#total">总述</a></li>
+<li><a href="#complieabout">编译相关</a></li>
+<li><a href="#variable">变量</a></li>
+<li><a href="#function">方法</a></li>
+</ul>
+
+<p><a name="total"></a></p>
+
+<h2>总述</h2>
+
+<p>这里介绍的宏是基本的宏，即包含任意头文件都会有这些宏，或者在编译时需要用到的宏。</p>
+
+<p><a name="complieabout"></a></p>
+
+<h2>编译相关</h2>
+<blockquote>
+<p>__WINDOWS__ //判断编译平台是否是windows，该宏无需定义，即可使用</p>
+<p>__LINUX__ //相对__WINDOWS__，是其的相反值</p>
+</blockquote>
+
+<p><b>Example #1 __WINDOWS__/__LINUX__ 范例</b></p>
+
+<pre><code>
+#include "pf/engine/kernel.h"                                                      
+#include "main.h"                                                                  
+                                                                                                                                  
+int32_t main(int32_t argc, char * argv[]) {                                        
+#if __WINDOWS__                                                                    
+  printf('windows platform!\n');
+#elif __LINUX__
+  printf('linux platform!\n');                               
+#endif                                                                                                                               
+  return 0;                                                                        
+}      
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>windows上: <code>windows platform!</code> linux上：<code>linux platform!</code></p>
+
+<p><a name="variable"></a></p>
+
+<h2>变量</h2>
+<blockquote>
+<p>DATE_LENGTH_MAX //日期字符串的最大长度</p>
+<p>IP_SIZE //IP的长度</p>
+<p>HANDLE_INVALID //无效的句柄</p>
+<p>ID_INVALID //无效的ID</p>
+<p>INDEX_INVALID //无效的索引</p>
+<p>TAB_PARAM_ID_INVALID //无效的tab文件ID参数</p>
+<p>LF //换行符</p>
+<p>NET_MODULENAME //网络模块名</p>
+<p>SCRIPT_MODULENAME //脚本模块名</p>
+<p>PERFORMANCE_MODULENAME //性能模块名</p>
+<p>DB_MODULENAME //数据库模块名</p>
+<p>ENGINE_MODULENAME //引擎模块名</p>
+<p>APPLICATION_NAME //应用名</p>
+<p>APPLICATION_TYPE //应用类型 0 服务器 1 客户端</p>
+</blockquote>
+
+<p>特别要说明的是以下宏为方法返回的变量，与直接定义的常量宏用法不同：</p>
+<pre><code>
+#define NET_MODULENAME pf_base::global::get_net_modulename()                       
+#define SCRIPT_MODULENAME pf_base::global::get_script_modulename()                 
+#define PERFORMANCE_MODULENAME pf_base::global::get_performanace_modulename()   
+#define DB_MODULENAME pf_base::global::get_db_modulename()                         
+#define ENGINE_MODULENAME pf_base::global::get_engine_modulename()                 
+#define APPLICATION_NAME pf_base::global::get_applicationname()                    
+#define APPLICATION_TYPE pf_base::global::get_applicationtype()      
+</code></pre>
+
+<p><a name="function"></a></p>
+
+<h2>方法</h2>
+
+<h3>断言</h3>
+<blockquote>
+<p>Assert(expr)</p>
+<p> ——　判断表达式是否成立，不成立则输出错误并退出程序。（windows的release版本不会抛出任何异常，也不会退出程序。）</p>
+</blockquote>
+
+<p><b>Example #1 Assert(expr) 范例</b></p>
+
+<pre><code>
+#include "pf/engine/kernel.h"                                                      
+#include "main.h"                                                                  
+                                                                                                                                  
+int32_t main(int32_t argc, char * argv[]) {                                        
+  Assert(1 != 2);                                                                                                                             
+  return 0;                                                                        
+}      
+</code></pre>
+
+<p>以上例程的输出类似于：</p>
+<p>由于表达式成立所以不会有输出，否则输出断言异常消息并退出程序：</p>
+<p><code>
+Assert:[/home/dc/develop/gitwork/plainframework/applications/pf_simple/src/main.cc][18][int32_t main(int32_t, char**)][1 == 2]
+Segmentation fault
+</code></p>
+
+<blockquote>
+<p>AssertEx(expr)</p>
+<p> —— 判断表达式是否成立，不成立则输出错误并退出程序，比上一个宏增加多了一处断言异常时需要打印出的字符串。（windows的release版本不会抛出任何异常，也不会退出程序。）</p>
+</blockquote>
+
+<p><b>Example #1 AssertEx(expr) 范例</b></p>
+
+<pre><code>
+#include "pf/engine/kernel.h"                                                      
+#include "main.h"                                                                  
+                                                                                                                                  
+int32_t main(int32_t argc, char * argv[]) {                                        
+  AssertEx(1 != 2, "AssertEx string");                                                                                                                             
+  return 0;                                                                        
+}      
+</code></pre>
+
+<p>以上例程的输出类似于：</p>
+<p>由于表达式成立所以不会有输出，否则输出断言异常消息并退出程序：</p>
+<p><code>
+Assert:[/home/dc/develop/gitwork/plainframework/applications/pf_simple/src/main.cc][18][int32_t main(int32_t, char**)][1 == 2]
+[AssertEx string]
+Segmentation fault
+</code></p>
+
+<h3>内存释放</h3>
+<blockquote>
+<p>SAFE_DELETE(x) //安全删除一个普通指针，new</p>
+<p>SAFE_DELETE_ARRAY(x) //安全删除一个数组指针， new []</p>
+<p>DELETE_ARRAY(x) //安全删除一个数组指针，只是在windows下不进行内存的校验，new []</p>
+<p>SAFE_FREE(x) //安全释放一个指针, C方法</p>
+<p>SAFE_RELEASE(x) //安全释放一个对象指针，目标必须是一个对象指针，而且必须要有一个名为release的方法。</p>
+</blockquote>
+
+<p><b>Example #1 内存释放 范例</b></p>
+
+<pre><code>
+#include "pf/engine/kernel.h"                                                   
+#include "main.h"                                                               
+                                                                                
+class Class {                                                                   
+ public:                                                                        
+   Class() {};                                                                  
+   ~Class() {};                                                                    
+                                                                                   
+ public:                                                                           
+   void release() {};                                                              
+                                                                                   
+};                                                                                 
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  int32_t *intval = new int32_t;                                                    
+  SAFE_DELETE(intval);                                                             
+  int32_t *int_array = new int32_t[2];                                              
+  SAFE_DELETE_ARRAY(int_array);                                                    
+  char *str = new char[32];                                                        
+  DELETE_ARRAY(str);                                                               
+  char *c_str = (char *)malloc(sizeof(char) * 32);                                 
+  SAFE_FREE(c_str);                                                                
+  Class *classpointer = new Class;                                                 
+  SAFE_RELEASE(classpointer);                                                      
+  return 0;                                                                        
+}        
+</code></pre>
+
+<h3>输入/输出流</h3>
+<blockquote>
+<p>ERRORPRINTF(const char *format, ...) //输出错误信息，终端显示为红色</p>
+<p>WARNINGPRINTF(const char *format, ...) //输出警告信息，终端显示为黄色</p>
+<p>DEBUGPRINTF(const char *format, ...) //输出调试信息，终端显示为绿色</p>
+</blockquote>
+
+<p><b>Example #1 输入/输出流 范例</b></p>
+
+<pre><code>
+#include "pf/engine/kernel.h"                                                      
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  int32_t i = 0;                                                                   
+  ERRORPRINTF("error printf: %d", ++i);                                            
+  WARNINGPRINTF("warning printf: %d", ++i);                                        
+  DEBUGPRINTF("debug printf: %d", ++i);                                            
+  return 0;                                                                        
+}      
+</code></pre>
+
+<p>以上例程的输出类似于：<br />
+<font color="red">error printf: 1</font> <br />
+<font color="yellow">warning printf: 2</font> <br />
+<font color="green">debug printf: 3</font>
+</p>
+
+
+<nav>
+	<a href="base.global.htm">全局变量</a>
+</nav>
+<footer>
+    <p><a href="#">Dayle Rees</a>.</p>
+</footer>
+            
+            
+</section>
+  <div class="clearfix"></div>
+</div>
+
+        <script src="../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="../js/vendor/jquery-1.8.2.min.js"><\/script>')</script>
+        <script src="../../checkout.stripe.com/v2/checkout.js"></script>
+        <script src="../js/vendor/prettify.js"></script>
+        <script src="../js/plugins.js"></script>
+        <script src="../js/main.js"></script>
+
+        <script type="text/javascript">
+
+          var _gaq = _gaq || [];
+          _gaq.push(['_setAccount', 'UA-37898177-1']);
+          _gaq.push(['_trackPageview']);
+
+          (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www/') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+          })();
+
+        </script>
+    </body>
+</html>

@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset=UTF-8"utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>简约框架参考手册</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" href="../css/style.css">
+        <script src="../js/vendor/modernizr-2.6.2.min.js"></script>
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="#">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+
+        <div class="wrapper">
+            <header>
+                <h1>简约框架参考手册</h1>
+            </header>
+            <aside class="sidebar">
+<ul>
+<li>入门指引
+
+<ul>
+<li><a href="../index.htm">简介</a></li>
+<li><a href="simpletutorials.htm">简明教程</a></li>
+<li><a href="style-guide.htm">代码风格</a></li>
+<li><a href="module.htm">模块</a></li>
+<li><a href="license.htm">许可</a></li>
+</ul></li>
+
+<li>基础模块
+<ul>
+<li><a href="base.macro.htm">宏</a></li>
+<li><a href="base.global.htm">全局变量</a></li>
+<li><a href="base.log.htm">日志</a></li>
+<li><a href="base.string.htm">字符串</a></li>
+<li><a href="base.hashmap.htm">hash map</a></li>
+<li><a href="base.timemanager.htm">时间管理器</a></li>
+<li><a href="base.tinytimer.htm">小型定时器</a></li>
+<li><a href="base.util.htm">工具集</a></li>
+</ul></li>
+
+<li>数据库模块
+<ul>
+<li><a href="db.manager.htm">管理器</a></li>
+<li><a href="db.odbc.htm">ODBC</a></li>
+</ul></li>
+
+<li>引擎模块
+<ul>
+<li><a href="engine.kernel.htm">核心</a></li>
+<li><a href="engine.thread.htm">线程</a></li>
+</ul></li>
+
+<li>事件模块
+<ul>
+<li><a href="event.manager.htm">管理器</a></li>
+</ul></li>
+
+<li>文件模块
+<ul>
+<li><a href="file.api.htm">系统API</a></li>
+<li><a href="file.database.htm">文件数据库</a></li>
+<li><a href="file.ini.htm">ini文件</a></li>
+</ul></li>
+
+<li>网络模块
+<ul>
+<li><a href="net.connection.htm">连接</a></li>
+<li><a href="net.packet.htm">包</a></li>
+<li><a href="net.socket.htm">套接字</a></li>
+<li><a href="net.manager.htm">管理器</a></li>
+</ul></li>
+
+<li>性能模块
+<ul>
+<li><a href="performance.eyes.htm">监视器</a></li>
+</ul></li>
+
+<li>脚本模块
+<ul>
+<li><a href="script.cache.htm">缓存</a></li>
+<li><a href="script.lua.htm">lua</a></li>
+</ul></li>
+
+<li>系统模块
+<ul>
+<li><a href="sys.memory.htm">内存</a></li>
+<li><a href="sys.info.htm">系统信息</a></li>
+<li><a href="sys.process.htm">进程</a></li>
+<li><a href="sys.thread.htm">线程</a></li>
+<li><a href="sys.util.htm">工具集</a></li>
+</ul></li>
+
+<li>工具模块
+<ul>
+<li><a href="util.compressor.htm">压缩模块</a></li>
+</ul></li>
+
+</ul>
+</aside>
+
+<section class="content">
+
+<h1>net module connection</h1>
+
+<ul>
+<li><a href="#total">总述</a></li>
+<li><a href="#base_define">Base定义</a></li>
+<li><a href="#base_init">Base::init</a></li>
+<li><a href="#base_processinput">Base::processinput</a></li>
+<li><a href="#base_processoutput">Base::processoutput</a></li>
+<li><a href="#base_processcommand">Base::processcommand</a></li>
+<li><a href="#base_heartbeat">Base::heartbeat</a></li>
+<li><a href="#base_sendpacket">Base::sendpacket</a></li>
+<li><a href="#base_isserver">Base::isserver</a></li>
+<li><a href="#base_getid">Base::getid</a></li>
+<li><a href="#base_setid">Base::setid</a></li>
+<li><a href="#base_get_userid">Base::get_userid</a></li>
+<li><a href="#base_set_userid">Base::set_userid</a></li>
+<li><a href="#base_get_managerid">Base::get_managerid</a></li>
+<li><a href="#base_set_managerid">Base::set_managerid</a></li>
+<li><a href="#base_getsocket">Base::getsocket</a></li>
+<li><a href="#base_disconnect">Base::disconnect</a></li>
+<li><a href="#base_isvalid">Base::isvalid</a></li>
+<li><a href="#base_cleanup">Base::cleanup</a></li>
+<li><a href="#base_isempty">Base::isempty</a></li>
+<li><a href="#base_isdisconnect">Base::isdisconnect</a></li>
+<li><a href="#base_setdisconnect">Base::setdisconnect</a></li>
+<li><a href="#base_resetkick">Base::resetkick</a></li>
+<li><a href="#base_get_execute_count_pretick">Base::get_execute_count_pretick</a></li>
+<li><a href="#base_isinit">Base::isinit</a></li>
+<li><a href="#base_setstatus">Base::setstatus</a></li>
+<li><a href="#base_get_receive_bytes">Base::get_receive_bytes</a></li>
+<li><a href="#base_get_send_bytes">Base::get_send_bytes</a></li>
+<li><a href="#pool_define">Pool定义</a></li>
+<li><a href="#pool_init">Pool::init</a></li>
+<li><a href="#pool_get">Pool::get</a></li>
+<li><a href="#pool_create">Pool::create</a></li>
+<li><a href="#pool_init_data">Pool::init_data</a></li>
+<li><a href="#pool_remove">Pool::remove</a></li>
+<li><a href="#pool_lock">Pool::lock</a></li>
+<li><a href="#pool_unlock">Pool::unlock</a></li>
+<li><a href="#pool_get_maxcount">Pool::get_maxcount</a></li>
+<li><a href="#manager_base_define">manager::Base定义</a></li>
+<li><a href="#manager_base_init">manager::Base::init</a></li>
+<li><a href="#manager_base_init_pool">manager::Base::init_pool*</a></li>
+<li><a href="#manager_base_add">manager::Base::add*</a></li>
+<li><a href="#manager_base_get">manager::Base::get</a></li>
+<li><a href="#manager_base_accept">manager::Base::accept</a></li>
+<li><a href="#manager_base_heartbeat">manager::Base::heartbeat</a></li>
+<li><a href="#manager_base_remove">manager::Base::remove*</a></li>
+<li><a href="#manager_base_erase">manager::Base::erase</a></li>
+<li><a href="#manager_base_destroy">manager::Base::destroy</a></li>
+<li><a href="#manager_base_addsocket">manager::Base::addsocket</a></li>
+<li><a href="#manager_base_removesocket">manager::Base::removesocket</a></li>
+<li><a href="#manager_base_addsocket">manager::Base::addsocket</a></li>
+<li><a href="#manager_base_get_idset">manager::Base::get_idset</a></li>
+<li><a href="#manager_base_getcount">manager::Base::getcount</a></li>
+<li><a href="#manager_base_get_maxcount">manager::Base::get_maxcount</a></li>
+<li><a href="#manager_base_hash">manager::Base::hash</a></li>
+<li><a href="#manager_base_get_listenport">manager::Base::get_listenport</a></li>
+<li><a href="#manager_base_get_connectionmax">manager::Base::get_connectionmax</a></li>
+<li><a href="#manager_base_get">manager::Base::get</a></li>
+<li><a href="#manager_base_getpool">manager::Base::getpool</a></li>
+<li><a href="#manager_base_set_onestep_accept">manager::Base::set_onestep_accept</a></li>
+<li><a href="#manager_base_get_send_bytes">manager::Base::get_send_bytes</a></li>
+<li><a href="#manager_base_get_receive_bytes">manager::Base::get_receive_bytes</a></li>
+<li><a href="#manager_base_get_isinit">manager::Base::isinit</a></li>
+<li><a href="#manager_epoll_define">manager::Epoll定义</a></li>
+<li><a href="#manager_epoll_init">manager::Epoll::init</a></li>
+<li><a href="#manager_epoll_select">manager::Epoll::select</a></li>
+<li><a href="#manager_epoll_processinput">manager::Epoll::processinput</a></li>
+<li><a href="#manager_epoll_processoutput">manager::Epoll::processoutput</a></li>
+<li><a href="#manager_epoll_processexception">manager::Epoll::processexception</a></li>
+<li><a href="#manager_epoll_processcommand">manager::Epoll::processcommand</a></li>
+<li><a href="#manager_epoll_set_poll_maxcount">manager::Epoll::set_poll_maxcount</a></li>
+<li><a href="#manager_epoll_heartbeat">manager::Epoll::heartbeat</a></li>
+<li><a href="#manager_epoll_addsocket">manager::Epoll::addsocket</a></li>
+<li><a href="#manager_epoll_removesocket">manager::Epoll::removesocket</a></li>
+<li><a href="#manager_select_define">manager::Select定义</a></li>
+<li><a href="#manager_select_init">manager::Select::init</a></li>
+<li><a href="#manager_select_select">manager::Select::select</a></li>
+<li><a href="#manager_select_processinput">manager::Select::processinput</a></li>
+<li><a href="#manager_select_processoutput">manager::Select::processoutput</a></li>
+<li><a href="#manager_select_processexception">manager::Select::processexception</a></li>
+<li><a href="#manager_select_processcommand">manager::Select::processcommand</a></li>
+<li><a href="#manager_select_set_poll_maxcount">manager::Select::set_poll_maxcount</a></li>
+<li><a href="#manager_select_heartbeat">manager::Select::heartbeat</a></li>
+<li><a href="#manager_select_addsocket">manager::Select::addsocket</a></li>
+<li><a href="#manager_select_removesocket">manager::Select::removesocket</a></li>
+</ul>
+
+<p><a name="total"></a></p>
+
+<h2>总述</h2>
+
+<p>网络连接模块提供了基础的网络连接操作接口，并提供了网络管理器（基础、select、epoll），由于接口比较多，暂不提供示例。</p>
+
+<p><a name="base_define"></a></p>
+
+<h2>Base定义</h2>
+
+<pre><code>
+namespace pf_net {                                                              
+                                                                                
+namespace connection {                                                          
+                                                                                
+class PF_API Base { 
+</code></pre>
+
+<p><a name="base_init"></a></p>
+
+<h2>Base::init</h2>
+<blockquote>
+<p>virtual bool init(); </p>
+<p>描述：连接初始化函数，只有连接成功初始化后连接才能正常工作。</p>
+<p>参数：无</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="base_processinput"></a></p>
+
+<h2>Base::processinput</h2>
+<blockquote>
+<p>virtual bool processinput(); </p>
+<p>描述：连接处理输入流函数。</p>
+<p>参数：无</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="base_processoutput"></a></p>
+
+<h2>Base::processoutput</h2>
+<blockquote>
+<p>virtual bool processoutput(); </p>
+<p>描述：连接处理输出流函数。</p>
+<p>参数：无</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="base_processcommand"></a></p>
+
+<h2>Base::processcommand</h2>
+<blockquote>
+<p>virtual bool processcommand(); </p>
+<p>描述：连接处理命令（主要指网络包解析）函数。</p>
+<p>参数：无</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="base_heartbeat"></a></p>
+
+<h2>Base::heartbeat</h2>
+<blockquote>
+<p>virtual bool heartbeat(); </p>
+<p>描述：连接心跳函数。</p>
+<p>参数：无</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="base_sendpacket"></a></p>
+
+<h2>Base::sendpacket</h2>
+<blockquote>
+<p>virtual bool sendpacket(); </p>
+<p>描述：连接网络包发送函数。</p>
+<p>参数：无</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="base_isserver"></a></p>
+
+<h2>Base::isserver</h2>
+<blockquote>
+<p>virtual bool isserver(); </p>
+<p>描述：是否是服务器的连接。</p>
+<p>参数：无</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="base_isplayer"></a></p>
+
+<h2>Base::isplayer</h2>
+<blockquote>
+<p>virtual bool isplayer(); </p>
+<p>描述：是否是玩家（客户端）的连接。</p>
+<p>参数：无</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="base_getid"></a></p>
+
+<h2>Base::getid</h2>
+<blockquote>
+<p>int16_t getid() const; </p>
+<p>描述：获取连接ID。</p>
+<p>参数：无</p>
+<p>返回：int16_t</p>
+</blockquote>
+
+<p><a name="base_setid"></a></p>
+
+<h2>Base::setid</h2>
+<blockquote>
+<p>void setid(int16_t id); </p>
+<p>描述：设置连接ID。</p>
+<p>参数：</p>
+<p>int16_t id 连接ID。</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="base_get_userid"></a></p>
+
+<h2>Base::get_userid</h2>
+<blockquote>
+<p>int16_t get_userid() const; </p>
+<p>描述：取的玩家UID的接口，userid是由UserPool类分配出来的索引值，于标识玩家的游戏存储位置信息。</p>
+<p>参数：无</p>
+<p>返回：int16_t</p>
+</blockquote>
+
+<p><a name="base_set_userid"></a></p>
+
+<h2>Base::set_userid</h2>
+<blockquote>
+<p>void set_userid(int16_t id); </p>
+<p>描述：设置玩家UID。</p>
+<p>参数：</p>
+<p>int16_t id 玩家UID。</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="base_get_managerid"></a></p>
+
+<h2>Base::get_managerid</h2>
+<blockquote>
+<p>int16_t get_managerid() const; </p>
+<p>描述：取设置玩家连接管理器ID，managerid 是由connection::Manager类分配的索引值，</p>
+<p>用于标识当前玩家所在的某个connection::Manager中的位置信息，每个ConnectionManager位于一个独立的线程里。</p>
+<p></p>
+<p>参数：无</p>
+<p>返回：int16_t</p>
+</blockquote>
+
+<p><a name="base_set_managerid"></a></p>
+
+<h2>Base::set_managerid</h2>
+<blockquote>
+<p>void set_managerid(int16_t id); </p>
+<p>描述：设置管理器ID。</p>
+<p>参数：</p>
+<p>int16_t id 管理器ID。</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="base_getsocket"></a></p>
+
+<h2>Base::getsocket</h2>
+<blockquote>
+<p>socket::Base *getsocket(); </p>
+<p>描述：获得当前连接的socket对象指针。</p>
+<p>参数：无</p>
+<p>返回：socket::Base *</p>
+</blockquote>
+
+<p><a name="base_disconnect"></a></p>
+
+<h2>Base::disconnect</h2>
+<blockquote>
+<p>virtual void disconnect(); </p>
+<p>描述：断开当前连接。</p>
+<p>参数：无</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="base_isvalid"></a></p>
+
+<h2>Base::isvalid</h2>
+<blockquote>
+<p>virtual bool isvalid(); </p>
+<p>描述：连接是否有效。</p>
+<p>参数：无</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="base_cleanup"></a></p>
+
+<h2>Base::cleanup</h2>
+<blockquote>
+<p>virtual void cleanup(); </p>
+<p>描述：清空连接信息。</p>
+<p>参数：无</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="base_isempty"></a></p>
+
+<h2>Base::isempty</h2>
+<blockquote>
+<p>bool isempty() const; </p>
+<p>描述：判断当前连接是否为空块，是则释放用于新连接。</p>
+<p>参数：无</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="base_setempty"></a></p>
+
+<h2>Base::setempty</h2>
+<blockquote>
+<p>void setempty(bool status = true); </p>
+<p>描述：设置连接是否为空块。</p>
+<p>参数：bool status 状态。</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="base_isdisconnect"></a></p>
+
+<h2>Base::isdisconnect</h2>
+<blockquote>
+<p>bool isdisconnect() const; </p>
+<p>描述：连接是否断开。</p>
+<p>参数：无</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="base_setdisconnect"></a></p>
+
+<h2>Base::setdisconnect</h2>
+<blockquote>
+<p>void setdisconnect(bool status = true); </p>
+<p>描述：设置连接是否断开。</p>
+<p>参数：bool status 状态。</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="base_resetkick"></a></p>
+
+<h2>Base::resetkick</h2>
+<blockquote>
+<p>virtual void resetkick() </p>
+<p>描述：连接重置帧监听。</p>
+<p>参数：无</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="base_get_execute_count_pretick"></a></p>
+
+<h2>Base::get_execute_count_pretick</h2>
+<blockquote>
+<p>uint8_t get_execute_count_pretick() const; </p>
+<p>描述：获取每帧执行网络包的数量。</p>
+<p>参数：无</p>
+<p>返回：uint8_t</p>
+</blockquote>
+
+<p><a name="base_set_execute_count_pretick"></a></p>
+
+<h2>Base::set_execute_count_pretick</h2>
+<blockquote>
+<p>void set_execute_count_pretick(uint8_t count); </p>
+<p>描述：设置每帧执行网络包的数量。</p>
+<p>参数：uint8_t count 数量。</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="base_isinit"></a></p>
+
+<h2>Base::isinit</h2>
+<blockquote>
+<p>bool isinit() const; </p>
+<p>描述：连接是否初始化。</p>
+<p>参数：无</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="base_setstatus"></a></p>
+
+<h2>Base::setstatus</h2>
+<blockquote>
+<p>void setstatus(uint32_t status); </p>
+<p>描述：设置连接的状态。</p>
+<p>参数：</p>
+<p>uint32_t status 状态。</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="base_getstatus"></a></p>
+
+<h2>Base::getstatus</h2>
+<blockquote>
+<p>uint32_t getstatus() const; </p>
+<p>描述：获取连接的状态。</p>
+<p>参数：无</p>
+<p>返回：uint32_t</p>
+</blockquote>
+
+<p><a name="base_get_receive_bytes"></a></p>
+
+<h2>Base::get_receive_bytes</h2>
+<blockquote>
+<p>uint32_t get_receive_bytes(); </p>
+<p>描述：获取流中接收的字节数，获取一次则重新计数。</p>
+<p>参数：无</p>
+<p>返回：uint32_t</p>
+</blockquote>
+
+<p><a name="base_get_send_bytes"></a></p>
+
+<h2>Base::get_send_bytes</h2>
+<blockquote>
+<p>uint32_t get_send_bytes(); </p>
+<p>描述：获取流中发送的字节数，获取一次则重新计数 。</p>
+<p>参数：无</p>
+<p>返回：uint32_t</p>
+</blockquote>
+
+<p><a name="pool_define"></a></p>
+
+<h2>Pool定义</h2>
+
+<pre><code>
+namespace pf_net {                                                                 
+                                                                                   
+namespace connection {                                                             
+                                                                                   
+class PF_API Pool {
+</code></pre>
+
+<p><a name="pool_init"></a></p>
+
+<h2>Pool::init</h2>
+<blockquote>
+<p>bool init(uint32_t maxcount = NET_CONNECTION_POOL_SIZE_DEFAULT); </p>
+<p>描述：连接池初始化函数 。</p>
+<p>参数：</p>
+<p>uint32_t maxcount 连接最大数量。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="pool_get"></a></p>
+
+<h2>Pool::get</h2>
+<blockquote>
+<p>Base *get(int16_t id); </p>
+<p>描述：获取连接指针。</p>
+<p>参数：</p>
+<p>int16_t id 连接ID。</p>
+<p>返回：Base *</p>
+</blockquote>
+
+<p><a name="pool_create"></a></p>
+
+<h2>Pool::create</h2>
+<blockquote>
+<p>Base *create(bool clear = true); </p>
+<p>描述：创建新的连接。</p>
+<p>参数：</p>
+<p>bool clear 创建时是否清空连接信息（有可能是旧的连接）。</p>
+<p>返回：Base *</p>
+</blockquote>
+
+<p><a name="pool_init_data"></a></p>
+
+<h2>Pool::init_data</h2>
+<blockquote>
+<p>bool init_data(uint16_t index, Base *connection); </p>
+<p>描述：初始化连接指针。</p>
+<p>参数：</p>
+<p>uint16_t index 索引（即连接ID）。</p>
+<p>Base *connection 连接指针。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="pool_remove"></a></p>
+
+<h2>Pool::remove</h2>
+<blockquote>
+<p>void remove(int16_t id); </p>
+<p>描述：移除连接。</p>
+<p>参数：</p>
+<p>int16_t id 连接ID。</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="pool_lock"></a></p>
+
+<h2>Pool::lock</h2>
+<blockquote>
+<p>void lock(); </p>
+<p>描述：锁住（线程锁）。</p>
+<p>参数：无</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="pool_unlock"></a></p>
+
+<h2>Pool::unlock</h2>
+<blockquote>
+<p>void unlock(); </p>
+<p>描述：放开（线程锁）。</p>
+<p>参数：无</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="pool_get_maxcount"></a></p>
+
+<h2>Pool::get_maxcount</h2>
+<blockquote>
+<p>uint32_t get_maxcount() const; </p>
+<p>描述：获得当前 连接池最大连接数量。</p>
+<p>参数：无</p>
+<p>返回：uint32_t</p>
+</blockquote>
+
+<p><a name="manager_base_define"></a></p>
+
+<h2>manager::Base定义</h2>
+
+<pre><code>
+namespace pf_net {                                                                 
+                                                                                   
+namespace connection {                                                             
+                                                                                   
+namespace manager {                                                                
+                                                                                   
+class PF_API Base { 
+</code></pre>
+
+<p><a name="manager_base_init"></a></p>
+
+<h2>manager::Base::init</h2>
+<blockquote>
+<p>bool init(uint16_t maxcount = NET_CONNECTION_MAX,                            
+             uint16_t listenport = 0,                                           
+             const char *listenip = NULL); </p>
+<p>描述：初始化函数。</p>
+<p>参数：</p>
+<p>uint16_t maxcount 最大连接数量。</p>
+<p>uint16_t listenport 监听端口。</p>
+<p>const char *listenip 监听IP。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="manager_base_init_pool"></a></p>
+
+<h2>manager::Base::init_pool*</h2>
+<blockquote>
+<p>bool init_pool(uint16_t connectionmax = NET_CONNECTION_MAX); </p>
+<p>描述：连接池初始化函数。</p>
+<p>参数：</p>
+<p>uint16_t connectionmax 最大连接数量。</p>
+<p>返回：bool</p>
+<p>---------------------------------------------------------------------------------------------</p>
+<p>bool init_pool(connection::Pool *pool); </p>
+<p>描述：连接池初始化函数，由外部分配连接池对象指针。</p>
+<p>参数：</p>
+<p>connection::Pool *pool 连接池对象指针。</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="manager_base_add"></a></p>
+
+<h2>manager::Base::add*</h2>
+<blockquote>
+<p>bool add(connection::Base *connection); </p>
+<p>描述：增加连接到管理器。</p>
+<p>参数：</p>
+<p>connection::Base *connection 连接器对象指针。</p>
+<p>返回：bool</p>
+<p>---------------------------------------------------------------------------------------------</p>
+<p>bool add(int16_t id); </p>
+<p>描述：增加连接到管理器。</p>
+<p>参数：</p>
+<p>int16_t id 连接器ID。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="manager_base_get"></a></p>
+
+<h2>manager::Base::get</h2>
+<blockquote>
+<p>connection::Base *get(int16_t id); </p>
+<p>描述：获得连接对象指针。</p>
+<p>参数：</p>
+<p>int16_t id 连接器ID。</p>
+<p>返回：connection::Base *</p>
+</blockquote>
+
+<p><a name="manager_base_accept"></a></p>
+
+<h2>manager::Base::accept</h2>
+<blockquote>
+<p>virtual connection::Base *accept(); </p>
+<p>描述：新连接接受处理函数，返回新连接对象指针，失败返回空(NULL)。</p>
+<p>参数：无</p>
+<p>返回：connection::Base *</p>
+</blockquote>
+
+<p><a name="manager_base_heartbeat"></a></p>
+
+<h2>manager::Base::heartbeat</h2>
+<blockquote>
+<p>virtual bool heartbeat(uint32_t time = 0); </p>
+<p>描述：心跳函数。</p>
+<p>参数：</p>
+<p>uint32_t time 心跳时间。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="manager_base_remove"></a></p>
+
+<h2>manager::Base::remove*</h2>
+<blockquote>
+<p>virtual bool remove(int16_t id); </p>
+<p>描述：从管理器中移除连接。</p>
+<p>参数：</p>
+<p>int16_t id 连接ID。</p>
+<p>返回：bool</p>
+<p>----------------------------------------------------------------------</p>
+<p>virtual bool remove(connection::Base *connection); </p>
+<p>描述：彻底删除连接，管理器、socket、pool。</p>
+<p>参数：</p>
+<p>connection::Base *connection 连接对象指针。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="manager_base_erase"></a></p>
+
+<h2>manager::Base::erase</h2>
+<blockquote>
+<p>virtual bool remove(connection::Base *connection); </p>
+<p>描述：删除连接包括管理器、socket。</p>
+<p>参数：</p>
+<p>connection::Base *connection 连接对象指针。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="manager_base_destroy"></a></p>
+
+<h2>manager::Base::destroy</h2>
+<blockquote>
+<p>virtual bool destroy(); </p>
+<p>描述：销毁管理器中所有连接。</p>
+<p>参数：无</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="manager_base_addsocket"></a></p>
+
+<h2>manager::Base::addsocket</h2>
+<blockquote>
+<p>virtual bool addsocket(int32_t socketid, int16_t connectionid) = 0; </p>
+<p>描述：增加socket信息到管理器中（纯虚函数，子类中实现）。</p>
+<p>参数：</p>
+<p>int32_t socketid 套接字ID。</p>
+<p>int16_t connectionid 连接ID。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="manager_base_removesocket"></a></p>
+
+<h2>manager::Base::removesocket</h2>
+<blockquote>
+<p>virtual bool removesocket(int32_t socketid) = 0; </p>
+<p>描述：移除套接字信息（纯虚函数，子类中实现）。</p>
+<p>参数：</p>
+<p>int32_t socketid 套接字ID。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="manager_base_get_idset"></a></p>
+
+<h2>manager::Base::get_idset</h2>
+<blockquote>
+<p>int16_t *get_idset(); </p>
+<p>描述：获得连接数组指针。</p>
+<p>参数：无</p>
+<p>返回：int16_t *</p>
+</blockquote>
+
+<p><a name="manager_base_getcount"></a></p>
+
+<h2>manager::Base::getcount</h2>
+<blockquote>
+<p>uint16_t getcount() const; </p>
+<p>描述：获得当前的连接数量。</p>
+<p>参数：无</p>
+<p>返回：uint16_t</p>
+</blockquote>
+
+<p><a name="manager_base_get_maxcount"></a></p>
+
+<h2>manager::Base::get_maxcount</h2>
+<blockquote>
+<p>uint16_t get_maxcount() const; </p>
+<p>描述：获得最大连接数量。</p>
+<p>参数：无</p>
+<p>返回：uint16_t</p>
+</blockquote>
+
+<p><a name="manager_base_hash"></a></p>
+
+<h2>manager::Base::hash</h2>
+<blockquote>
+<p>bool hash(); </p>
+<p>描述：管理器是否已经正确的hash连接数组。</p>
+<p>参数：无</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="manager_base_get_listenport"></a></p>
+
+<h2>manager::Base::get_listenport</h2>
+<blockquote>
+<p>uint16_t get_listenport() const; </p>
+<p>描述：获得监听端口。</p>
+<p>参数：无</p>
+<p>返回：uint16_t</p>
+</blockquote>
+
+<p><a name="manager_base_get_connectionmax"></a></p>
+
+<h2>manager::Base::get_connectionmax</h2>
+<blockquote>
+<p>uint16_t get_connectionmax() const; </p>
+<p>描述：获得最大连接数量。</p>
+<p>参数：无</p>
+<p>返回：uint16_t</p>
+</blockquote>
+
+<p><a name="manager_base_get"></a></p>
+
+<h2>manager::Base::get</h2>
+<blockquote>
+<p>connection::Base *get(uint16_t id); </p>
+<p>描述：获得连接指针。</p>
+<p>参数：</p>
+<p>uint16_t id 连接ID。</p>
+<p>返回：connection::Base *</p>
+</blockquote>
+
+<p><a name="manager_base_getpool"></a></p>
+
+<h2>manager::Base::getpool</h2>
+<blockquote>
+<p>connection::Pool *getpool(); </p>
+<p>描述：获得连接池指针。</p>
+<p>参数：无</p>
+<p>返回：connection::Pool *</p>
+</blockquote>
+
+<p><a name="manager_base_get_onestep_accept"></a></p>
+
+<h2>manager::Base::get_onestep_accept</h2>
+<blockquote>
+<p>int32_t get_onestep_accept() const; </p>
+<p>描述：获得一次（帧）接受的新连接数量。</p>
+<p>参数：无</p>
+<p>返回：int32_t</p>
+</blockquote>
+
+<p><a name="manager_base_set_onestep_accept"></a></p>
+
+<h2>manager::Base::set_onestep_accept</h2>
+<blockquote>
+<p>void set_onestep_accept(int32_t count); </p>
+<p>描述：设置一次（帧）接受的新连接数量。</p>
+<p>参数：</p>
+<p>int32_t count 数量。</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="manager_base_get_send_bytes"></a></p>
+
+<h2>manager::Base::get_send_bytes</h2>
+<blockquote>
+<p>uint64_t get_send_bytes(); </p>
+<p>描述：获取流中发送的字节数，获取一次则重新计数。</p>
+<p>参数：无</p>
+<p>返回：uint64_t</p>
+</blockquote>
+
+<p><a name="manager_base_get_receive_bytes"></a></p>
+
+<h2>manager::Base::get_receive_bytes</h2>
+<blockquote>
+<p>uint64_t get_receive_bytes(); </p>
+<p>描述：获取流中接收的字节数，获取一次则重新计数。</p>
+<p>参数：无</p>
+<p>返回：uint64_t</p>
+</blockquote>
+
+<p><a name="manager_base_isinit"></a></p>
+
+<h2>manager::Base::isinit</h2>
+<blockquote>
+<p>bool isinit() const; </p>
+<p>描述：管理器是否初始化。</p>
+<p>参数：无</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="manager_epoll_define"></a></p>
+
+<h2>manager::Epoll定义</h2>
+
+<pre><code>
+namespace pf_net {                                                              
+                                                                                   
+namespace connection {                                                             
+                                                                                   
+namespace manager {                                                                
+                                                                                   
+class PF_API Epoll : public Base {  
+</code></pre>
+
+<p><a name="manager_epoll_init"></a></p>
+
+<h2>manager::Epoll::init</h2>
+<blockquote>
+<p>virtual bool init(uint16_t connectionmax = NET_CONNECTION_MAX,                  
+                     uint16_t listenport = 0,                                      
+                     const char *listenip = NULL); </p>
+<p>描述：初始化函数。</p>
+<p>参数：</p>
+<p>uint16_t connectionmax 最大连接数量。</p>
+<p>uint16_t listenport 监听端口。</p>
+<p>const char *listenip 监听IP。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="manager_epoll_select"></a></p>
+
+<h2>manager::Epoll::select</h2>
+<blockquote>
+<p>virtual bool select(); </p>
+<p>描述：网络侦测函数。</p>
+<p>参数：无</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="manager_epoll_processinput"></a></p>
+
+<h2>manager::Epoll::processinput</h2>
+<blockquote>
+<p>virtual bool processinput(); </p>
+<p>描述：数据接收接口。</p>
+<p>参数：无</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="manager_epoll_processoutput"></a></p>
+
+<h2>manager::Epoll::processoutput</h2>
+<blockquote>
+<p>virtual bool processoutput(); </p>
+<p>描述：数据发送接口。</p>
+<p>参数：无</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="manager_epoll_processexception"></a></p>
+
+<h2>manager::Epoll::processexception</h2>
+<blockquote>
+<p>virtual bool processexception(); </p>
+<p>描述：处理异常接口。</p>
+<p>参数：无</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="manager_epoll_processcommand"></a></p>
+
+<h2>manager::Epoll::processcommand</h2>
+<blockquote>
+<p>virtual bool processcommand(); </p>
+<p>描述：处理消息接口。</p>
+<p>参数：无</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="manager_epoll_set_poll_maxcount"></a></p>
+
+<h2>manager::Epoll::set_poll_maxcount</h2>
+<blockquote>
+<p>virtual bool set_poll_maxcount(uint16_t maxcount); </p>
+<p>描述：设置poll最大数量。</p>
+<p>参数：</p>
+<p>uint16_t maxcount 最大数量。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="manager_epoll_heartbeat"></a></p>
+
+<h2>manager::Epoll::heartbeat</h2>
+<blockquote>
+<p>virtual bool heartbeat(uint32_t time = 0); </p>
+<p>描述：心跳函数。</p>
+<p>参数：</p>
+<p>uint32_t time 心跳时间。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="manager_epoll_addsocket"></a></p>
+
+<h2>manager::Epoll::addsocket</h2>
+<blockquote>
+<p>virtual bool addsocket(int32_t socketid, int16_t connectionid); </p>
+<p>描述：增加套接字到管理器，基类实现<a href="#manager_base_addsocket">manager::Base::addsocket</a>。</p>
+<p>参数：</p>
+<p>int32_t socketid 套接字ID。</p>
+<p>int16_t connectionid 连接ID。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="manager_epoll_removesocket"></a></p>
+
+<h2>manager::Epoll::removesocket</h2>
+<blockquote>
+<p>virtual bool removesocket(int32_t socketid); </p>
+<p>描述：将套接字移出管理器，基类实现<a href="#manager_base_removesocket">manager::Base::removesocket</a>。</p>
+<p>参数：</p>
+<p>int32_t socketid 套接字ID。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="manager_select_define"></a></p>
+
+<h2>manager::Select定义</h2>
+
+<pre><code>
+namespace pf_net {                                                              
+                                                                                   
+namespace connection {                                                             
+                                                                                   
+namespace manager {                                                                
+                                                                                   
+class PF_API Select : public Base {  
+</code></pre>
+
+<p><a name="manager_select_init"></a></p>
+
+<h2>manager::Select::init</h2>
+<blockquote>
+<p>virtual bool init(uint16_t connectionmax = NET_CONNECTION_MAX,                  
+                     uint16_t listenport = 0,                                      
+                     const char *listenip = NULL); </p>
+<p>描述：初始化函数。</p>
+<p>参数：</p>
+<p>uint16_t connectionmax 最大连接数量。</p>
+<p>uint16_t listenport 监听端口。</p>
+<p>const char *listenip 监听IP。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="manager_select_select"></a></p>
+
+<h2>manager::Select::select</h2>
+<blockquote>
+<p>virtual bool select(); </p>
+<p>描述：网络侦测函数。</p>
+<p>参数：无</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="manager_select_processinput"></a></p>
+
+<h2>manager::Select::processinput</h2>
+<blockquote>
+<p>virtual bool processinput(); </p>
+<p>描述：数据接收接口。</p>
+<p>参数：无</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="manager_select_processoutput"></a></p>
+
+<h2>manager::Select::processoutput</h2>
+<blockquote>
+<p>virtual bool processoutput(); </p>
+<p>描述：数据发送接口。</p>
+<p>参数：无</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="manager_select_processexception"></a></p>
+
+<h2>manager::Select::processexception</h2>
+<blockquote>
+<p>virtual bool processexception(); </p>
+<p>描述：处理异常接口。</p>
+<p>参数：无</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="manager_select_processcommand"></a></p>
+
+<h2>manager::Select::processcommand</h2>
+<blockquote>
+<p>virtual bool processcommand(); </p>
+<p>描述：处理消息接口。</p>
+<p>参数：无</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="manager_epoll_set_poll_maxcount"></a></p>
+
+<h2>manager::Select::set_poll_maxcount</h2>
+<blockquote>
+<p>virtual bool set_poll_maxcount(uint16_t maxcount); </p>
+<p>描述：设置poll最大数量。</p>
+<p>参数：</p>
+<p>uint16_t maxcount 最大数量。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="manager_epoll_heartbeat"></a></p>
+
+<h2>manager::Select::heartbeat</h2>
+<blockquote>
+<p>virtual bool heartbeat(uint32_t time = 0); </p>
+<p>描述：心跳函数。</p>
+<p>参数：</p>
+<p>uint32_t time 心跳时间。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="manager_epoll_addsocket"></a></p>
+
+<h2>manager::Select::addsocket</h2>
+<blockquote>
+<p>virtual bool addsocket(int32_t socketid, int16_t connectionid); </p>
+<p>描述：增加套接字到管理器，基类实现<a href="#manager_base_addsocket">manager::Base::addsocket</a>。</p>
+<p>参数：</p>
+<p>int32_t socketid 套接字ID。</p>
+<p>int16_t connectionid 连接ID。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="manager_select_removesocket"></a></p>
+
+<h2>manager::Select::removesocket</h2>
+<blockquote>
+<p>virtual bool removesocket(int32_t socketid); </p>
+<p>描述：将套接字移出管理器，基类实现<a href="#manager_base_removesocket">manager::Base::removesocket</a>。</p>
+<p>参数：</p>
+<p>int32_t socketid 套接字ID。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<nav>
+	<a href="net.packet.htm">包 </a>
+</nav>
+<footer>
+    <p><a href="#">Dayle Rees</a>.</p>
+</footer>
+            
+            
+</section>
+  <div class="clearfix"></div>
+</div>
+
+        <script src="../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="../js/vendor/jquery-1.8.2.min.js"><\/script>')</script>
+        <script src="../../checkout.stripe.com/v2/checkout.js"></script>
+        <script src="../js/vendor/prettify.js"></script>
+        <script src="../js/plugins.js"></script>
+        <script src="../js/main.js"></script>
+
+        <script type="text/javascript">
+
+          var _gaq = _gaq || [];
+          _gaq.push(['_setAccount', 'UA-37898177-1']);
+          _gaq.push(['_trackPageview']);
+
+          (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www/') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+          })();
+
+        </script>
+    </body>
+</html>

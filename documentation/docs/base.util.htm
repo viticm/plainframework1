@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset=UTF-8"utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>简约框架参考手册</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" href="../css/style.css">
+        <script src="../js/vendor/modernizr-2.6.2.min.js"></script>
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="#">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+
+        <div class="wrapper">
+            <header>
+                <h1>简约框架参考手册</h1>
+            </header>
+            <aside class="sidebar">
+<ul>
+<li>入门指引
+
+<ul>
+<li><a href="../index.htm">简介</a></li>
+<li><a href="simpletutorials.htm">简明教程</a></li>
+<li><a href="style-guide.htm">代码风格</a></li>
+<li><a href="module.htm">模块</a></li>
+<li><a href="license.htm">许可</a></li>
+</ul></li>
+
+<li>基础模块
+<ul>
+<li><a href="base.macro.htm">宏</a></li>
+<li><a href="base.global.htm">全局变量</a></li>
+<li><a href="base.log.htm">日志</a></li>
+<li><a href="base.string.htm">字符串</a></li>
+<li><a href="base.hashmap.htm">hash map</a></li>
+<li><a href="base.timemanager.htm">时间管理器</a></li>
+<li><a href="base.tinytimer.htm">小型定时器</a></li>
+<li><a href="base.util.htm">工具集</a></li>
+</ul></li>
+
+<li>数据库模块
+<ul>
+<li><a href="db.manager.htm">管理器</a></li>
+<li><a href="db.odbc.htm">ODBC</a></li>
+</ul></li>
+
+<li>引擎模块
+<ul>
+<li><a href="engine.kernel.htm">核心</a></li>
+<li><a href="engine.thread.htm">线程</a></li>
+</ul></li>
+
+<li>事件模块
+<ul>
+<li><a href="event.manager.htm">管理器</a></li>
+</ul></li>
+
+<li>文件模块
+<ul>
+<li><a href="file.api.htm">系统API</a></li>
+<li><a href="file.database.htm">文件数据库</a></li>
+<li><a href="file.ini.htm">ini文件</a></li>
+</ul></li>
+
+<li>网络模块
+<ul>
+<li><a href="net.connection.htm">连接</a></li>
+<li><a href="net.packet.htm">包</a></li>
+<li><a href="net.socket.htm">套接字</a></li>
+<li><a href="net.manager.htm">管理器</a></li>
+</ul></li>
+
+<li>性能模块
+<ul>
+<li><a href="performance.eyes.htm">监视器</a></li>
+</ul></li>
+
+<li>脚本模块
+<ul>
+<li><a href="script.cache.htm">缓存</a></li>
+<li><a href="script.lua.htm">lua</a></li>
+</ul></li>
+
+<li>系统模块
+<ul>
+<li><a href="sys.memory.htm">内存</a></li>
+<li><a href="sys.info.htm">系统信息</a></li>
+<li><a href="sys.process.htm">进程</a></li>
+<li><a href="sys.thread.htm">线程</a></li>
+<li><a href="sys.util.htm">工具集</a></li>
+</ul></li>
+
+<li>工具模块
+<ul>
+<li><a href="util.compressor.htm">压缩模块</a></li>
+</ul></li>
+
+</ul>
+</aside>
+
+<section class="content">
+
+<h1>base module util</h1>
+
+<ul>
+<li><a href="#total">总述</a></li>
+<li><a href="#sleep">pf_base::util::sleep</a></li>
+<li><a href="#get_sizestr">pf_base::util::get_sizestr</a></li>
+<li><a href="#path_tounix">pf_base::util::path_tounix</a></li>
+<li><a href="#path_towindows">pf_base::util::path_towindows</a></li>
+<li><a href="#get_module_filename">pf_base::util::get_module_filename</a></li>
+</ul>
+
+<p><a name="total"></a></p>
+
+<h2>总述</h2>
+
+<p>基本工具集提供了常用的一系列方法，常用的罗列在此，不常用的大家可以自己去研究。</p>
+
+<p><a name="#sleep"></a></p>
+
+<h2>pf_base::util::sleep</h2>
+
+<blockquote>
+<p>void sleep(uint32_t million_seconds); </p>
+<p>描述：程序休眠执行。
+</p>
+<p>参数：</p>
+<p>uint32_t million_seconds 需要暂停的时间（毫秒）。</p>
+<p>返回值：无</p>
+</blockquote>
+
+<p><b>Example #1 sleep 范例</b></p>
+
+<pre><code>
+#include "pf/base/util.h"                                                        
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_base::util::sleep(1000); //暂停一秒                                               
+  return 0;                                                                        
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+无
+</p>
+
+<p><a name="get_sizestr"></a></p>
+
+<h2>pf_base::util::get_sizestr</h2>
+
+<blockquote>
+<p>void get_sizestr(uint64_t size, char *buffer, uint32_t length, int8_t type = -1); </p>
+<p>描述：</p>                                                                            
+<p>由byte类型获得单位大小字符串如：32bytes,32kb,32mb,32gb,32t</p>                      
+<p>type: -1 获得大于1最大单位字符串，如1023byte则返回1023bytes而非kb</p>           
+<p>type: 0 - 4 分别对应单位bytes、kb、mb、gb、t，                                  
+      不过规则是返回最至少大于0.01单位的字符串
+</p>
+<p>参数：</p>
+<p>uint64_t size 字节大小。</p>
+<p>char *buffer 获得的单位字符串存储的指针。</p>
+<p>uint32_t length 获得的单位字符串存储的长度。</p>
+<p>int8_t type 转换的类型，请查看描述。</p>
+<p>返回值：无</p>
+</blockquote>
+
+<p><b>Example #1 get_sizestr 范例</b></p>
+
+<pre><code>
+#include "pf/base/util.h"                                                          
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  uint64_t size = 1023;                                                            
+  char temp[64] = {0};                                                             
+  pf_base::util::get_sizestr(size, temp, sizeof(temp) - 1);                        
+  DEBUGPRINTF("temp: %s", temp);                                                   
+  pf_base::util::get_sizestr(size, temp, sizeof(temp) - 1, 1);                     
+  DEBUGPRINTF("temp: %s", temp);                                                   
+  size = 1999999999;                                                               
+  pf_base::util::get_sizestr(size, temp, sizeof(temp) - 1);                        
+  DEBUGPRINTF("temp: %s", temp);                                                   
+  pf_base::util::get_sizestr(size, temp, sizeof(temp) - 1, 1);                     
+  DEBUGPRINTF("temp: %s", temp);                                                   
+  pf_base::util::get_sizestr(size, temp, sizeof(temp) - 1, 2);                     
+  DEBUGPRINTF("temp: %s", temp);                                                   
+  pf_base::util::get_sizestr(size, temp, sizeof(temp) - 1, 3);                     
+  DEBUGPRINTF("temp: %s", temp);                                                   
+  pf_base::util::get_sizestr(size, temp, sizeof(temp) - 1, 4);                     
+  DEBUGPRINTF("temp: %s", temp);                                                   
+  return 0;                                                                        
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">temp: 1023.00bytes</font> <br />
+<font color="green">temp: 1.00kb</font> <br />
+<font color="green">temp: 1.86gb</font> <br />
+<font color="green">temp: 1953125.00kb</font> <br />
+<font color="green">temp: 1907.35mb</font> <br />
+<font color="green">temp: 1.86gb</font> <br />
+<font color="green">temp: 1.86gb</font>
+</p>
+
+<p><a name="path_tounix"></a></p>
+
+<h2>pf_base::util::path_tounix</h2>
+
+<blockquote>
+<p>void path_tounix(char *buffer, uint16_t length); </p>
+<p>描述：</p>                                                                            
+<p>格式化unix路径地址。</p>                      
+<p>参数：</p>
+<p>char *buffer 需转换的字符串指针。</p>
+<p>uint16_t length 长度。</p>
+<p>返回值：无</p>
+</blockquote>
+
+<p><b>Example #1 path_tounix 范例</b></p>
+
+<pre><code>
+#include "pf/base/util.h"                                                          
+#include "pf/base/string.h"                                                        
+#include "main.h"                                                               
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  char path[FILENAME_MAX] = {0};                                                
+  pf_base::string::safecopy(path, "public\\script\\lua/", sizeof(path));               
+  pf_base::util::path_tounix(path, sizeof(path) - 1);                           
+  DEBUGPRINTF("path: %s", path);                                                
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">path: public/script/lua/</font>
+</p>
+
+<p><a name="path_towindows"></a></p>
+
+<h2>pf_base::util::path_towindows</h2>
+
+<blockquote>
+<p>void path_towindows(char *buffer, uint16_t length); </p>
+<p>描述：</p>                                                                            
+<p>格式化windows路径地址。</p>                      
+<p>参数：</p>
+<p>char *buffer 需转换的字符串指针。</p>
+<p>uint16_t length 长度。</p>
+<p>返回值：无</p>
+</blockquote>
+
+<p><b>Example #1 path_towindows 范例</b></p>
+
+<pre><code>
+#include "pf/base/util.h"                                                          
+#include "pf/base/string.h"                                                        
+#include "main.h"                                                               
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  char path[FILENAME_MAX] = {0};                                                
+  pf_base::string::safecopy(path, "public/script/lua/", sizeof(path));          
+  pf_base::util::path_towindows(path, sizeof(path) - 1);                        
+  DEBUGPRINTF("path: %s", path);                                                
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">path: public\script\lua\</font>
+</p>
+
+<p><a name="get_module_filename"></a></p>
+
+<h2>pf_base::util::get_module_filename</h2>
+
+<blockquote>
+<p>void get_module_filename(char *buffer, size_t size); </p>
+<p>描述：</p>                                                                            
+<p>取当前执行文件名。</p>                      
+<p>参数：</p>
+<p>char *buffer 保存的字符串指针。</p>
+<p>size_t size 长度。</p>
+<p>返回值：无</p>
+</blockquote>
+
+<p><b>Example #1 get_module_filename 范例</b></p>
+
+<pre><code>
+#include "pf/base/util.h"                                                          
+#include "pf/base/string.h"                                                        
+#include "main.h"                                                               
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  char name[FILENAME_MAX] = {0};                                                
+  pf_base::util::get_module_filename(name, sizeof(name) - 1);                   
+  DEBUGPRINTF("name: %s", name);                                                
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">name: /home/viticm/work/plainframework1/applications/bin/pf_simple</font>
+</p>
+
+<nav>
+	<a href="base.tinytimer.htm">小型定时器</a>
+</nav>
+<footer>
+    <p><a href="#">Dayle Rees</a>.</p>
+</footer>
+            
+            
+</section>
+  <div class="clearfix"></div>
+</div>
+
+        <script src="../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="../js/vendor/jquery-1.8.2.min.js"><\/script>')</script>
+        <script src="../../checkout.stripe.com/v2/checkout.js"></script>
+        <script src="../js/vendor/prettify.js"></script>
+        <script src="../js/plugins.js"></script>
+        <script src="../js/main.js"></script>
+
+        <script type="text/javascript">
+
+          var _gaq = _gaq || [];
+          _gaq.push(['_setAccount', 'UA-37898177-1']);
+          _gaq.push(['_trackPageview']);
+
+          (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www/') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+          })();
+
+        </script>
+    </body>
+</html>

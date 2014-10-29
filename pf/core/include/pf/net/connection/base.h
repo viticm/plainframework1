@@ -60,16 +60,16 @@ class PF_API Base {
    virtual bool isplayer() const;
    //读取设置玩家连接ID的接口，该ID是由connection::Pool类分配出来的索引值
    //用于标识一个客户端连接在整个系统中的数据位置信息
-   int16_t getid();
+   int16_t getid() const;
    void setid(int16_t id);
    //读取设置玩家UID的接口，userid是由UserPool类分配出来的索引值
    //用于标识玩家的游戏存储位置信息
-   int16_t get_userid();
+   int16_t get_userid() const;
    void set_userid(int16_t id);
    //读取设置玩家连接管理器ID，managerid 是由connection::Manager类分配的索引值
    //用于标识当前玩家所在的某个connection::Manager中的位置信息，每个
    //ConnectionManager位于一个独立的线程里
-   int16_t get_managerid();
+   int16_t get_managerid() const;
    void set_managerid(int16_t id);
    //读取当前连接的socket对象
    socket::Base *getsocket();
@@ -79,9 +79,9 @@ class PF_API Base {
    virtual bool isvalid();
    virtual void cleanup();
    //判断当前连接是否为空块，是则释放用于新连接
-   bool isempty();
+   bool isempty() const;
    void setempty(bool status = true);
-   bool isdisconnect();
+   bool isdisconnect() const;
    void setdisconnect(bool status = true);
    virtual void resetkick();
    uint8_t get_execute_count_pretick() const;

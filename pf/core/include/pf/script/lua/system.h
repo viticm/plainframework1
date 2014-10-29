@@ -30,12 +30,14 @@ class PF_API System : public pf_base::Singleton<System>, public Interface {
  public:
    static System *getsingleton_pointer();
    static System &getsingleton();
-   function_registers function_registers_;
    void registerfunctions();
    void set_function_registers(function_registers function);
 
  public:
    static int32_t call_noclosure(lua_State *L);
+
+ private:
+   function_registers function_registers_;
 
 };
 

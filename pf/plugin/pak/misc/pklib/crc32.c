@@ -12,11 +12,13 @@
 
 #include "pklib.h"
 
+/**
 static char CopyRight[] = "PKWARE Data Compression Library for Win32\r\n"
                           "Copyright 1989-1995 PKWARE Inc.  All Rights Reserved\r\n"
                           "Patent No. 5,051,745\r\n"
                           "PKWARE Data Compression Library Reg. U.S. Pat. and Tm. Off.\r\n"
                           "Version 1.11\r\n";
+**/
 
 static unsigned long crc_table[] =
 {

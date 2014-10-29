@@ -265,7 +265,7 @@ char *Base::get_data(uint32_t size, uint32_t index) {
     return NULL;
 }
 
-uint32_t Base::get_size() {
+uint32_t Base::get_size() const {
   __ENTER_FUNCTION
     return size_;
   __LEAVE_FUNCTION
@@ -305,7 +305,7 @@ void Base::set_head_version(uint32_t version) {
   __LEAVE_FUNCTION
 }
 
-uint32_t Base::get_head_version() {
+uint32_t Base::get_head_version() const {
   __ENTER_FUNCTION
     uint32_t version = 
       (reinterpret_cast<dataheader_struct *>(header_))->version;

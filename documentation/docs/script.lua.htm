@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset=UTF-8"utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>简约框架参考手册</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" href="../css/style.css">
+        <script src="../js/vendor/modernizr-2.6.2.min.js"></script>
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="#">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+
+        <div class="wrapper">
+            <header>
+                <h1>简约框架参考手册</h1>
+            </header>
+            <aside class="sidebar">
+<ul>
+<li>入门指引
+
+<ul>
+<li><a href="../index.htm">简介</a></li>
+<li><a href="simpletutorials.htm">简明教程</a></li>
+<li><a href="style-guide.htm">代码风格</a></li>
+<li><a href="module.htm">模块</a></li>
+<li><a href="license.htm">许可</a></li>
+</ul></li>
+
+<li>基础模块
+<ul>
+<li><a href="base.macro.htm">宏</a></li>
+<li><a href="base.global.htm">全局变量</a></li>
+<li><a href="base.log.htm">日志</a></li>
+<li><a href="base.string.htm">字符串</a></li>
+<li><a href="base.hashmap.htm">hash map</a></li>
+<li><a href="base.timemanager.htm">时间管理器</a></li>
+<li><a href="base.tinytimer.htm">小型定时器</a></li>
+<li><a href="base.util.htm">工具集</a></li>
+</ul></li>
+
+<li>数据库模块
+<ul>
+<li><a href="db.manager.htm">管理器</a></li>
+<li><a href="db.odbc.htm">ODBC</a></li>
+</ul></li>
+
+<li>引擎模块
+<ul>
+<li><a href="engine.kernel.htm">核心</a></li>
+<li><a href="engine.thread.htm">线程</a></li>
+</ul></li>
+
+<li>事件模块
+<ul>
+<li><a href="event.manager.htm">管理器</a></li>
+</ul></li>
+
+<li>文件模块
+<ul>
+<li><a href="file.api.htm">系统API</a></li>
+<li><a href="file.database.htm">文件数据库</a></li>
+<li><a href="file.ini.htm">ini文件</a></li>
+</ul></li>
+
+<li>网络模块
+<ul>
+<li><a href="net.connection.htm">连接</a></li>
+<li><a href="net.packet.htm">包</a></li>
+<li><a href="net.socket.htm">套接字</a></li>
+<li><a href="net.manager.htm">管理器</a></li>
+</ul></li>
+
+<li>性能模块
+<ul>
+<li><a href="performance.eyes.htm">监视器</a></li>
+</ul></li>
+
+<li>脚本模块
+<ul>
+<li><a href="script.cache.htm">缓存</a></li>
+<li><a href="script.lua.htm">lua</a></li>
+</ul></li>
+
+<li>系统模块
+<ul>
+<li><a href="sys.memory.htm">内存</a></li>
+<li><a href="sys.info.htm">系统信息</a></li>
+<li><a href="sys.process.htm">进程</a></li>
+<li><a href="sys.thread.htm">线程</a></li>
+<li><a href="sys.util.htm">工具集</a></li>
+</ul></li>
+
+<li>工具模块
+<ul>
+<li><a href="util.compressor.htm">压缩模块</a></li>
+</ul></li>
+
+</ul>
+</aside>
+
+<section class="content">
+
+<h1>script module lua</h1>
+
+<ul>
+<li><a href="#total">总述</a></li>
+<li><a href="#filebridge_define">FileBridge定义</a></li>
+<li><a href="#filebridge_set_rootpath">FileBridge::set_rootpath</a></li>
+<li><a href="#filebridge_set_workpath">FileBridge::set_workpath</a></li>
+<li><a href="#filebridge_get_fullpath">FileBridge::get_fullpath</a></li>
+<li><a href="#filebridge_get_rootpath">FileBridge::get_rootpath</a></li>
+<li><a href="#filebridge_open">FileBridge::open</a></li>
+<li><a href="#filebridge_close">FileBridge::close</a></li>
+<li><a href="#filebridge_read">FileBridge::read</a></li>
+<li><a href="#filebridge_write">FileBridge::write</a></li>
+<li><a href="#filebridge_seek">FileBridge::seek</a></li>
+<li><a href="#filebridge_tell">FileBridge::tell</a></li>
+<li><a href="#filebridge_size">FileBridge::size</a></li>
+<li><a href="#interface_define">Interface定义</a></li>
+<li><a href="#interface_init">Interface::init</a></li>
+<li><a href="#interface_release">Interface::release</a></li>
+<li><a href="#interface_find_function">Interface::find_function</a></li>
+<li><a href="#interface_verify_function">Interface::verify_function</a></li>
+<li><a href="#interface_enter_runstep">Interface::enter_runstep</a></li>
+<li><a href="#interface_leave_runstep">Interface::leave_runstep</a></li>
+<li><a href="#interface_reloadscript">Interface::reloadscript</a></li>
+<li><a href="#interface_getscript_byid">Interface::getscript_byid</a></li>
+<li><a href="#interface_addscript">Interface::addscript</a></li>
+<li><a href="#interface_getscript_filedata">Interface::getscript_filedata</a></li>
+<li><a href="#interface_loadscript">Interface::loadscript</a></li>
+<li><a href="#interface_set_globalfile">Interface::set_globalfile</a></li>
+<li><a href="#interface_set_rootpath">Interface::set_rootpath</a></li>
+<li><a href="#interface_set_workpath">Interface::set_workpath</a></li>
+<li><a href="#interface_get_vm">Interface::get_vm</a></li>
+<li><a href="#interface_check_paramnumber">Interface::check_paramnumber</a></li>
+<li><a href="#interface_is_paramnumber">Interface::is_paramnumber</a></li>
+<li><a href="#interface_is_paramstring">Interface::is_paramstring</a></li>
+<li><a href="#interface_getscript_stepid">Interface::getscript_stepid</a></li>
+<li><a href="#interface_mark_scriptname">Interface::mark_scriptname</a></li>
+<li><a href="#interface_check_scriptvalid">Interface::check_scriptvalid</a></li>
+<li><a href="#interface_run_scriptfunction">Interface::run_scriptfunction*</a></li>
+<li><a href="#interface_get_rootpath">Interface::get_rootpath</a></li>
+<li><a href="#interface_run_filefunction">Interface::run_filefunction*</a></li>
+<li><a href="#stack_define">Stack定义</a></li>
+<li><a href="#stack_reset">Stack::reset</a></li>
+<li><a href="#stack_stepenter">Stack::stepenter</a></li>
+<li><a href="#stack_stepleave">Stack::stepleave</a></li>
+<li><a href="#vm_define">VM定义</a></li>
+<li><a href="#vm_init">VM::init</a></li>
+<li><a href="#vm_release">VM::release</a></li>
+<li><a href="#vm_register_function">VM::register_function</a></li>
+<li><a href="#vm_register_functiontable">VM::register_functiontable</a></li>
+<li><a href="#vm_register_globalvalue">VM::register_globalvalue*</a></li>
+<li><a href="#vm_load">VM::load</a></li>
+<li><a href="#vm_loadbuffer">VM::loadbuffer</a></li>
+<li><a href="#vm_callfunction_enter">VM::callfunction_enter</a></li>
+<li><a href="#vm_callfunction">VM::callfunction*</a></li>
+<li><a href="#vm_callfunction_leave">VM::callfunction_leave</a></li>
+<li><a href="#vm_set_rootpath">VM::set_rootpath</a></li>
+<li><a href="#vm_set_workpath">VM::set_workpath</a></li>
+<li><a href="#vm_get_rootpath">VM::get_rootpath</a></li>
+<li><a href="#system_define">System定义</a></li>
+<li><a href="#system_getsingleton_pointer">System::getsingleton_pointer</a></li>
+<li><a href="#system_getsingleton">System::getsingleton</a></li>
+<li><a href="#system_registerfunctions">System::registerfunctions</a></li>
+<li><a href="#system_set_function_registers">System::set_function_registers</a></li>
+</ul>
+
+<p><a name="total"></a></p>
+
+<h2>总述</h2>
+
+<p>lua模块封装了与之相关的常用接口与方法，例如c++导出与调用lua的接口。</p>
+
+<p><a name="filebridge_define"></a></p>
+
+<h2>FileBridge定义</h2>
+<pre><code>
+namespace pf_script {                                                                                          
+                                                                                                               
+namespace lua {                                                                                                
+                                                                                                               
+class PF_API FileBridge {
+</code></pre>
+
+<p><a name="filebridge_set_rootpath"></a></p>
+
+<h2>FileBridge::set_rootpath</h2>
+<blockquote>
+<p>void set_rootpath(const char *path); </p>
+<p>描述：设置lua脚本所在的根目录。</p>
+<p>参数：</p>
+<p>const char *path 路径。</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="filebridge_set_workpath"></a></p>
+
+<h2>FileBridge::set_workpath</h2>
+<blockquote>
+<p>void set_workpath(const char *path); </p>
+<p>描述：设置lua脚本所在的工作目录。</p>
+<p>参数：</p>
+<p>const char *path 路径。</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="filebridge_get_fullpath"></a></p>
+
+<h2>FileBridge::get_fullpath</h2>
+<blockquote>
+<p>void get_fullpath(char *path, const char *filename, size_t length); </p>
+<p>描述：根据文件名获取脚本的绝对路径。</p>
+<p>参数：</p>
+<p>const char *path 路径保存的指针。</p>
+<p>const char *filename 脚本文件名。</p>
+<p>size_t length 路径保存的长度。</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="filebridge_get_rootpath"></a></p>
+
+<h2>FileBridge::get_rootpath</h2>
+<blockquote>
+<p>const char *get_rootpath(); </p>
+<p>描述：获取lua脚本所在的根目录。</p>
+<p>参数：无</p>
+<p>返回：const char *</p>
+</blockquote>
+
+<p><a name="filebridge_open"></a></p>
+
+<h2>FileBridge::open</h2>
+<blockquote>
+<p>bool open(const char *); </p>
+<p>描述：打开函数。</p>
+<p>参数：</p>
+<p>const char * 文件名</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="filebridge_close"></a></p>
+
+<h2>FileBridge::close</h2>
+<blockquote>
+<p>void close(); </p>
+<p>描述：关闭函数。</p>
+<p>参数：无</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="filebridge_read"></a></p>
+
+<h2>FileBridge::read</h2>
+<blockquote>
+<p>uint64_t read(void *, uint64_t); </p>
+<p>描述：读取函数。</p>
+<p>参数：</p>
+<p>void * 保存的指针。</p>
+<p>uint64_t 保存的大小。</p>
+<p>返回：uint64_t</p>
+</blockquote>
+
+<p><a name="filebridge_write"></a></p>
+
+<h2>FileBridge::write</h2>
+<blockquote>
+<p>uint64_t write(void *, uint64_t); </p>
+<p>描述：写入函数。</p>
+<p>参数：</p>
+<p>void * 写入的指针。</p>
+<p>uint64_t 写入的大小。</p>
+<p>返回：uint64_t</p>
+</blockquote>
+
+<p><a name="filebridge_seek"></a></p>
+
+<h2>FileBridge::seek</h2>
+<blockquote>
+<p>int64_t seek(int64_t, file_accessmode); </p>
+<p>描述：同文件seek函数。</p>
+<p>参数：</p>
+<p>int64_t 位置。</p>
+<p>file_accessmode 模式。</p>
+<p>返回：int64_t</p>
+</blockquote>
+
+<p><a name="filebridge_seek"></a></p>
+
+<h2>FileBridge::tell</h2>
+<blockquote>
+<p>int64_t tell(); </p>
+<p>描述：同文件tell函数。</p>
+<p>参数：无</p>
+<p>返回：int64_t</p>
+</blockquote>
+
+<p><a name="filebridge_size"></a></p>
+
+<h2>FileBridge::size</h2>
+<blockquote>
+<p>uint64_t size(); </p>
+<p>描述：获得文件大小函数。</p>
+<p>参数：无</p>
+<p>返回：uint64_t</p>
+</blockquote>
+
+<p><a name="interface_define"></a></p>
+
+<h2>Interface定义</h2>
+<pre><code>
+namespace pf_script {                                                                                          
+                                                                                                               
+namespace lua {                                                                                                
+                                                                                                               
+class PF_API Interface {
+</code></pre>
+
+<p><a name="interface_size"></a></p>
+
+<h2>Interface::init</h2>
+<blockquote>
+<p>bool init(); </p>
+<p>描述：初始化函数。</p>
+<p>参数：无</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="interface_release"></a></p>
+
+<h2>Interface::release</h2>
+<blockquote>
+<p>void release(); </p>
+<p>描述：内存释放函数。</p>
+<p>参数：无</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="interface_find_function"></a></p>
+
+<h2>Interface::find_function</h2>
+<blockquote>
+<p>bool find_function(lua_State *L, const char *name); </p>
+<p>描述：查找方法函数。</p>
+<p>参数：</p>
+<p>lua_State *L lua的栈。</p>
+<p>const char *name 方法名。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="interface_verify_function"></a></p>
+
+<h2>Interface::verify_function</h2>
+<blockquote>
+<p>bool verify_function(lua_State *L, const char **names); </p>
+<p>描述：校验方法函数。</p>
+<p>参数：</p>
+<p>lua_State *L lua的栈。</p>
+<p>const char **name 方法名指针。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="interface_enter_runstep"></a></p>
+
+<h2>Interface::enter_runstep</h2>
+<blockquote>
+<p>void enter_runstep(int32_t scriptid,                                         
+                      const char *functionname); </p>
+<p>描述：进入运行步骤函数。</p>
+<p>参数：</p>
+<p>int32_t scriptid 脚本ID。</p>
+<p>const char *functionname方法名。</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="interface_leave_runstep"></a></p>
+
+<h2>Interface::leave_runstep</h2>
+<blockquote>
+<p>void leave_runstep(int32_t scriptid,                                         
+                      const char *functionname); </p>
+<p>描述：离开运行步骤函数。</p>
+<p>参数：</p>
+<p>int32_t scriptid 脚本ID。</p>
+<p>const char *functionname方法名。</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="interface_reloadscript"></a></p>
+
+<h2>Interface::reloadscript</h2>
+<blockquote>
+<p>bool reloadscript(int32_t scriptid); </p>
+<p>描述：脚本重载函数。</p>
+<p>参数：</p>
+<p>int32_t scriptid 脚本ID。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="interface_getscript_byid"></a></p>
+
+<h2>Interface::getscript_byid</h2>
+<blockquote>
+<p>void *getscript_byid(int32_t scriptid); </p>
+<p>描述：通过ID获得脚本数据。</p>
+<p>参数：</p>
+<p>int32_t scriptid 脚本ID。</p>
+<p>返回：void *</p>
+</blockquote>
+
+<p><a name="interface_addscript"></a></p>
+
+<h2>Interface::addscript</h2>
+<blockquote>
+<p>bool addscript(int32_t scriptid, void *data); </p>
+<p>描述：增加脚本数据。</p>
+<p>参数：</p>
+<p>int32_t scriptid 脚本ID。</p>
+<p>void *data 数据。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="interface_getscript_filedata"></a></p>
+
+<h2>Interface::getscript_filedata</h2>
+<blockquote>
+<p>static cache::Base *getscript_filedata(int32_t scriptid); </p>
+<p>描述：获得脚本缓存数据。</p>
+<p>参数：</p>
+<p>int32_t scriptid 脚本ID。</p>
+<p>返回：cache::Base *</p>
+</blockquote>
+
+<p><a name="interface_loadscript"></a></p>
+
+<h2>Interface::loadscript</h2>
+<blockquote>
+<p>bool loadscript(const char *filename); </p>
+<p>描述：载入脚本文件。</p>
+<p>参数：</p>
+<p>const char *filename 文件名。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="interface_set_globalfile"></a></p>
+
+<h2>Interface::set_globalfile</h2>
+<blockquote>
+<p>void set_globalfile(const char *filename); </p>
+<p>描述：设置全局文件（脚本最初的时候即加载）。</p>
+<p>参数：</p>
+<p>const char *filename 文件名。</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="interface_set_rootpath"></a></p>
+
+<h2>Interface::set_rootpath</h2>
+<blockquote>
+<p>void set_rootpath(const char *path); </p>
+<p>描述：设置lua脚本根目录。</p>
+<p>参数：</p>
+<p>const char *path 路径。</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="interface_set_workpath"></a></p>
+
+<h2>Interface::set_workpath</h2>
+<blockquote>
+<p>void set_workpath(const char *path); </p>
+<p>描述：设置lua脚本工作路径。</p>
+<p>参数：</p>
+<p>const char *path 路径。</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="interface_get_vm"></a></p>
+
+<h2>Interface::get_vm</h2>
+<blockquote>
+<p>VM *get_vm(); </p>
+<p>描述：获得lua虚拟机对象指针。</p>
+<p>参数：无</p>
+<p>返回：VM *</p>
+</blockquote>
+
+<p><a name="interface_check_paramnumber"></a></p>
+
+<h2>Interface::check_paramnumber</h2>
+<blockquote>
+<p>static bool check_paramnumber(lua_State *L, int32_t count); </p>
+<p>描述：检查lua堆栈中的参数数量。</p>
+<p>参数：</p>
+<p>lua_State *L 堆栈指针。</p>
+<p>int32_t count 正确的数量。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="interface_is_paramnumber"></a></p>
+
+<h2>Interface::is_paramnumber</h2>
+<blockquote>
+<p>static bool is_paramnumber(lua_State *L,                                     
+                              int32_t index,                                    
+                              const char *function_name); </p>
+<p>描述：检查lua堆栈的某个参数是否为数字。</p>
+<p>参数：</p>
+<p>lua_State *L 堆栈指针。</p>
+<p>int32_t index 值的索引。</p>
+<p>const char *function_name 方法名。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="interface_is_paramstring"></a></p>
+
+<h2>Interface::is_paramstring</h2>
+<blockquote>
+<p>static bool is_paramstring(lua_State *L,                                     
+                              int32_t index,                                    
+                              const char *function_name); </p>
+<p>描述：检查lua堆栈的某个参数是否为字符串。</p>
+<p>参数：</p>
+<p>lua_State *L 堆栈指针。</p>
+<p>int32_t index 值的索引。</p>
+<p>const char *function_name 方法名。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="interface_getscript_stepid"></a></p>
+
+<h2>Interface::getscript_stepid</h2>
+<blockquote>
+<p>static int32_t getscript_stepid(lua_State *L); </p>
+<p>描述：获取lua脚本当前步骤ID。</p>
+<p>参数：</p>
+<p>lua_State *L 堆栈指针。</p>
+<p>返回：int32_t</p>
+</blockquote>
+
+<p><a name="interface_mark_scriptname"></a></p>
+
+<h2>Interface::mark_scriptname</h2>
+<blockquote>
+<p>static void mark_scriptname(lua_State *L, const char *scriptname); </p>
+<p>描述：将脚本名加入标签。</p>
+<p>参数：</p>
+<p>lua_State *L 堆栈指针。</p>
+<p>const char *scriptname 脚本名。</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="interface_check_scriptvalid"></a></p>
+
+<h2>Interface::check_scriptvalid</h2>
+<blockquote>
+<p>static void check_scriptvalid(void *file,                                    
+                                 int32_t scriptid,                              
+                                 const char *function_name); </p>
+<p>描述：检查lua脚本是否有效（内部调试，暂时未实现）。</p>
+<p>参数：</p>
+<p>void *file 文件数据。</p>
+<p>int32_t scriptid 脚本ID。</p>
+<p>const char *function_name 方法名。</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="interface_check_scriptvalid"></a></p>
+
+<h2>Interface::check_scriptvalid</h2>
+<blockquote>
+<p>static void check_scriptvalid(void *file,                                    
+                                 int32_t scriptid,                              
+                                 const char *function_name); </p>
+<p>描述：检查lua脚本是否有效（内部调试，暂时未实现）。</p>
+<p>参数：</p>
+<p>void *file 文件数据。</p>
+<p>int32_t scriptid 脚本ID。</p>
+<p>const char *function_name 方法名。</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="interface_run_scriptfunction"></a></p>
+
+<h2>Interface::run_scriptfunction*</h2>
+<blockquote>
+<p>int64_t run_scriptfunction(int32_t scriptid,                                 
+                              const char *function_name, ...); </p>
+<p>描述：运行脚本函数。</p>
+<p>参数：</p>
+<p>int32_t scriptid 脚本ID。</p>
+<p>const char *function_name 方法名。</p>
+<p>... 更多的参数（这些参数有整数、小数、字符串等）。</p>
+<p>返回：int64_t</p>
+</blockquote>
+
+<p><a name="interface_get_rootpath"></a></p>
+
+<h2>Interface::get_rootpath</h2>
+<blockquote>
+<p>const char *get_rootpath(); </p>
+<p>描述：获得脚本根路径。</p>
+<p>参数：无</p>
+<p>返回：const char *</p>
+</blockquote>
+
+<p><a name="interface_run_filefunction"></a></p>
+
+<h2>Interface::run_filefunction*</h2>
+<blockquote>
+<p>int64_t run_filefunction(const char *filename,                               
+                            const char *function_name,
+                            ...,                          
+                            bool load = true); </p>
+<p>描述：运行文件函数。</p>
+<p>参数：</p>
+<p>const char *filename 文件名。</p>
+<p>const char *function_name 方法名。</p>
+<p>... 更多的参数（这些参数有整数、小数、字符串等）。</p>
+<p>bool load 是否加载。</p>
+<p>返回：int64_t</p>
+</blockquote>
+
+<p><a name="stack_define"></a></p>
+
+<h2>Stack定义</h2>
+<pre><code>
+namespace pf_script {                                                           
+                                                                                
+namespace lua {                                                                 
+                                                                                
+class PF_API Stack {
+</code></pre>
+
+<p><a name="stack_reset"></a></p>
+
+<h2>Stack::reset</h2>
+<blockquote>
+<p>void reset(); </p>
+<p>描述：重置方法。</p>
+<p>参数：无</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="stack_stepenter"></a></p>
+
+<h2>Stack::stepenter</h2>
+<blockquote>
+<p>bool stepenter(const char *functionname, int32_t scriptid); </p>
+<p>描述：步骤进入方法。</p>
+<p>参数：</p>
+<p>const char *functionname 方法名。</p>
+<p>int32_t scriptid 脚本ID。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="stack_stepleave"></a></p>
+
+<h2>Stack::stepleave</h2>
+<blockquote>
+<p>bool stepleave(); </p>
+<p>描述：步骤离开方法。</p>
+<p>参数：无</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="vm_define"></a></p>
+
+<h2>VM定义</h2>
+<pre><code>
+namespace pf_script {                                                           
+                                                                                
+namespace lua {                                                                 
+                                                                                
+class PF_API VM {
+</code></pre>
+
+<p><a name="vm_init"></a></p>
+
+<h2>VM::init</h2>
+<blockquote>
+<p>bool init(int32_t size = 0); </p>
+<p>描述：初始化函数。</p>
+<p>参数：</p>
+<p>int32_t size 堆栈大小。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="vm_release"></a></p>
+
+<h2>VM::release</h2>
+<blockquote>
+<p>void release(); </p>
+<p>描述：内存释放函数。</p>
+<p>参数：无</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="vm_register_function"></a></p>
+
+<h2>VM::register_function</h2>
+<blockquote>
+<p>bool register_function(const char *name, void *pointer); </p>
+<p>描述：注册全局方法。</p>
+<p>参数：</p>
+<p>const char *name 方法名。</p>
+<p>void *pointer 方法的指针。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="vm_register_functiontable"></a></p>
+
+<h2>VM::register_functiontable</h2>
+<blockquote>
+<p>bool register_functiontable(                                                 
+       const char *name, const struct luaL_Reg regtable[]); </p>
+<p>描述：注册方法到表中。</p>
+<p>参数：</p>
+<p>const char *name 表名。</p>
+<p>const struct luaL_Reg regtable[] 方法数组。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="vm_register_globalvalue"></a></p>
+
+<h2>VM::register_globalvalue*</h2>
+<blockquote>
+<p>bool register_globalvalue(const char *name, const char *value); </p>
+<p>描述：注册全局变量（字符串）。</p>
+<p>参数：</p>
+<p>const char *name 变量名。</p>
+<p>const char *value 变量值。</p>
+<p>返回：bool</p>
+<p>------------------------------------------------------------------------------------------------</p>
+<p>bool register_globalvalue(const char *name, lua_Number value); </p>
+<p>描述：注册全局变量（数字）。</p>
+<p>参数：</p>
+<p>const char *name 变量名。</p>
+<p>lua_Number value 变量值。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="vm_load"></a></p>
+
+<h2>VM::load</h2>
+<blockquote>
+<p>bool load(const char *filename); </p>
+<p>描述：加载文件。</p>
+<p>参数：</p>
+<p>const char *filename 文件名。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="vm_loadbuffer"></a></p>
+
+<h2>VM::loadbuffer</h2>
+<blockquote>
+<p>bool loadbuffer(unsigned char *buffer, uint64_t length); </p>
+<p>描述：加载数据。</p>
+<p>参数：</p>
+<p>unsigned char *buffer 数据指针。</p>
+<p>uint64_t length 数据长度。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="vm_callfunction_enter"></a></p>
+
+<h2>VM::callfunction_enter</h2>
+<blockquote>
+<p>void callfunction_enter(int32_t *index); </p>
+<p>描述：调用方法进入。</p>
+<p>参数：</p>
+<p>int32_t *index 索引指针。</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="vm_callfunction_enter"></a></p>
+
+<h2>VM::callfunction_enter</h2>
+<blockquote>
+<p>void callfunction_enter(int32_t *index); </p>
+<p>描述：调用方法进入。</p>
+<p>参数：</p>
+<p>int32_t *index 堆栈索引指针。</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="vm_callfunction"></a></p>
+
+<h2>VM::callfunction*</h2>
+<blockquote>
+<p>bool callfunction(const char *, ...); </p>
+<p>描述：调用脚本方法。</p>
+<p>参数：</p>
+<p>const char * 方法名。</p>
+<p>... 更多的参数（这些参数有整数、小数、字符串等）。</p>
+<p>返回：bool</p>
+</blockquote>
+
+<p><a name="vm_callfunction_leave"></a></p>
+
+<h2>VM::callfunction_leave</h2>
+<blockquote>
+<p>void callfunction_leave(int32_t index); </p>
+<p>描述：调用脚本方法。</p>
+<p>参数：</p>
+<p>int32_t index 堆栈索引。</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="vm_set_rootpath"></a></p>
+
+<h2>VM::set_rootpath</h2>
+<blockquote>
+<p>void set_rootpath(const char *path); </p>
+<p>描述：设置脚本根路径。</p>
+<p>参数：</p>
+<p>const char *path 路径。</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="vm_set_workpath"></a></p>
+
+<h2>VM::set_workpath</h2>
+<blockquote>
+<p>void set_workpath(const char *path); </p>
+<p>描述：设置脚本工作路径。</p>
+<p>参数：</p>
+<p>const char *path 路径。</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="vm_get_rootpath"></a></p>
+
+<h2>VM::get_rootpath</h2>
+<blockquote>
+<p>const char *get_rootpath(); </p>
+<p>描述：设置脚本根路径。</p>
+<p>参数：无</p>
+<p>返回：const char *</p>
+</blockquote>
+
+<p><a name="system_define"></a></p>
+
+<h2>System定义</h2>
+<pre><code>
+namespace pf_script {                                                           
+                                                                                
+namespace lua {                                                                 
+                                                                                
+class PF_API System {
+</code></pre>
+
+<p><a name="system_getsingleton_pointer"></a></p>
+
+<h2>System::getsingleton_pointer</h2>
+<blockquote>
+<p>static System *getsingleton_pointer(); </p>
+<p>描述：获取单例系统对象指针。</p>
+<p>参数：无</p>
+<p>返回：System *</p>
+</blockquote>
+
+<p><a name="system_getsingleton"></a></p>
+
+<h2>System::getsingleton</h2>
+<blockquote>
+<p>static System &getsingleton(); </p>
+<p>描述：获取单例系统指针。</p>
+<p>参数：无</p>
+<p>返回：System &</p>
+</blockquote>
+
+<p><a name="system_registerfunctions"></a></p>
+
+<h2>System::registerfunctions</h2>
+<blockquote>
+<p>void registerfunctions(); </p>
+<p>描述：注册脚本方法。</p>
+<p>参数：无</p>
+<p>返回：无</p>
+</blockquote>
+
+<p><a name="system_set_function_registers"></a></p>
+
+<h2>System::set_function_registers</h2>
+<blockquote>
+<p>void set_function_registers(function_registers function); </p>
+<p>描述：设置注册脚本方法函数。</p>
+<p>参数：function_registers function 方法指针。</p>
+<p>返回：无</p>
+</blockquote>
+
+<nav>
+	<a href="script.cache.htm">缓存 </a>
+</nav>
+<footer>
+    <p><a href="#">Dayle Rees</a>.</p>
+</footer>
+            
+            
+</section>
+  <div class="clearfix"></div>
+</div>
+
+        <script src="../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="../js/vendor/jquery-1.8.2.min.js"><\/script>')</script>
+        <script src="../../checkout.stripe.com/v2/checkout.js"></script>
+        <script src="../js/vendor/prettify.js"></script>
+        <script src="../js/plugins.js"></script>
+        <script src="../js/main.js"></script>
+
+        <script type="text/javascript">
+
+          var _gaq = _gaq || [];
+          _gaq.push(['_setAccount', 'UA-37898177-1']);
+          _gaq.push(['_trackPageview']);
+
+          (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www/') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+          })();
+
+        </script>
+    </body>
+</html>

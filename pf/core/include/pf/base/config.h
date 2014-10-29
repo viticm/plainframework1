@@ -191,6 +191,9 @@ enum {
 #ifndef stricmp
 #define stricmp _stricmp
 #endif
+#ifndef strnicmp
+#define strnicmp _strnicmp
+#endif
 #ifndef vsnprintf
 #define vsnprintf _vsnprintf
 #endif
@@ -201,9 +204,12 @@ enum {
 #elif __LINUX__
 #ifndef stricmp
 #define stricmp strcasecmp
+#endif
+#ifndef strnicmp
+#define strnicmp strncasecmp
+#endif
 #define strtoint64(pointer,endpointer,base) strtoll(pointer,endpointer,base)
 #define strtouint64(pointer,endpointer,base) strtoull(pointer,endpointer,base) 
-#endif
 #endif
 
 #if __WINDOWS__

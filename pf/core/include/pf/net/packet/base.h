@@ -58,9 +58,9 @@ class PF_API Base {
 
  public:
    virtual void cleanup() {};
-   virtual bool read(socket::InputStream& inputstream) = 0;
-   virtual bool write(socket::OutputStream& outputstream) const = 0;
-   virtual uint32_t execute(connection::Base* connection) = 0;
+   virtual bool read(socket::InputStream &inputstream) = 0;
+   virtual bool write(socket::OutputStream &outputstream) const = 0;
+   virtual uint32_t execute(connection::Base *connection) = 0;
    virtual uint16_t getid() const = 0;
    virtual uint32_t getsize() const = 0;
    int8_t getindex() const;

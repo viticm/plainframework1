@@ -121,41 +121,15 @@ uint32_t Base::available() const {
     return 0;
 }
 
-int32_t Base::accept(uint16_t port, const char *ip) {
+int32_t Base::accept(struct sockaddr_in *accept_sockaddr_in) {
   __ENTER_FUNCTION
     int32_t result = SOCKET_ERROR;
     uint32_t addrlength = 0;
-    struct sockaddr_in accept_sockaddr_in;
-    accept_sockaddr_in.sin_family = AF_INET;
-    if (NULL == ip || 
-        0 == strlen(ip) || 
-        0 == strcmp("127.0.0.1", ip) ||
-        0 == strcmp("0.0.0.0", ip)) {
-      accept_sockaddr_in.sin_addr.s_addr = htonl(INADDR_ANY);
-    } else {
-      accept_sockaddr_in.sin_addr.s_addr = inet_addr(ip);
-    }
-    accept_sockaddr_in.sin_port = htons(port);
     addrlength = sizeof(struct sockaddr_in);
     result = api::acceptex(
         socketid_, 
-        reinterpret_cast<struct sockaddr *>(&accept_sockaddr_in),
+        reinterpret_cast<struct sockaddr *>(accept_sockaddr_in),
         &addrlength);
-    port_ = ntohs(accept_sockaddr_in.sin_port);
-    pf_base::string::safecopy(host_, 
-                              inet_ntoa(accept_sockaddr_in.sin_addr), 
-                              sizeof(host_)); //接受的时候host变为客户端IP
-    return result;
-  __LEAVE_FUNCTION
-    return SOCKET_ERROR;
-}
-
-int32_t Base::fastaccept() {
-  __ENTER_FUNCTION
-    int32_t result = SOCKET_ERROR;
-    uint32_t addrlength = 0;
-    addrlength = sizeof(struct sockaddr_in);
-    result = api::acceptex(socketid_, NULL, &addrlength);
     return result;
   __LEAVE_FUNCTION
     return SOCKET_ERROR;

@@ -4,7 +4,7 @@ namespace pf_net {
 
 namespace socket {
 
-Stream::Stream(Base* socket, 
+Stream::Stream(Base *socket, 
                uint32_t bufferlength, 
                uint32_t bufferlength_max) {
   __ENTER_FUNCTION

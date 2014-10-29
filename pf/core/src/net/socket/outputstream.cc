@@ -192,8 +192,6 @@ bool OutputStream::write_uint32(uint32_t value) {
     return false;
 }
 
-
-
 bool OutputStream::write_int64(int64_t value) {
   __ENTER_FUNCTION
     uint32_t count = write((char*)&value, sizeof(value));

@@ -19,8 +19,8 @@ namespace socket {
 
 namespace encode {
 
-PF_API bool make(encodeparam_t& encodeparam);
-PF_API bool skip(encodeparam_t& encodeparam, int32_t length);
+PF_API bool make(encodeparam_t &encodeparam);
+PF_API bool skip(encodeparam_t &encodeparam, int32_t length);
 
 }; //namespace encode
 

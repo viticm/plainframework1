@@ -1,3 +1,4 @@
+#include "pf/base/string.h"
 #include "pf/net/socket/server.h"
 
 namespace pf_net {
@@ -62,16 +63,18 @@ void Server::close() {
   if (socket_ != NULL) socket_->close();
 }
 
-bool Server::accept(pf_net::socket::Base* socket) {
+bool Server::accept(pf_net::socket::Base *socket) {
   __ENTER_FUNCTION
+    using namespace pf_base;
     if (NULL == socket) return false;
+    struct sockaddr_in accept_sockaddr_in;
     socket->close();
-    if (0 == socket->port_) {
-      socket->socketid_ = socket_->fastaccept();
-    } else {
-      socket->socketid_ = socket_->accept(socket->port_);
-    }
+    socket->socketid_ = socket_->accept(&accept_sockaddr_in);
     if (SOCKET_INVALID == socket->socketid_) return false;
+    socket->port_ = ntohs(accept_sockaddr_in.sin_port);
+    string::safecopy(socket->host_, 
+                     inet_ntoa(accept_sockaddr_in.sin_addr), 
+                     sizeof(socket->host_));
     return true;
   __LEAVE_FUNCTION
     return false;

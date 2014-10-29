@@ -164,7 +164,7 @@
 			<Tool
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;NO_FSEEKO;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;CMAKE_INTDIR=\&quot;Release\&quot;;ZLIB_DLL"
-				AdditionalIncludeDirectories="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib;E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build;"
+				AdditionalIncludeDirectories="../"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -178,8 +178,8 @@
 				Version="1.2"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories=""
-				ProgramDatabaseFile="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build\Release\zlib.pdb"
-				ImportLibrary="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build\Release\zlib.lib"
+				ProgramDatabaseFile=".\dll\Release\zlib.pdb"
+				ImportLibrary=".\dll\Release\zlib.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"

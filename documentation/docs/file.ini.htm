@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset=UTF-8"utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>简约框架参考手册</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" href="../css/style.css">
+        <script src="../js/vendor/modernizr-2.6.2.min.js"></script>
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="#">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+
+        <div class="wrapper">
+            <header>
+                <h1>简约框架参考手册</h1>
+            </header>
+            <aside class="sidebar">
+<ul>
+<li>入门指引
+
+<ul>
+<li><a href="../index.htm">简介</a></li>
+<li><a href="simpletutorials.htm">简明教程</a></li>
+<li><a href="style-guide.htm">代码风格</a></li>
+<li><a href="module.htm">模块</a></li>
+<li><a href="license.htm">许可</a></li>
+</ul></li>
+
+<li>基础模块
+<ul>
+<li><a href="base.macro.htm">宏</a></li>
+<li><a href="base.global.htm">全局变量</a></li>
+<li><a href="base.log.htm">日志</a></li>
+<li><a href="base.string.htm">字符串</a></li>
+<li><a href="base.hashmap.htm">hash map</a></li>
+<li><a href="base.timemanager.htm">时间管理器</a></li>
+<li><a href="base.tinytimer.htm">小型定时器</a></li>
+<li><a href="base.util.htm">工具集</a></li>
+</ul></li>
+
+<li>数据库模块
+<ul>
+<li><a href="db.manager.htm">管理器</a></li>
+<li><a href="db.odbc.htm">ODBC</a></li>
+</ul></li>
+
+<li>引擎模块
+<ul>
+<li><a href="engine.kernel.htm">核心</a></li>
+<li><a href="engine.thread.htm">线程</a></li>
+</ul></li>
+
+<li>事件模块
+<ul>
+<li><a href="event.manager.htm">管理器</a></li>
+</ul></li>
+
+<li>文件模块
+<ul>
+<li><a href="file.api.htm">系统API</a></li>
+<li><a href="file.database.htm">文件数据库</a></li>
+<li><a href="file.ini.htm">ini文件</a></li>
+</ul></li>
+
+<li>网络模块
+<ul>
+<li><a href="net.connection.htm">连接</a></li>
+<li><a href="net.packet.htm">包</a></li>
+<li><a href="net.socket.htm">套接字</a></li>
+<li><a href="net.manager.htm">管理器</a></li>
+</ul></li>
+
+<li>性能模块
+<ul>
+<li><a href="performance.eyes.htm">监视器</a></li>
+</ul></li>
+
+<li>脚本模块
+<ul>
+<li><a href="script.cache.htm">缓存</a></li>
+<li><a href="script.lua.htm">lua</a></li>
+</ul></li>
+
+<li>系统模块
+<ul>
+<li><a href="sys.memory.htm">内存</a></li>
+<li><a href="sys.info.htm">系统信息</a></li>
+<li><a href="sys.process.htm">进程</a></li>
+<li><a href="sys.thread.htm">线程</a></li>
+<li><a href="sys.util.htm">工具集</a></li>
+</ul></li>
+
+<li>工具模块
+<ul>
+<li><a href="util.compressor.htm">压缩模块</a></li>
+</ul></li>
+
+</ul>
+</aside>
+
+<section class="content">
+
+<h1>file module ini</h1>
+
+<ul>
+<li><a href="#total">总述</a></li>
+<li><a href="#define">定义</a></li>
+<li><a href="#download">文件下载</a></li>
+<li><a href="#get_data">::get_data</a></li>
+<li><a href="#get_lines">::get_lines</a></li>
+<li><a href="#goto_next_line">::goto_next_line</a></li>
+<li><a href="#find_key">::find_key</a></li>
+<li><a href="#readstring">::readstring</a></li>
+<li><a href="#get_section_indexlist">::get_section_indexlist</a></li>
+<li><a href="#get_sectionnumber">::get_sectionnumber</a></li>
+<li><a href="#get_datalength">::get_datalength</a></li>
+<li><a href="#find_section_index">::find_section_index</a></li>
+<li><a href="#read_int64">::read_int64</a></li>
+<li><a href="#read_exist_int64">::read_exist_int64</a></li>
+<li><a href="#read_float">::read_float</a></li>
+<li><a href="#read_bool">::read_bool</a></li>
+<li><a href="#read_int32">::read_int32</a></li>
+<li><a href="#read_uint32">::read_uint32</a></li>
+<li><a href="#read_int16">::read_int16</a></li>
+<li><a href="#read_uint16">::read_uint16</a></li>
+<li><a href="#read_int8">::read_int8</a></li>
+<li><a href="#read_uint8">::read_uint8</a></li>
+<li><a href="#read_exist_int32">::read_exist_int32</a></li>
+<li><a href="#read_exist_uint32">::read_exist_uint32</a></li>
+<li><a href="#read_exist_int16">::read_exist_int16</a></li>
+<li><a href="#read_exist_uint16">::read_exist_uint16</a></li>
+<li><a href="#read_exist_int16">::read_exist_int8</a></li>
+<li><a href="#read_exist_uint16">::read_exist_uint8</a></li>
+<li><a href="#readstring">::readstring</a></li>
+<li><a href="#read_existstring">::read_existstring</a></li>
+</ul>
+
+<p><a name="total"></a></p>
+
+<h2>总述</h2>
+
+<p>该模块封装了ini文件操作的常用接口。</p>
+
+<p><a name="define"></a></p>
+
+<h2>定义</h2>
+<pre><code>
+namespace pf_file {                                                                
+                                                                                   
+class PF_API Ini {                                                                 
+</code></pre>
+
+<p><a name="download"></a></p>
+<h2>文件下载</h2>
+
+<blockquote>
+<p><a href="hostset.ini">hostset.ini</a></p>
+</blockquote>
+
+<h2>::get_data</h2>
+<p><a name="get_data"></a></p>
+
+<blockquote>
+<p>char *get_data(); </p>
+<p>描述：</p>                                                                            
+<p>获得文件数据内容。</p>                      
+<p>参数：</p>
+<p>无</p>
+<p>返回值：char *</p>
+</blockquote>
+
+<p><b>Example #1 get_data 范例</b></p>
+
+<pre><code>
+#include "pf/file/ini.h"                                                           
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_file::Ini fileini("hostset.ini"); //还有一种构造，在此不做演示                
+  DEBUGPRINTF("data: %s", fileini.get_data());                                     
+  return 0;                                                                        
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">data: ;GameServer数量和各台GameServer对应的ID编号（ID编号不能有相同）</font> <br />
+<font color="green">;ID编号 < 1000，最大数量不超过32</font> <br />
+<font color="green">[Init]</font> <br />
+<font color="green">ServerCount=7</font> <br />
+<font color="green">Server01=1</font> <br />
+<font color="green">Server02=2</font> <br />
+<font color="green">Server03=3</font> <br />
+<font color="green">Server04=4</font> <br />
+<font color="green">Server05=5</font> <br />
+<font color="green">Server06=6</font> <br />
+<font color="green">Server07=7</font> <br />
+<font color="green">Server08=8</font> <br />
+<font color="green">Server09=9</font> <br />
+<font color="green">Server10=10</font> <br />
+<font color="green">Server11=11</font> <br />
+<font color="green">Server12=12</font> <br />
+<font color="green">Server13=13</font> <br />
+<font color="green">Server14=14</font> <br />
+<font color="green">Server15=15</font> <br />
+<font color="green">Server16=16</font> <br />
+<br />
+<font color="green">;开服多少天后使用哪个worldset（注意Days递增）</font> <br />
+<font color="green">[WorldSet]</font> <br />
+<font color="green">Count=1</font> <br />
+<font color="green">1_Days=0</font> <br />
+<font color="green">1_File=\setting\worldset.txt</font> <br />
+</p>
+
+<p><a name="get_lines"></a></p>
+
+<h2>::get_lines</h2>
+
+<blockquote>
+<p>int32_t get_lines(int32_t current); </p>
+<p>描述：</p>                                                                            
+<p>从给出的位置获取数据行数。</p>                      
+<p>参数：</p>
+<p>int32_t current 指定的位置。</p>
+<p>返回值：int32_t</p>
+</blockquote>
+
+<p><b>Example #1 get_lines 范例</b></p>
+
+<pre><code>
+#include "pf/file/ini.h"                                                           
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_file::Ini fileini("hostset.ini"); //还有一种构造，在此不做演示                
+  DEBUGPRINTF("lines: %d", fileini.get_lines(101));                                
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">lines: 2</font>
+</p>
+
+<p><a name="goto_next_line"></a></p>
+
+<h2>::goto_next_line</h2>
+
+<blockquote>
+<p>int32_t goto_next_line(int32_t position); </p>
+<p>描述：</p>                                                                            
+<p>从给出的位置获取下一行开始的位置。</p>                      
+<p>参数：</p>
+<p>int32_t position 指定的位置。</p>
+<p>返回值：int32_t</p>
+</blockquote>
+
+<p><b>Example #1 goto_next_line 范例</b></p>
+
+<pre><code>
+#include "pf/file/ini.h"                                                           
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_file::Ini fileini("hostset.ini"); //还有一种构造，在此不做演示                
+  DEBUGPRINTF("position: %d", fileini.goto_next_line(101));                                
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">position: 128</font>
+</p>
+
+<p><a name="find_key"></a></p>
+
+<h2>::find_key</h2>
+
+<blockquote>
+<p>char *find_key(int32_t &position); </p>
+<p>描述：</p>                                                                            
+<p>在指定位置读取键 。</p>                      
+<p>参数：</p>
+<p>int32_t &position 指定的位置。</p>
+<p>返回值：char *</p>
+</blockquote>
+
+<p><b>Example #1 find_key 范例</b></p>
+
+<pre><code>
+#include "pf/file/ini.h"                                                           
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_file::Ini fileini("hostset.ini"); //还有一种构造，在此不做演示                
+  int32_t position = fileini.goto_next_line(128);                               
+  DEBUGPRINTF("key: %s", fileini.find_key(position));                           
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">key: ServerCount</font>
+</p>
+
+<p><a name="readstring"></a></p>
+
+<h2>::readstring</h2>
+
+<blockquote>
+<p>char *readstring(int32_t position); </p>
+<p>描述：</p>                                                                            
+<p>在指定位置读取字符串 。</p>                      
+<p>参数：</p>
+<p>int32_t position 指定的位置。</p>
+<p>返回值：char *</p>
+</blockquote>
+
+<p><b>Example #1 readstring 范例</b></p>
+
+<pre><code>
+#include "pf/file/ini.h"                                                           
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_file::Ini fileini("hostset.ini"); //还有一种构造，在此不做演示                
+  int32_t position = fileini.goto_next_line(128);                               
+  DEBUGPRINTF("str: %s", fileini.readstring(position));                           
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">str: ServerCount=7</font>
+</p>
+
+<p><a name="get_section_indexlist"></a></p>
+
+<h2>::get_section_indexlist</h2>
+
+<blockquote>
+<p>int32_t *get_section_indexlist(); </p>
+<p>描述：</p>                                                                            
+<p>获得段的索引列表。</p>                      
+<p>参数：</p>
+<p>无</p>
+<p>返回值：int32_t *</p>
+</blockquote>
+
+<p><b>Example #1 get_section_indexlist 范例</b></p>
+
+<pre><code>
+#include "pf/file/ini.h"                                                           
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_file::Ini fileini("hostset.ini"); //还有一种构造，在此不做演示                
+  int32_t *index = fileini.get_section_indexlist();                             
+  DEBUGPRINTF("index[0]: %d", index[0]);                                        
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">index[0]: 129</font>
+</p>
+
+<p><a name="get_sectionnumber"></a></p>
+
+<h2>::get_sectionnumber</h2>
+
+<blockquote>
+<p>int32_t get_sectionnumber() const; </p>
+<p>描述：</p>                                                                            
+<p>获得段的数量。</p>                      
+<p>参数：</p>
+<p>无</p>
+<p>返回值：int32_t </p>
+</blockquote>
+
+<p><b>Example #1 get_sectionnumber 范例</b></p>
+
+<pre><code>
+#include "pf/file/ini.h"                                                           
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_file::Ini fileini("hostset.ini"); //还有一种构造，在此不做演示                
+  DEBUGPRINTF("section number: %d", fileini.get_sectionnumber());               
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">section number: 2</font>
+</p>
+
+<p><a name="get_datalength"></a></p>
+
+<h2>::get_datalength</h2>
+
+<blockquote>
+<p>int32_t get_datalength() const; </p>
+<p>描述：</p>                                                                            
+<p>获得文件数据的长度。</p>                      
+<p>参数：</p>
+<p>无</p>
+<p>返回值：int32_t </p>
+</blockquote>
+
+<p><b>Example #1 get_datalength 范例</b></p>
+
+<pre><code>
+#include "pf/file/ini.h"                                                           
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_file::Ini fileini("hostset.ini"); //还有一种构造，在此不做演示                
+  DEBUGPRINTF("data length: %d", fileini.get_datalength());               
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">data length: 476</font>
+</p>
+
+<p><a name="find_section_index"></a></p>
+
+<h2>::find_section_index</h2>
+
+<blockquote>
+<p>int32_t find_section_index(const char *section); </p>
+<p>描述：</p>                                                                            
+<p>根据段的名字获取段的索引。</p>                      
+<p>参数：</p>
+<p>const char *section 段的名字。（[]的内容）</p>
+<p>返回值：int32_t </p>
+</blockquote>
+
+<p><b>Example #1 find_section_index 范例</b></p>
+
+<pre><code>
+#include "pf/file/ini.h"                                                           
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_file::Ini fileini("hostset.ini"); //还有一种构造，在此不做演示                
+  DEBUGPRINTF("index: %d", fileini.find_section_index("WorldSet"));             
+  return 0;                                                                     
+} 
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">index: 416</font>
+</p>
+
+<p><a name="find_key_index"></a></p>
+
+<h2>::find_key_index</h2>
+
+<blockquote>
+<p>int32_t find_key_index(int32_t position, const char *key); </p>
+<p>描述：</p>                                                                            
+<p>根据位置和键名获取键的索引。</p>                      
+<p>参数：</p>
+<p>int32_t position 开始的位置。</p>
+<p>const char *key 键的名字。</p>
+<p>返回值：int32_t </p>
+</blockquote>
+
+<p><b>Example #1 find_key_index 范例</b></p>
+
+<pre><code>
+#include "pf/file/ini.h"                                                           
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_file::Ini fileini("hostset.ini"); //还有一种构造，在此不做演示                
+  DEBUGPRINTF("index: %d", fileini.find_key_index(128, "Server03"));             
+  return 0;                                                                     
+} 
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">index: 184</font>
+</p>
+
+<p><a name="read_int64"></a></p>
+
+<h2>::read_int64</h2>
+
+<blockquote>
+<p>int64_t read_int64(const char *section, const char *key); </p>
+<p>描述：</p>                                                                            
+<p>根据段和键获取int64类型的值。</p>                      
+<p>参数：</p>
+<p>const char *section 段名。</p>
+<p>const char *key 键名。</p>
+<p>返回值：int64_t </p>
+</blockquote>
+
+<p><b>Example #1 read_int64 范例</b></p>
+
+<pre><code>
+#include "pf/file/ini.h"                                                           
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_file::Ini fileini("hostset.ini"); //还有一种构造，在此不做演示                
+  DEBUGPRINTF("value: %d", fileini.read_int64("Init", "Server03"));             
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">value: 3</font>
+</p>
+
+<p><a name="read_exist_int64"></a></p>
+
+<h2>::read_exist_int64</h2>
+
+<blockquote>
+<p>bool read_exist_int64(const char *section, const char *key, int64_t &result); </p>
+<p>描述：</p>                                                                            
+<p>读取一个int64的值，不存在则返回false。</p>                      
+<p>参数：</p>
+<p>const char *section 段名。</p>
+<p>const char *key 键名。</p>
+<p>int64_t &result 需要读取到的变量。</p>
+<p>返回值：bool </p>
+</blockquote>
+
+<p><b>Example #1 read_exist_int64 范例</b></p>
+
+<pre><code>
+#include "pf/file/ini.h"                                                           
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_file::Ini fileini("hostset.ini"); //还有一种构造，在此不做演示                
+  bool result = false;                                                          
+  int64_t value = 0;                                                            
+  result = fileini.read_exist_int64("Init", "Server3", value);                  
+  if (true == result) DEBUGPRINTF("value: %d", value);                          
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于（因为键Server3不存在，所以没有输出）：</p>
+<p>
+无
+</p>
+
+<p><a name="read_float"></a></p>
+
+<h2>::read_float</h2>
+
+<blockquote>
+<p>float read_float(const char *section, const char *key); </p>
+<p>描述：</p>                                                                            
+<p>根据段和键获取float类型的值。</p>                      
+<p>参数：</p>
+<p>const char *section 段名。</p>
+<p>const char *key 键名。</p>
+<p>返回值：float </p>
+</blockquote>
+
+<p><b>Example #1 read_float 范例</b></p>
+
+<pre><code>
+#include "pf/file/ini.h"                                                           
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_file::Ini fileini("hostset.ini"); //还有一种构造，在此不做演示                
+  DEBUGPRINTF("value: %.2f", fileini.read_float("Init", "Server03"));             
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">value: 3.00</font>
+</p>
+
+<p><a name="read_bool"></a></p>
+
+<h2>::read_bool</h2>
+
+<blockquote>
+<p>bool read_bool(const char *section, const char *key); </p>
+<p>描述：</p>                                                                            
+<p>根据段和键获取bool类型的值。</p>                      
+<p>参数：</p>
+<p>const char *section 段名。</p>
+<p>const char *key 键名。</p>
+<p>返回值：bool </p>
+</blockquote>
+
+<p><b>Example #1 read_bool 范例</b></p>
+
+<pre><code>
+#include "pf/file/ini.h"                                                           
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_file::Ini fileini("hostset.ini"); //还有一种构造，在此不做演示                
+  bool result = false;                                                          
+  result = fileini.read_bool("Init", "Server03");                               
+  DEBUGPRINTF("value: %s", true == result ? "true" : "false");                  
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">value: true</font>
+</p>
+
+<p><a name="read_int32"></a></p>
+
+<h2>::read_int32</h2>
+
+<blockquote>
+<p>int32_t read_int32(const char *section, const char *key); </p>
+<p>描述：</p>                                                                            
+<p>根据段和键获取int32类型的值。</p>                      
+<p>参数：</p>
+<p>const char *section 段名。</p>
+<p>const char *key 键名。</p>
+<p>返回值：int32_t </p>
+</blockquote>
+
+<p><b>Example #1 read_int32 范例</b></p>
+
+<pre><code>
+#include "pf/file/ini.h"                                                           
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_file::Ini fileini("hostset.ini"); //还有一种析构，在此不做演示                
+  DEBUGPRINTF("value: %d", fileini.read_int32("Init", "Server03"));             
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">value: 3</font>
+</p>
+
+<p><a name="read_uint32"></a></p>
+
+<h2>::read_uint32</h2>
+
+<blockquote>
+<p>uint32_t read_uint32(const char *section, const char *key); </p>
+<p>描述：</p>                                                                            
+<p>根据段和键获取uint32类型的值。</p>                      
+<p>参数：</p>
+<p>const char *section 段名。</p>
+<p>const char *key 键名。</p>
+<p>返回值：uint32_t </p>
+</blockquote>
+
+<p><b>Example #1 read_uint32 范例</b></p>
+
+<pre><code>
+#include "pf/file/ini.h"                                                           
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_file::Ini fileini("hostset.ini"); //还有一种析构，在此不做演示                
+  DEBUGPRINTF("value: %d", fileini.read_uint32("Init", "Server03"));             
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">value: 3</font>
+</p>
+
+<p><a name="read_int16"></a></p>
+
+<h2>::read_int16</h2>
+
+<blockquote>
+<p>int16_t read_int16(const char *section, const char *key); </p>
+<p>描述：</p>                                                                            
+<p>根据段和键获取int16类型的值。</p>                      
+<p>参数：</p>
+<p>const char *section 段名。</p>
+<p>const char *key 键名。</p>
+<p>返回值：int16_t </p>
+</blockquote>
+
+<p><b>Example #1 read_int16 范例</b></p>
+
+<pre><code>
+#include "pf/file/ini.h"                                                           
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_file::Ini fileini("hostset.ini"); //还有一种析构，在此不做演示                
+  DEBUGPRINTF("value: %d", fileini.read_int16("Init", "Server03"));             
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">value: 3</font>
+</p>
+
+<p><a name="read_uint16"></a></p>
+
+<h2>::read_uint16</h2>
+
+<blockquote>
+<p>uint16_t read_int16(const char *section, const char *key); </p>
+<p>描述：</p>                                                                            
+<p>根据段和键获取uint16类型的值。</p>                      
+<p>参数：</p>
+<p>const char *section 段名。</p>
+<p>const char *key 键名。</p>
+<p>返回值：uint16_t </p>
+</blockquote>
+
+<p><b>Example #1 read_uint16 范例</b></p>
+
+<pre><code>
+#include "pf/file/ini.h"                                                           
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_file::Ini fileini("hostset.ini"); //还有一种析构，在此不做演示                
+  DEBUGPRINTF("value: %d", fileini.read_uint16("Init", "Server03"));             
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">value: 3</font>
+</p>
+
+<p><a name="read_int8"></a></p>
+
+<h2>::read_int8</h2>
+
+<blockquote>
+<p>int8_t read_int8(const char *section, const char *key); </p>
+<p>描述：</p>                                                                            
+<p>根据段和键获取int8类型的值。</p>                      
+<p>参数：</p>
+<p>const char *section 段名。</p>
+<p>const char *key 键名。</p>
+<p>返回值：int8_t </p>
+</blockquote>
+
+<p><b>Example #1 read_int8 范例</b></p>
+
+<pre><code>
+#include "pf/file/ini.h"                                                           
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_file::Ini fileini("hostset.ini"); //还有一种析构，在此不做演示                
+  DEBUGPRINTF("value: %d", fileini.read_int8("Init", "Server03"));             
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">value: 3</font>
+</p>
+
+<p><a name="read_uint8"></a></p>
+
+<h2>::read_uint8</h2>
+
+<blockquote>
+<p>uint8_t read_uint8(const char *section, const char *key); </p>
+<p>描述：</p>                                                                            
+<p>根据段和键获取uint8类型的值。</p>                      
+<p>参数：</p>
+<p>const char *section 段名。</p>
+<p>const char *key 键名。</p>
+<p>返回值：uint8_t </p>
+</blockquote>
+
+<p><b>Example #1 read_int8 范例</b></p>
+
+<pre><code>
+#include "pf/file/ini.h"                                                           
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_file::Ini fileini("hostset.ini"); //还有一种析构，在此不做演示                
+  DEBUGPRINTF("value: %d", fileini.read_uint8("Init", "Server03"));             
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">value: 3</font>
+</p>
+
+<p><a name="read_uint8"></a></p>
+
+<h2>::read_uint8</h2>
+
+<blockquote>
+<p>uint8_t read_uint8(const char *section, const char *key); </p>
+<p>描述：</p>                                                                            
+<p>根据段和键获取uint8类型的值。</p>                      
+<p>参数：</p>
+<p>const char *section 段名。</p>
+<p>const char *key 键名。</p>
+<p>返回值：uint8_t </p>
+</blockquote>
+
+<p><b>Example #1 read_int8 范例</b></p>
+
+<pre><code>
+#include "pf/file/ini.h"                                                           
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_file::Ini fileini("hostset.ini"); //还有一种析构，在此不做演示                
+  DEBUGPRINTF("value: %d", fileini.read_uint8("Init", "Server03"));             
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">value: 3</font>
+</p>
+
+<p><a name="read_exist_int32"></a></p>
+
+<h2>::read_exist_int32</h2>
+
+<blockquote>
+<p>bool read_exist_int32(const char *section, const char *key, int32_t &result); </p>
+<p>描述：</p>                                                                            
+<p>读取一个int32的值，不存在则返回false。</p>                      
+<p>参数：</p>
+<p>const char *section 段名。</p>
+<p>const char *key 键名。</p>
+<p>int32_t &result 需要读取到的变量。</p>
+<p>返回值：bool </p>
+</blockquote>
+
+<p><b>Example #1 read_exist_int32 范例</b></p>
+
+<pre><code>
+#include "pf/file/ini.h"                                                           
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_file::Ini fileini("hostset.ini"); //还有一种构造，在此不做演示                
+  bool result = false;                                                          
+  int32_t value = 0;                                                            
+  result = fileini.read_exist_int32("Init", "Server3", value);                  
+  if (true == result) DEBUGPRINTF("value: %d", value);                          
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于（因为键Server3不存在，所以没有输出）：</p>
+<p>
+无
+</p>
+
+<p><a name="read_exist_uint32"></a></p>
+
+<h2>::read_exist_uint32</h2>
+
+<blockquote>
+<p>bool read_exist_uint32(const char *section, const char *key, uint32_t &result); </p>
+<p>描述：</p>                                                                            
+<p>读取一个uint32的值，不存在则返回false。</p>                      
+<p>参数：</p>
+<p>const char *section 段名。</p>
+<p>const char *key 键名。</p>
+<p>uint32_t &result 需要读取到的变量。</p>
+<p>返回值：bool </p>
+</blockquote>
+
+<p><b>Example #1 read_exist_uint32 范例</b></p>
+
+<pre><code>
+#include "pf/file/ini.h"                                                           
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_file::Ini fileini("hostset.ini"); //还有一种构造，在此不做演示                
+  bool result = false;                                                          
+  int32_t value = 0;                                                            
+  result = fileini.read_exist_uint32("Init", "Server3", value);                  
+  if (true == result) DEBUGPRINTF("value: %d", value);                          
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于（因为键Server3不存在，所以没有输出）：</p>
+<p>
+无
+</p>
+
+<p><a name="read_exist_int16"></a></p>
+
+<h2>::read_exist_int16</h2>
+
+<blockquote>
+<p>bool read_exist_int16(const char *section, const char *key, int16_t &result); </p>
+<p>描述：</p>                                                                            
+<p>读取一个int16的值，不存在则返回false。</p>                      
+<p>参数：</p>
+<p>const char *section 段名。</p>
+<p>const char *key 键名。</p>
+<p>int16_t &result 需要读取到的变量。</p>
+<p>返回值：bool </p>
+</blockquote>
+
+<p><b>Example #1 read_exist_int16 范例</b></p>
+
+<pre><code>
+#include "pf/file/ini.h"                                                           
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_file::Ini fileini("hostset.ini"); //还有一种构造，在此不做演示                
+  bool result = false;                                                          
+  int16_t value = 0;                                                            
+  result = fileini.read_exist_int16("Init", "Server3", value);                  
+  if (true == result) DEBUGPRINTF("value: %d", value);                          
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于（因为键Server3不存在，所以没有输出）：</p>
+<p>
+无
+</p>
+
+<p><a name="read_exist_uint16"></a></p>
+
+<h2>::read_exist_uint16</h2>
+
+<blockquote>
+<p>bool read_exist_uint16(const char *section, const char *key, uint16_t &result); </p>
+<p>描述：</p>                                                                            
+<p>读取一个uint16的值，不存在则返回false。</p>                      
+<p>参数：</p>
+<p>const char *section 段名。</p>
+<p>const char *key 键名。</p>
+<p>uint16_t &result 需要读取到的变量。</p>
+<p>返回值：bool </p>
+</blockquote>
+
+<p><b>Example #1 read_exist_uint16 范例</b></p>
+
+<pre><code>
+#include "pf/file/ini.h"                                                           
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_file::Ini fileini("hostset.ini"); //还有一种构造，在此不做演示                
+  bool result = false;                                                          
+  uint16_t value = 0;                                                            
+  result = fileini.read_exist_uint16("Init", "Server3", value);                  
+  if (true == result) DEBUGPRINTF("value: %d", value);                          
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于（因为键Server3不存在，所以没有输出）：</p>
+<p>
+无
+</p>
+
+<p><a name="read_exist_int8"></a></p>
+
+<h2>::read_exist_int8</h2>
+
+<blockquote>
+<p>bool read_exist_int8(const char *section, const char *key, int8_t &result); </p>
+<p>描述：</p>                                                                            
+<p>读取一个int8的值，不存在则返回false。</p>                      
+<p>参数：</p>
+<p>const char *section 段名。</p>
+<p>const char *key 键名。</p>
+<p>int8_t &result 需要读取到的变量。</p>
+<p>返回值：bool </p>
+</blockquote>
+
+<p><b>Example #1 read_exist_int8 范例</b></p>
+
+<pre><code>
+#include "pf/file/ini.h"                                                           
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_file::Ini fileini("hostset.ini"); //还有一种构造，在此不做演示                
+  bool result = false;                                                          
+  int8_t value = 0;                                                            
+  result = fileini.read_exist_int8("Init", "Server3", value);                  
+  if (true == result) DEBUGPRINTF("value: %d", value);                          
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于（因为键Server3不存在，所以没有输出）：</p>
+<p>
+无
+</p>
+
+<p><a name="read_exist_uint8"></a></p>
+
+<h2>::read_exist_uint8</h2>
+
+<blockquote>
+<p>bool read_exist_uint8(const char *section, const char *key, uint8_t &result); </p>
+<p>描述：</p>                                                                            
+<p>读取一个uint8的值，不存在则返回false。</p>                      
+<p>参数：</p>
+<p>const char *section 段名。</p>
+<p>const char *key 键名。</p>
+<p>uint8_t &result 需要读取到的变量。</p>
+<p>返回值：bool </p>
+</blockquote>
+
+<p><b>Example #1 read_exist_uint8 范例</b></p>
+
+<pre><code>
+#include "pf/file/ini.h"                                                           
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_file::Ini fileini("hostset.ini"); //还有一种构造，在此不做演示                
+  bool result = false;                                                          
+  uint8_t value = 0;                                                            
+  result = fileini.read_exist_uint8("Init", "Server3", value);                  
+  if (true == result) DEBUGPRINTF("value: %d", value);                          
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于（因为键Server3不存在，所以没有输出）：</p>
+<p>
+无
+</p>
+
+<p><a name="readstring"></a></p>
+
+<h2>::readstring</h2>
+
+<blockquote>
+<p>void readstring(const char *section,                                            
+                   const char *key,                                                
+                   char *str,                                                      
+                   int32_t length); </p>
+<p>描述：</p>                                                                            
+<p>根据段和键获取字符串类型的值。</p>                      
+<p>参数：</p>
+<p>const char *section 段名。</p>
+<p>const char *key 键名。</p>
+<p>char *str 字符串保存的指针。</p>
+<p>int32_t length 字符串保存的长度。</p>
+<p>返回值：无 </p>
+</blockquote>
+
+<p><b>Example #1 readstring 范例</b></p>
+
+<pre><code>
+#include "pf/file/ini.h"                                                           
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_file::Ini fileini("hostset.ini"); //还有一种析构，在此不做演示                
+  char value[64] = {0};                                                         
+  fileini.readstring("WorldSet", "1_File", value, sizeof(value) - 1);           
+  DEBUGPRINTF("value: %s", value);                                              
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">value: \setting\worldset.txt</font>
+</p>
+
+<p><a name="readstring"></a></p>
+
+<h2>::readstring</h2>
+
+<blockquote>
+<p>bool read_existstring(const char *section,                                            
+                         const char *key,                                                
+                         char *str,                                                      
+                         int32_t length); </p>
+<p>描述：</p>                                                                            
+<p>根据段和键获取字符串类型的值，当读取的值不存在时返回false。</p>                      
+<p>参数：</p>
+<p>const char *section 段名。</p>
+<p>const char *key 键名。</p>
+<p>char *str 字符串保存的指针。</p>
+<p>int32_t length 字符串保存的长度。</p>
+<p>返回值：bool </p>
+</blockquote>
+
+<p><b>Example #1 read_existstring 范例</b></p>
+
+<pre><code>
+#include "pf/file/ini.h"                                                           
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_file::Ini fileini("hostset.ini"); //还有一种析构，在此不做演示                
+  char value[64] = {0};                                                         
+  bool result = true;                                                           
+  result =                                                                       
+    fileini.read_existstring("WorldSet", "1_File", value, sizeof(value) - 1);   
+  if (true == result) DEBUGPRINTF("value: %s", value);                          
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">value: \setting\worldset.txt</font>
+</p>
+
+<nav>
+	<a href="file.ini.htm">文件数据库</a>
+</nav>
+<footer>
+    <p><a href="#">Dayle Rees</a>.</p>
+</footer>
+            
+            
+</section>
+  <div class="clearfix"></div>
+</div>
+
+        <script src="../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="../js/vendor/jquery-1.8.2.min.js"><\/script>')</script>
+        <script src="../../checkout.stripe.com/v2/checkout.js"></script>
+        <script src="../js/vendor/prettify.js"></script>
+        <script src="../js/plugins.js"></script>
+        <script src="../js/main.js"></script>
+
+        <script type="text/javascript">
+
+          var _gaq = _gaq || [];
+          _gaq.push(['_setAccount', 'UA-37898177-1']);
+          _gaq.push(['_trackPageview']);
+
+          (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www/') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+          })();
+
+        </script>
+    </body>
+</html>

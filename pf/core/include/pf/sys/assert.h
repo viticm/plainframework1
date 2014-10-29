@@ -13,11 +13,11 @@
 
 #include "pf/sys/config.h"
 
-extern int g_command_assert; //控制参数，不提示Assert的对话框，直接忽略
+extern bool g_command_assert; //控制参数，不提示Assert的对话框，直接忽略
 extern bool g_command_ignore_message_box;//控制参数，跳过MyMessageBox的中断
 extern uint32_t g_file_name_fix_last;
 extern int32_t g_file_name_fix;
-extern int g_need_manager_do_pos_init;//控制参数，是否需要初始化管理器数据
+extern bool g_need_manager_do_pos_init;//控制参数，是否需要初始化管理器数据
 
 namespace pf_sys {
 

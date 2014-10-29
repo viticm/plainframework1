@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset=UTF-8"utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>简约框架参考手册</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" href="../css/style.css">
+        <script src="../js/vendor/modernizr-2.6.2.min.js"></script>
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="#">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+
+        <div class="wrapper">
+            <header>
+                <h1>简约框架参考手册</h1>
+            </header>
+            <aside class="sidebar">
+<ul>
+<li>入门指引
+
+<ul>
+<li><a href="../index.htm">简介</a></li>
+<li><a href="simpletutorials.htm">简明教程</a></li>
+<li><a href="style-guide.htm">代码风格</a></li>
+<li><a href="module.htm">模块</a></li>
+<li><a href="license.htm">许可</a></li>
+</ul></li>
+
+<li>基础模块
+<ul>
+<li><a href="base.macro.htm">宏</a></li>
+<li><a href="base.global.htm">全局变量</a></li>
+<li><a href="base.log.htm">日志</a></li>
+<li><a href="base.string.htm">字符串</a></li>
+<li><a href="base.hashmap.htm">hash map</a></li>
+<li><a href="base.timemanager.htm">时间管理器</a></li>
+<li><a href="base.tinytimer.htm">小型定时器</a></li>
+<li><a href="base.util.htm">工具集</a></li>
+</ul></li>
+
+<li>数据库模块
+<ul>
+<li><a href="db.manager.htm">管理器</a></li>
+<li><a href="db.odbc.htm">ODBC</a></li>
+</ul></li>
+
+<li>引擎模块
+<ul>
+<li><a href="engine.kernel.htm">核心</a></li>
+<li><a href="engine.thread.htm">线程</a></li>
+</ul></li>
+
+<li>事件模块
+<ul>
+<li><a href="event.manager.htm">管理器</a></li>
+</ul></li>
+
+<li>文件模块
+<ul>
+<li><a href="file.api.htm">系统API</a></li>
+<li><a href="file.database.htm">文件数据库</a></li>
+<li><a href="file.ini.htm">ini文件</a></li>
+</ul></li>
+
+<li>网络模块
+<ul>
+<li><a href="net.connection.htm">连接</a></li>
+<li><a href="net.packet.htm">包</a></li>
+<li><a href="net.socket.htm">套接字</a></li>
+<li><a href="net.manager.htm">管理器</a></li>
+</ul></li>
+
+<li>性能模块
+<ul>
+<li><a href="performance.eyes.htm">监视器</a></li>
+</ul></li>
+
+<li>脚本模块
+<ul>
+<li><a href="script.cache.htm">缓存</a></li>
+<li><a href="script.lua.htm">lua</a></li>
+</ul></li>
+
+<li>系统模块
+<ul>
+<li><a href="sys.memory.htm">内存</a></li>
+<li><a href="sys.info.htm">系统信息</a></li>
+<li><a href="sys.process.htm">进程</a></li>
+<li><a href="sys.thread.htm">线程</a></li>
+<li><a href="sys.util.htm">工具集</a></li>
+</ul></li>
+
+<li>工具模块
+<ul>
+<li><a href="util.compressor.htm">压缩模块</a></li>
+</ul></li>
+
+</ul>
+</aside>
+
+<section class="content">
+
+<h1>db module manager</h1>
+
+<ul>
+<li><a href="#total">总述</a></li>
+<li><a href="#define">定义</a></li>
+<li><a href="#init">::init</a></li>
+<li><a href="#get_connector_type">::get_connector_type</a></li>
+<li><a href="#get_internal_query">::get_internal_query</a></li>
+<li><a href="#query">::query</a></li>
+<li><a href="#fetch">::fetch</a></li>
+<li><a href="#get_affectcount">::get_affectcount</a></li>
+<li><a href="#check_db_connect">::check_db_connect</a></li>
+<li><a href="#isready">::isready</a></li>
+<li><a href="#get_float">::get_float</a></li>
+<li><a href="#get_int64">::get_int64</a></li>
+<li><a href="#get_uint64">::get_uint64</a></li>
+<li><a href="#get_int32">::get_int32</a></li>
+<li><a href="#get_uint32">::get_uint32</a></li>
+<li><a href="#get_int16">::get_int16</a></li>
+<li><a href="#get_uint16">::get_uint16</a></li>
+<li><a href="#get_int8">::get_int8</a></li>
+<li><a href="#get_uint8">::get_uint8</a></li>
+<li><a href="#get_string">::get_string</a></li>
+
+</ul>
+
+<p><a name="total"></a></p>
+
+<h2>总述</h2>
+
+<p>数据库管理器提供了基础的数据库操作接口。</p>
+
+<p><a name="define"></a></p>
+
+<h2>定义</h2>
+
+<pre><code>
+namespace pf_db {                                                                  
+                                                                                   
+class PF_API Manager { 
+</code></pre>
+
+<p><a name="init"></a></p>
+
+<h2>::init</h2>
+
+<blockquote>
+<p>bool init(const char *connection_or_dbname,                                  
+             const char *username,                                              
+             const char *password); </p>
+<p>描述：</p>                                                                            
+<p>数据库系统初始化函数（其他操作必须在初始化成功后才能正确执行）。</p>                      
+<p>参数：</p>
+<p>const char *connection_or_dbname 连接或数据名称。</p>
+<p>const char *username 连接用户。</p>
+<p>const char *password 连接密码。</p>
+<p>返回值：bool 成功返回true 失败返回false</p>
+</blockquote>
+
+<p><b>Example #1 init 范例</b></p>
+
+<pre><code>
+#include "pf/db/manager.h"                                                      
+#include "main.h"                                                               
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_db::Manager db_manager;                                                    
+  bool result = true;                                                           
+  result = db_manager.init("sword_user", "root", "mysql");                      
+  DEBUGPRINTF("db manager init %s", result ? "success" : "failed");             
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">db manager init success</font>
+</p>
+
+<p><a name="get_connector_type"></a></p>
+
+<h2>::get_connector_type</h2>
+
+<blockquote>
+<p>dbconnector_type_t get_connector_type() const; </p>
+<p>描述：</p>                                                                            
+<p>获取当前的数据库连接类型（0 ODBC 其他待定）。</p>                      
+<p>参数：</p>
+<p>无。</p>
+<p>返回值：dbconnector_type_t</p>
+</blockquote>
+
+<p><b>Example #1 get_connector_type 范例</b></p>
+
+<pre><code>
+#include "pf/db/manager.h"                                                      
+#include "main.h"                                                               
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_db::Manager db_manager;                                                    
+  bool result = true;                                                           
+  result = db_manager.init("sword_user", "root", "mysql");                      
+  if (!result) return 1;                                                        
+  DEBUGPRINTF("db connector type: %d", db_manager.get_connector_type());        
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">db connector type: 0</font>
+</p>
+
+<p><a name="get_internal_query"></a></p>
+
+<h2>::get_internal_query</h2>
+
+<blockquote>
+<p>db_query_t *get_internal_query(); </p>
+<p>描述：</p>                                                                            
+<p>获取内部的查询结构指针。</p>                      
+<p>参数：</p>
+<p>无。</p>
+<p>返回值：db_query_t *</p>
+</blockquote>
+
+<p><b>Example #1 get_internal_query 范例</b></p>
+
+<pre><code>
+#include "pf/db/manager.h"                                                      
+#include "main.h"                                                               
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_db::Manager db_manager;                                                    
+  bool result = true;                                                           
+  result = db_manager.init("sword_user", "root", "mysql");                      
+  if (!result) return 1;                                                        
+  DEBUGPRINTF("db internal query is %sactive",                                  
+              db_manager.get_internal_query() ? "" : "not ");                   
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">db internal query is active</font>
+</p>
+
+<p><a name="query"></a></p>
+
+<h2>::query</h2>
+
+<blockquote>
+<p>bool query(); </p>
+<p>描述：</p>                                                                            
+<p>执行查询。</p>                      
+<p>参数：</p>
+<p>无。</p>
+<p>返回值：bool 成功返回true 否则返回false</p>
+</blockquote>
+
+<p><b>Example #1 query 范例</b></p>
+
+<pre><code>
+#include "pf/db/manager.h"                                                      
+#include "main.h"                                                               
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_db::Manager db_manager;                                                    
+  bool result = true;                                                           
+  result = db_manager.init("sword_user", "root", "mysql");                      
+  if (!result) return 1;                                                        
+  DEBUGPRINTF("db query %s", db_manager.query() ? "success" : "failed");        
+  db_manager.get_internal_query()->parse("select * from users");                
+  DEBUGPRINTF("db query %s", db_manager.query() ? "success" : "failed");        
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">db query failed</font> <br />
+<font color="green">db query success</font>
+</p>
+
+<p><a name="fetch"></a></p>
+
+<h2>::fetch</h2>
+
+<blockquote>
+<p>bool fetch(int32_t orientation = 1, int32_t offset = 0); </p>
+<p>描述：</p>                                                                            
+<p>获取查询结果。</p>                      
+<p>参数：</p>
+<p>int32_t orientation 查询结果集的方向，1自上而下，0自下而上。</p>
+<p>int32_t offset 查询的记录记录数。</p>
+<p>返回值：bool 成功返回true 否则返回false</p>
+</blockquote>
+
+<p><b>Example #1 fetch 范例</b></p>
+
+<pre><code>
+#include "pf/db/manager.h"                                                      
+#include "main.h"                                                               
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_db::Manager db_manager;                                                    
+  bool result = true;                                                           
+  result = db_manager.init("sword_user", "root", "mysql");                      
+  if (!result) return 1;                                                        
+  db_manager.get_internal_query()->parse("select * from users");                
+  db_manager.query();                                                           
+  DEBUGPRINTF("db fetch %s", db_manager.fetch() ? "success" : "failed");        
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于（没有数据时也返回失败）：</p>
+<p>
+<font color="green">db fetch success</font>
+</p>
+
+<p><a name="get_affectcount"></a></p>
+
+<h2>::get_affectcount</h2>
+
+<blockquote>
+<p>int32_t get_affectcount() const; </p>
+<p>描述：</p>                                                                            
+<p>获取受影响的行数。</p>                      
+<p>参数：</p>
+<p>无</p>
+<p>返回值：int32_t</p>
+</blockquote>
+
+<p><b>Example #1 get_affectcount 范例</b></p>
+
+<pre><code>
+#include "pf/db/manager.h"                                                      
+#include "main.h"                                                               
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_db::Manager db_manager;                                                    
+  bool result = true;                                                           
+  result = db_manager.init("sword_user", "root", "mysql");                      
+  if (!result) return 1;                                                        
+  db_manager.get_internal_query()->parse("select * from users");                
+  db_manager.query();                                                           
+  db_manager.fetch();                                                           
+  DEBUGPRINTF("affect count: %d", db_manager.get_affectcount());                
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">affect count: 1</font>
+</p>
+
+<p><a name="check_db_connect"></a></p>
+
+<h2>::check_db_connect</h2>
+
+<blockquote>
+<p>bool check_db_connect(); </p>
+<p>描述：</p>                                                                            
+<p>检查当前的数据库连接，如果没有连接将尝试连接5次，5次还失败则返回false。</p>                      
+<p>参数：</p>
+<p>无</p>
+<p>返回值：bool 成功连接返回true，否则为false</p>
+</blockquote>
+
+<p><b>Example #1 check_db_connect 范例</b></p>
+
+<pre><code>
+#include "pf/db/manager.h"                                                      
+#include "main.h"                                                               
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_db::Manager db_manager;                                                    
+  bool result = true;                                                           
+  result = db_manager.init("sword_user", "root", "mysql");                      
+  if (!result) return 1;                                                        
+  db_manager.get_internal_query()->parse("select * from users");                
+  db_manager.query();                                                           
+  db_manager.fetch();                                                           
+  DEBUGPRINTF("check db connect: %s",                                           
+              db_manager.check_db_connect() ? "success" : "failed");            
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">check db connect: success</font>
+</p>
+
+<p><a name="isready"></a></p>
+
+<h2>::isready</h2>
+
+<blockquote>
+<p>bool isready() const; </p>
+<p>描述：</p>                                                                            
+<p>检查数据库系统是否准备好，该方法一般用于判断是否可以执行数据库操作。</p>                      
+<p>参数：</p>
+<p>无</p>
+<p>返回值：bool 准备完毕返回true，否则为false</p>
+</blockquote>
+
+<p><b>Example #1 isready 范例</b></p>
+
+<pre><code>
+#include "pf/db/manager.h"                                                      
+#include "main.h"                                                               
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_db::Manager db_manager;                                                    
+  bool result = true;                                                           
+  result = db_manager.init("sword_user", "root", "mysql");                      
+  if (!result) return 1;                                                        
+  if (!db_manager.isready()) return 1;                                          
+  DEBUGPRINTF("db manager can query");                                          
+  db_manager.get_internal_query()->parse("select * from users");                
+  db_manager.query();                                                           
+  db_manager.fetch();                                                           
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">db manager can query</font>
+</p>
+
+<p><a name="get_float"></a></p>
+
+<h2>::get_float</h2>
+
+<blockquote>
+<p>float get_float(int32_t column_index, int32_t &error_code); </p>
+<p>描述：</p>                                                                            
+<p>从结果集中取浮点值。</p>                      
+<p>参数：</p>
+<p>int32_t column_index 所在列的索引。</p>
+<p>int32_t &error_code 错误码。</p>
+<p>返回值：float</p>
+</blockquote>
+
+<p><b>Example #1 get_float 范例</b></p>
+
+<pre><code>
+#include "pf/db/manager.h"                                                      
+#include "main.h"                                                               
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_db::Manager db_manager;                                                    
+  bool result = true;                                                           
+  result = db_manager.init("sword_user", "root", "mysql");                      
+  if (!result) return 1;                                                        
+  if (!db_manager.isready()) return 1;                                          
+  enum {                                                                        
+    kDBId = 1,                                                                  
+    kDBName,                                                                    
+  };                                                                            
+  db_manager.get_internal_query()                                               
+    ->parse("select id, name from users where name = 'viticm'");                
+  db_manager.query();                                                           
+  db_manager.fetch();                                                           
+  int32_t error_code = 0;                                                       
+  float value = db_manager.get_float(kDBId, error_code);                        
+  DEBUGPRINTF("value: %.2f", value);                                            
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">value: 3.00</font>
+</p>
+
+<p><a name="get_int64"></a></p>
+
+<h2>::get_int64</h2>
+
+<blockquote>
+<p>int64_t get_int64(int32_t column_index, int32_t &error_code); </p>
+<p>描述：</p>                                                                            
+<p>从结果集中取int64类型的值。</p>                      
+<p>参数：</p>
+<p>int32_t column_index 所在列的索引。</p>
+<p>int32_t &error_code 错误码。</p>
+<p>返回值：int64_t</p>
+</blockquote>
+
+<p><b>Example #1 get_int64 范例</b></p>
+
+<pre><code>
+#include "pf/db/manager.h"                                                      
+#include "main.h"                                                               
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_db::Manager db_manager;                                                    
+  bool result = true;                                                           
+  result = db_manager.init("sword_user", "root", "mysql");                      
+  if (!result) return 1;                                                        
+  if (!db_manager.isready()) return 1;                                          
+  enum {                                                                        
+    kDBId = 1,                                                                  
+    kDBName,                                                                    
+  };                                                                            
+  db_manager.get_internal_query()                                               
+    ->parse("select id, name from users where name = 'viticm'");                
+  db_manager.query();                                                           
+  db_manager.fetch();                                                           
+  int32_t error_code = 0;                                                       
+  int64_t value = db_manager.get_int64(kDBId, error_code);                      
+  DEBUGPRINTF("value: %d", value);                                              
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">value: 3</font>
+</p>
+
+<p><a name="get_uint64"></a></p>
+
+<h2>::get_uint64</h2>
+
+<blockquote>
+<p>uint64_t get_uint64(int32_t column_index, int32_t &error_code); </p>
+<p>描述：</p>                                                                            
+<p>从结果集中取uint64类型的值。</p>                      
+<p>参数：</p>
+<p>int32_t column_index 所在列的索引。</p>
+<p>int32_t &error_code 错误码。</p>
+<p>返回值：uint64_t</p>
+</blockquote>
+
+<p><b>Example #1 get_uint64 范例</b></p>
+
+<pre><code>
+#include "pf/db/manager.h"                                                      
+#include "main.h"                                                               
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_db::Manager db_manager;                                                    
+  bool result = true;                                                           
+  result = db_manager.init("sword_user", "root", "mysql");                      
+  if (!result) return 1;                                                        
+  if (!db_manager.isready()) return 1;                                          
+  enum {                                                                        
+    kDBId = 1,                                                                  
+    kDBName,                                                                    
+  };                                                                            
+  db_manager.get_internal_query()                                               
+    ->parse("select id, name from users where name = 'viticm'");                
+  db_manager.query();                                                           
+  db_manager.fetch();                                                           
+  int32_t error_code = 0;                                                       
+  uint64_t value = db_manager.get_uint64(kDBId, error_code);                      
+  DEBUGPRINTF("value: %d", value);                                              
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">value: 3</font>
+</p>
+
+<p><a name="get_int32"></a></p>
+
+<h2>::get_int32</h2>
+
+<blockquote>
+<p>int32_t get_int32(int32_t column_index, int32_t &error_code); </p>
+<p>描述：</p>                                                                            
+<p>从结果集中取int32类型的值。</p>                      
+<p>参数：</p>
+<p>int32_t column_index 所在列的索引。</p>
+<p>int32_t &error_code 错误码。</p>
+<p>返回值：int32_t</p>
+</blockquote>
+
+<p><b>Example #1 get_int32 范例</b></p>
+
+<pre><code>
+#include "pf/db/manager.h"                                                      
+#include "main.h"                                                               
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_db::Manager db_manager;                                                    
+  bool result = true;                                                           
+  result = db_manager.init("sword_user", "root", "mysql");                      
+  if (!result) return 1;                                                        
+  if (!db_manager.isready()) return 1;                                          
+  enum {                                                                        
+    kDBId = 1,                                                                  
+    kDBName,                                                                    
+  };                                                                            
+  db_manager.get_internal_query()                                               
+    ->parse("select id, name from users where name = 'viticm'");                
+  db_manager.query();                                                           
+  db_manager.fetch();                                                           
+  int32_t error_code = 0;                                                       
+  int32_t value = db_manager.get_int32(kDBId, error_code);                      
+  DEBUGPRINTF("value: %d", value);                                              
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">value: 3</font>
+</p>
+
+<p><a name="get_uint32"></a></p>
+
+<h2>::get_uint32</h2>
+
+<blockquote>
+<p>uint32_t get_uint32(int32_t column_index, int32_t &error_code); </p>
+<p>描述：</p>                                                                            
+<p>从结果集中取uint32类型的值。</p>                      
+<p>参数：</p>
+<p>int32_t column_index 所在列的索引。</p>
+<p>int32_t &error_code 错误码。</p>
+<p>返回值：int32_t</p>
+</blockquote>
+
+<p><b>Example #1 get_uint32 范例</b></p>
+
+<pre><code>
+#include "pf/db/manager.h"                                                      
+#include "main.h"                                                               
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_db::Manager db_manager;                                                    
+  bool result = true;                                                           
+  result = db_manager.init("sword_user", "root", "mysql");                      
+  if (!result) return 1;                                                        
+  if (!db_manager.isready()) return 1;                                          
+  enum {                                                                        
+    kDBId = 1,                                                                  
+    kDBName,                                                                    
+  };                                                                            
+  db_manager.get_internal_query()                                               
+    ->parse("select id, name from users where name = 'viticm'");                
+  db_manager.query();                                                           
+  db_manager.fetch();                                                           
+  int32_t error_code = 0;                                                       
+  uint32_t value = db_manager.get_uint32(kDBId, error_code);                      
+  DEBUGPRINTF("value: %d", value);                                              
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">value: 3</font>
+</p>
+
+<p><a name="get_int16"></a></p>
+
+<h2>::get_int16</h2>
+
+<blockquote>
+<p>int16_t get_int16(int32_t column_index, int32_t &error_code); </p>
+<p>描述：</p>                                                                            
+<p>从结果集中取int16类型的值。</p>                      
+<p>参数：</p>
+<p>int32_t column_index 所在列的索引。</p>
+<p>int32_t &error_code 错误码。</p>
+<p>返回值：int16_t</p>
+</blockquote>
+
+<p><b>Example #1 get_int16 范例</b></p>
+
+<pre><code>
+#include "pf/db/manager.h"                                                      
+#include "main.h"                                                               
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_db::Manager db_manager;                                                    
+  bool result = true;                                                           
+  result = db_manager.init("sword_user", "root", "mysql");                      
+  if (!result) return 1;                                                        
+  if (!db_manager.isready()) return 1;                                          
+  enum {                                                                        
+    kDBId = 1,                                                                  
+    kDBName,                                                                    
+  };                                                                            
+  db_manager.get_internal_query()                                               
+    ->parse("select id, name from users where name = 'viticm'");                
+  db_manager.query();                                                           
+  db_manager.fetch();                                                           
+  int32_t error_code = 0;                                                       
+  int16_t value = db_manager.get_int16(kDBId, error_code);                      
+  DEBUGPRINTF("value: %d", value);                                              
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">value: 3</font>
+</p>
+
+<p><a name="get_uint16"></a></p>
+
+<h2>::get_uint16</h2>
+
+<blockquote>
+<p>uint16_t get_uint16(int32_t column_index, int32_t &error_code); </p>
+<p>描述：</p>                                                                            
+<p>从结果集中取uint16类型的值。</p>                      
+<p>参数：</p>
+<p>int32_t column_index 所在列的索引。</p>
+<p>int32_t &error_code 错误码。</p>
+<p>返回值：uint16_t</p>
+</blockquote>
+
+<p><b>Example #1 get_uint16 范例</b></p>
+
+<pre><code>
+#include "pf/db/manager.h"                                                      
+#include "main.h"                                                               
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_db::Manager db_manager;                                                    
+  bool result = true;                                                           
+  result = db_manager.init("sword_user", "root", "mysql");                      
+  if (!result) return 1;                                                        
+  if (!db_manager.isready()) return 1;                                          
+  enum {                                                                        
+    kDBId = 1,                                                                  
+    kDBName,                                                                    
+  };                                                                            
+  db_manager.get_internal_query()                                               
+    ->parse("select id, name from users where name = 'viticm'");                
+  db_manager.query();                                                           
+  db_manager.fetch();                                                           
+  int32_t error_code = 0;                                                       
+  uint16_t value = db_manager.get_uint16(kDBId, error_code);                      
+  DEBUGPRINTF("value: %d", value);                                              
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">value: 3</font>
+</p>
+
+<p><a name="get_int8"></a></p>
+
+<h2>::get_int8</h2>
+
+<blockquote>
+<p>int8_t get_int8(int32_t column_index, int32_t &error_code); </p>
+<p>描述：</p>                                                                            
+<p>从结果集中取int8类型的值。</p>                      
+<p>参数：</p>
+<p>int32_t column_index 所在列的索引。</p>
+<p>int32_t &error_code 错误码。</p>
+<p>返回值：int8_t</p>
+</blockquote>
+
+<p><b>Example #1 get_int8 范例</b></p>
+
+<pre><code>
+#include "pf/db/manager.h"                                                      
+#include "main.h"                                                               
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_db::Manager db_manager;                                                    
+  bool result = true;                                                           
+  result = db_manager.init("sword_user", "root", "mysql");                      
+  if (!result) return 1;                                                        
+  if (!db_manager.isready()) return 1;                                          
+  enum {                                                                        
+    kDBId = 1,                                                                  
+    kDBName,                                                                    
+  };                                                                            
+  db_manager.get_internal_query()                                               
+    ->parse("select id, name from users where name = 'viticm'");                
+  db_manager.query();                                                           
+  db_manager.fetch();                                                           
+  int32_t error_code = 0;                                                       
+  int8_t value = db_manager.get_int8(kDBId, error_code);                      
+  DEBUGPRINTF("value: %d", value);                                              
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">value: 3</font>
+</p>
+
+<p><a name="get_uint8"></a></p>
+
+<h2>::get_uint8</h2>
+
+<blockquote>
+<p>uint8_t get_uint8(int32_t column_index, int32_t &error_code); </p>
+<p>描述：</p>                                                                            
+<p>从结果集中取uint8类型的值。</p>                      
+<p>参数：</p>
+<p>int32_t column_index 所在列的索引。</p>
+<p>int32_t &error_code 错误码。</p>
+<p>返回值：int8_t</p>
+</blockquote>
+
+<p><b>Example #1 get_uint8 范例</b></p>
+
+<pre><code>
+#include "pf/db/manager.h"                                                      
+#include "main.h"                                                               
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_db::Manager db_manager;                                                    
+  bool result = true;                                                           
+  result = db_manager.init("sword_user", "root", "mysql");                      
+  if (!result) return 1;                                                        
+  if (!db_manager.isready()) return 1;                                          
+  enum {                                                                        
+    kDBId = 1,                                                                  
+    kDBName,                                                                    
+  };                                                                            
+  db_manager.get_internal_query()                                               
+    ->parse("select id, name from users where name = 'viticm'");                
+  db_manager.query();                                                           
+  db_manager.fetch();                                                           
+  int32_t error_code = 0;                                                       
+  uint8_t value = db_manager.get_uint8(kDBId, error_code);                      
+  DEBUGPRINTF("value: %d", value);                                              
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">value: 3</font>
+</p>
+
+<p><a name="get_string"></a></p>
+
+<h2>::get_string</h2>
+
+<blockquote>
+<p>int32_t get_string(int32_t column_index,                                        
+                      char *buffer,                                                
+                      int32_t buffer_length,                                       
+                      int32_t &error_code);  </p>
+<p>描述：</p>                                                                            
+<p>从结果集中取字符串类型的值。</p>                      
+<p>参数：</p>
+<p>int32_t column_index 所在列的索引。</p>
+<p>char *buffer 字符串存储指针。</p>
+<p>int32_t buffer_length 字符串存储大小。</p>
+<p>int32_t &error_code 错误码。</p>
+<p>返回值：int32_t</p>
+</blockquote>
+
+<p><b>Example #1 get_string 范例</b></p>
+
+<pre><code>
+#include "pf/db/manager.h"                                                      
+#include "main.h"                                                               
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_db::Manager db_manager;                                                    
+  bool result = true;                                                           
+  result = db_manager.init("sword_user", "root", "mysql");                      
+  if (!result) return 1;                                                        
+  if (!db_manager.isready()) return 1;                                          
+  enum {                                                                        
+    kDBId = 1,                                                                  
+    kDBName,                                                                    
+  };                                                                            
+  db_manager.get_internal_query()                                               
+    ->parse("select id, name from users where name = 'viticm'");                
+  db_manager.query();                                                           
+  db_manager.fetch();                                                           
+  int32_t error_code = 0;                                                       
+  char value[64] = {0};                                                         
+  int32_t get_code =                                                            
+    db_manager.get_string(kDBName, value, sizeof(value) - 1, error_code);       
+  DEBUGPRINTF("get_code: %d, value: %s", get_code, value);                      
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">get_code: 6, value: viticm</font>
+</p>
+
+<nav>
+	<a href="db.odbc.htm">ODBC </a>
+</nav>
+<footer>
+    <p><a href="#">Dayle Rees</a>.</p>
+</footer>
+            
+            
+</section>
+  <div class="clearfix"></div>
+</div>
+
+        <script src="../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="../js/vendor/jquery-1.8.2.min.js"><\/script>')</script>
+        <script src="../../checkout.stripe.com/v2/checkout.js"></script>
+        <script src="../js/vendor/prettify.js"></script>
+        <script src="../js/plugins.js"></script>
+        <script src="../js/main.js"></script>
+
+        <script type="text/javascript">
+
+          var _gaq = _gaq || [];
+          _gaq.push(['_setAccount', 'UA-37898177-1']);
+          _gaq.push(['_trackPageview']);
+
+          (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www/') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+          })();
+
+        </script>
+    </body>
+</html>

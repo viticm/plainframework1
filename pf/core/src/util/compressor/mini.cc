@@ -27,7 +27,7 @@ bool Mini::init() {
 bool Mini::compress(const unsigned char *in,
                     uint32_t insize,
                     unsigned char *out,
-                    uint64_t& outsize) {
+                    uint64_t &outsize) {
   __ENTER_FUNCTION
     if (outsize < UTIL_COMPRESSOR_MINI_GET_OUTLENGTH(insize)) return false;
     int32_t result = lzo1x_1_compress(in,

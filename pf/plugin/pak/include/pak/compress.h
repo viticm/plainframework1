@@ -31,16 +31,19 @@ int32_t smart(char *out,
               char *in, 
               int32_t insize, 
               int32_t compressions,
-              int32_t *type, 
+              int32_t type, 
               int32_t level);
 
-int32_t de_smart(char *out, 
-                 int32_t *outsize, 
-                 char *in, 
-                 int32_t insize, 
-                 int32_t compressions,
-                 int32_t *type, 
-                 int32_t level);
+int32_t de_smart(char *out, int32_t *outsize, char *in, int32_t insize);
+
+int32_t zlib(char *out, 
+             int32_t *outsize, 
+             char *in, 
+             int32_t insize, 
+             int32_t *type, 
+             int32_t level); 
+
+int32_t de_zlib(char *out, int32_t *outsize, char *in, int32_t insize);
 
 }; //namespace compress
 

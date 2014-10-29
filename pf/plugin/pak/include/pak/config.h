@@ -14,6 +14,9 @@
 #include "pf/base/config.h"
 #include "pf/sys/thread.h"
 
+#define PAK_MAGIC 0x1A4B4150 //header 'PAK\1A
+#define PAK_VERSION 1500 //current version
+
 #define PAK_FILE_IMPLODE 0x00000200 //Implode method (By PKWARE Data Compression Library)
 #define PAK_FILE_COMPRESS 0x00000100 //Compress methods (My various methods)
 #define PAK_FILE_COMPRESSED 0x0000FF00 //File is compressed 
@@ -22,6 +25,7 @@
 #define PAK_FILE_SINGLE_UNIT 0x02000000 //File is stored as a single unit, rather than split into sectors (Thx, Quantam)
 #define PAK_FILE_EXISTS 0x80000000 //Set if file exists, reset when the file was deleted
 #define PAK_FILE_REPLACEEXISTING 0x80000000 //Replace when the file exist (SFileAddFile)
+#define PAK_PLATFORM_LITTLE_ENDIAN 1 //for lagreint_t
 
 #define PAK_FILE_VALID_FLAGS (\
   PAK_FILE_IMPLODE | \
@@ -50,8 +54,8 @@
 #define PAK_SIGNATURE_NAME "(sign)" //Name of internal signature
 #define PAK_ATTRIBUTES_NAME "(attr)" //Name of internal attributes file
 
-#define PAK_LISTFILE_ENTRY_DELETED -2
-#define PAK_LISTFILE_ENTRY_FREE -1
+#define PAK_LISTFILE_ENTRY_DELETED (uint64_t *)(-2)
+#define PAK_LISTFILE_ENTRY_FREE (uint64_t *)(-1)
 
 #define PAK_TYPE_NORMAL 0x01
 #define PAK_TYPE_PATCH 0x02
@@ -77,12 +81,25 @@
 #define PAK_ERROR_CAN_NOT_COMPLETE 1003
 #define PAK_ERROR_PARAMETER_QUOTA_EXCEEDED 1283
 #define PAK_ERROR_FILE_CORRUPT 1392
+#define PAK_ERROR_FILE_CREATE 1500
+#define PAK_ERROR_FILE_CLOSE 1501
+#define PAK_ERROR_FILE_READ 1502
+#define PAK_ERROR_FILE_WRITE 1503
+#define PAK_ERROR_FILE_MOVE 1504
+#define PAK_ERROR_FILE_REMOVE 1505
 #define PAK_ERROR_INSUFFICIENT_BUFFER 4999
+#define PAK_ERROR_UNKOWN 999999
 /* } pak error code */
 
 namespace pak { //一些结构体的定义
 
 typedef void *handle_t; //句柄指针
+
+#if __WINDOWS__
+#define HANDLE_INVALID_VALUE ((handle_t)-1)
+#else
+#define HANDLE_INVALID_VALUE NULL
+#endif
 
 typedef union {
 #ifdef PAK_PLATFORM_LITTLE_ENDIAN
@@ -92,8 +109,8 @@ typedef union {
   };
 #else
   struct {
-    int64_t low;
-    uint64_t high;
+    int64_t high;
+    uint64_t low;
   };
 #endif
   int64_t quad;
@@ -206,7 +223,7 @@ typedef struct archive_struct {
   int64_t paksize; //Size of pak archive
   uint64_t blocksize; //Size of file block
   blockcache_t blockcache; 
-  header_t header; //Pointer to header
+  header_t header; //header struct
   hashkey_t *hashkey_table; //Pointer to hashKey table
   block_t *block_table; //Pointer to block table
   attribute_t *attribute; //Pointer to file attribute in (attr) file

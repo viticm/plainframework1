@@ -117,7 +117,7 @@ void Manager::loop() {
       uint32_t runtime = TIME_MANAGER_POINTER->get_tickcount();
       uint32_t waittime = 
         runtime + 
-        static_cast<uint32_t>(1000/NET_MANAGER_FRAME) - 
+        static_cast<uint32_t>(1000 / NET_MANAGER_FRAME) - 
         TIME_MANAGER_POINTER->get_tickcount();
 #endif /* } */
       tick(); //循环逻辑

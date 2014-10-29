@@ -195,12 +195,10 @@ void Log::get_log_filename(uint8_t logid, char *save) {
       pf_base::util::makedir(savedir, 0755);
       snprintf(save,
                FILENAME_MAX - 1,
-               "%s/%s_%.2d_%.2d_%.2d.log",
+               "%s/%s_%.2d.log",
                savedir,
                prefixfinal,
-               TIME_MANAGER_POINTER->get_hour(),
-               TIME_MANAGER_POINTER->get_minute(),
-               TIME_MANAGER_POINTER->get_second());
+               TIME_MANAGER_POINTER->get_hour());
     } else {
       snprintf(save,
                FILENAME_MAX - 1,
@@ -251,12 +249,10 @@ void Log::get_log_filename(const char *filename_prefix,
         ERRORPRINTF("save dir: %s make failed", savedir);
       snprintf(save,
                FILENAME_MAX - 1,
-               "%s/%s_%.2d_%.2d_%.2d.log",
+               "%s/%s_%.2d.log",
                savedir,
                prefixfinal,
-               TIME_MANAGER_POINTER->get_hour(),
-               TIME_MANAGER_POINTER->get_minute(),
-               TIME_MANAGER_POINTER->get_second());
+               TIME_MANAGER_POINTER->get_hour());
     } else {
       snprintf(save,
                FILENAME_MAX - 1,

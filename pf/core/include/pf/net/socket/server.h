@@ -25,7 +25,7 @@ class PF_API Server {
 
  public:
    void close();
-   bool accept(pf_net::socket::Base* socket);
+   bool accept(pf_net::socket::Base *socket);
    uint32_t getlinger() const;
    bool setlinger(uint32_t lingertime);
    bool is_nonblocking() const;

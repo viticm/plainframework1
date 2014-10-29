@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset=UTF-8"utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>简约框架参考手册</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" href="css/style.css">
+        <script src="js/vendor/modernizr-2.6.2.min.js"></script>
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="#">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+
+        <div class="wrapper">
+            <header>
+                <h1>简约框架参考手册</h1>
+            </header>
+            <aside class="sidebar">
+                	<ul>
+<li>入门指引
+
+<ul>
+<li><a href="index.htm">简介</a></li>
+<li><a href="docs/simpletutorials.htm">简明教程</a></li>
+<li><a href="docs/style-guide.htm">代码风格</a></li>
+<li><a href="docs/module.htm">模块</a></li>
+<li><a href="docs/license.htm">许可</a></li>
+</ul></li>
+<li>基础模块
+<ul>
+<li><a href="docs/base.macro.htm">宏</a></li>
+<li><a href="docs/base.global.htm">全局变量</a></li>
+<li><a href="docs/base.log.htm">日志</a></li>
+<li><a href="docs/base.string.htm">字符串</a></li>
+<li><a href="docs/base.hashmap.htm">hash map</a></li>
+<li><a href="docs/base.timemanager.htm">时间管理器</a></li>
+<li><a href="docs/base.tinytimer.htm">小型定时器</a></li>
+<li><a href="docs/base.util.htm">工具集</a></li>
+</ul></li>
+
+<li>数据库模块
+<ul>
+<li><a href="docs/db.manager.htm">管理器</a></li>
+<li><a href="docs/db.odbc.htm">ODBC</a></li>
+</ul></li>
+
+<li>引擎模块
+<ul>
+<li><a href="docs/engine.kernel.htm">核心</a></li>
+<li><a href="docs/engine.thread.htm">线程</a></li>
+</ul></li>
+
+<li>事件模块
+<ul>
+<li><a href="docs/event.manager.htm">管理器</a></li>
+</ul></li>
+
+<li>文件模块
+<ul>
+<li><a href="docs/file.api.htm">系统API</a></li>
+<li><a href="docs/file.database.htm">文件数据库</a></li>
+<li><a href="docs/file.ini.htm">ini文件</a></li>
+</ul></li>
+
+<li>网络模块
+<ul>
+<li><a href="docs/net.connection.htm">连接</a></li>
+<li><a href="docs/net.packet.htm">包</a></li>
+<li><a href="docs/net.socket.htm">套接字</a></li>
+<li><a href="docs/net.manager.htm">管理器</a></li>
+</ul></li>
+
+<li>性能模块
+<ul>
+<li><a href="docs/performance.eyes.htm">监视器</a></li>
+</ul></li>
+
+<li>脚本模块
+<ul>
+<li><a href="docs/script.cache.htm">缓存</a></li>
+<li><a href="docs/script.lua.htm">lua</a></li>
+</ul></li>
+
+<li>系统模块
+<ul>
+<li><a href="docs/sys.memory.htm">内存</a></li>
+<li><a href="docs/sys.info.htm">系统信息</a></li>
+<li><a href="docs/sys.process.htm">进程</a></li>
+<li><a href="docs/sys.thread.htm">线程</a></li>
+<li><a href="docs/sys.util.htm">工具集</a></li>
+</ul></li>
+
+<li>工具模块
+<ul>
+<li><a href="docs/util.compressor.htm">压缩模块</a></li>
+</ul></li>
+
+</ul>
+            </aside>
+            <section class="content">
+                	<h1>简介</h1>
+
+<ul>
+<li><a href="#overview">简介</a></li>
+<li><a href="#cando">能做什么？</a></li>
+</ul>
+
+<p><img src="images/pf_simple_linux.png" /></p>
+<p><img src="images/pf_simple_windows.png" /></p>
+
+<p><a name="overview"></a></p>
+
+<h2>简介</h2>
+
+<p>简约框架（plain framework）是一款基于C/C++开发的，跨平台（windows/linux）应用的基础框架，开发者可以利用此框架快速的开发出需要的系统应用，如通信服务器，游戏服务器/客户端等的核心。</p>
+
+<p><a name="cando"></a></p>
+
+<h2>能做什么？</h2>
+
+<p>框架集成了数据库的操作、脚本的操作（lua）、线程的操作、网络的封装，丰富的的接口使得能够满足绝大多数的应用开发。该框架主要针对网络应用，特别是游戏开发（服务端/客户端）。</p>
+
+<p>你也可以扩展框架以便实现更多的功能。</p>
+
+<blockquote>
+  <p>如果你要了解的更多, 查看 <a href="docs/simpletutorials.htm">简明教程</a></p>
+</blockquote>
+
+
+                <nav>
+                                                    <a href="docs/simpletutorials.htm">简明教程 </a>
+                                </nav>
+                <footer>
+                    <p><a href="#">Dayle Rees</a>.</p>
+                </footer>
+            </section>
+            <div class="clearfix"></div>
+        </div>
+
+        <script src="../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.8.2.min.js"><\/script>')</script>
+        <script src="../checkout.stripe.com/v2/checkout.js"></script>
+        <script src="js/vendor/prettify.js"></script>
+        <script src="js/plugins.js"></script>
+        <script src="js/main.js"></script>
+
+        <script type="text/javascript">
+
+          var _gaq = _gaq || [];
+          _gaq.push(['_setAccount', 'UA-37898177-1']);
+          _gaq.push(['_trackPageview']);
+
+          (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www/') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+          })();
+
+        </script>
+    </body>
+</html>

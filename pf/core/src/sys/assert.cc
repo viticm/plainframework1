@@ -6,9 +6,10 @@
 #include "pf/base/util.h"
 #include "pf/sys/thread.h"
 #include "pf/sys/assert.h"
-int g_command_assert = 0;
+
+bool g_command_assert = false;
 bool g_command_ignore_message_box = false; //控制参数，跳过MyMessageBox的中断
-int g_need_manager_do_pos_init = 1; //控制参数，是否需要初始化管理器数据
+bool g_need_manager_do_pos_init = true; //控制参数，是否需要初始化管理器数据
 
 namespace pf_sys {
 
@@ -18,7 +19,6 @@ namespace pf_sys {
  * 1:忽略
  * 2:继续抛出异常用于获取运行堆栈
  **/
-
 void __show__(const char *temp) {
   char savedir[FILENAME_MAX] = {0};
 #if __LINUX__
@@ -43,10 +43,8 @@ void __show__(const char *temp) {
   if (TIME_MANAGER_POINTER) {
     snprintf(filename, 
              sizeof(filename) - 1,
-             "assert_%.2d_%.2d_%.2d.log",
-             TIME_MANAGER_POINTER->get_hour(),
-             TIME_MANAGER_POINTER->get_minute(),
-             TIME_MANAGER_POINTER->get_second());
+             "assert_%.2d.log",
+             TIME_MANAGER_POINTER->get_hour());
   } else {
     snprintf(filename, sizeof(filename) - 1, "assert.log");
   }
@@ -161,14 +159,13 @@ bool RangeCheckForIndex_Assert(int index,
     return true;
   }
   snprintf(buff,
-          sizeof(buff),
+          sizeof(buff) - 1,
           "[%s] index out of range!! index=%d, but legal range is [%d, %d]."
           " check it now, please!!",
           code_location,
           index,
           low_border,
           up_border);
-  buff[sizeof(buff)-1] = '\0';
   AssertEx(false, buff);
   return false;
 }

@@ -742,7 +742,7 @@ void Interface::diag_state() {
     snprintf(error_buffer,
              sizeof(error_buffer) - 1,
              "error code: %d, error msg: %s,error sql: %s", 
-             error_code_, 
+             static_cast<int32_t>(error_code_), 
              error_message_,
              query_.sql_str_);
     save_error_log(error_buffer);
