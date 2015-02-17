@@ -53,13 +53,15 @@ class Server;
 class Stream;
 class InputStream;
 class OutputStream;
+class Encryptor;
+class Compressor;
 
 typedef struct {
   char *buffer;
   uint32_t bufferlength;
   uint32_t bufferlength_max;
-  uint32_t headlength;
-  uint32_t taillength;
+  uint32_t head;
+  uint32_t tail;
 } streamdata_t;
 
 typedef struct {

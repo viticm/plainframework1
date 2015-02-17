@@ -28,7 +28,7 @@ class PF_API Base {
 
  public:
    Base();
-   ~Base();
+   virtual ~Base();
    
  public:
    uint64_t threadid_;

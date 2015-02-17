@@ -55,7 +55,7 @@ bool Ini::open(const char *file_name) {
     if (data_length_ > 0) {
       data_info_ = 
         static_cast<char*>(malloc(static_cast<size_t>(data_length_)));
-      memset(data_info_, '\0', sizeof(data_info_));
+      memset(data_info_, '\0', sizeof(*data_info_));
       FILE* fp;
       fp = fopen(file_name_, "rb");
       AssertEx(fp != NULL, file_name_);
@@ -67,7 +67,7 @@ bool Ini::open(const char *file_name) {
       data_length_ = 1;
       data_info_ = 
         static_cast<char*>(malloc(static_cast<size_t>(data_length_)));
-      memset(data_info_, '\0', sizeof(data_info_));
+      memset(data_info_, '\0', sizeof(*data_info_));
       init_section();
     }
     return result;
@@ -261,7 +261,7 @@ bool Ini::add_section(const char *section) {
                static_cast<size_t>(data_length_ - 1), 
                "%s", 
                str);
-      data_length_ += static_cast<int64_t>(strlen(str));
+      data_length_ += static_cast<int32_t>(strlen(str));
       init_section();
       result = true;
     }
@@ -275,8 +275,8 @@ bool Ini::add_data(int32_t position, const char *key, const char *value) {
     char *str;
     int32_t length = static_cast<int32_t>(strlen(value));
     str = new char[length + 256];
-    memset(str, '\0', sizeof(str));
-    snprintf(str, sizeof(str), "%s=%s", key, value);
+    memset(str, '\0', length + 256);
+    snprintf(str, length + 256, "%s=%s", key, value);
     length = static_cast<int32_t>(strlen(str));
     position = goto_next_line(position);
     size_t new_datalength = static_cast<size_t>(data_length_ + length);
@@ -717,14 +717,12 @@ bool Ini::write(const char *section, const char *key, int32_t value) {
   __ENTER_FUNCTION
     bool result = false;
     int32_t section_index = find_section_index(section);
-    int32_t line;
-    char str[64];
-    memset(str, '\0', sizeof(str));
+    char str[64] = {0};
     snprintf(str, sizeof(str), "%d", value);
     if (-1 == section_index) { //add new section
       add_section(section);
       section_index = find_section_index(section);
-      line = goto_last_line(section);
+      goto_last_line(section);
       add_data(section_index, key, str);
       result = true;
     }

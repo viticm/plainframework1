@@ -24,14 +24,12 @@ function str_nreplace($search,
   if ($count < -1) return $result;
   if (-1 === $count) {
     $result = str_replace($search, $replace, $subject);
-  }
-  else {
+  } else {
     for ($i = 0; $i < $count; ++$i) {
       $pos = $beginlast ? strrpos($result, $search): strpos($result, $search);
       if ($pos === false) {
         break;
-      }
-      else {
+      } else {
         $result = substr_replace($result, $replace, $pos, strlen($search));
       }
     }
@@ -51,6 +49,23 @@ function complementpath($path, $delimiter = '/') {
   $lastlimiter = substr($path, -1, 1);
   if ($lastlimiter != $delimiter) $result .= $delimiter;
   return $result;
+}
+
+/**
+ * replace file content string 
+ * this function will check the target string if exist
+ * @param string $filename
+ * @param string $source
+ * @param string $target
+ * @return bool
+ */
+function replace_filecontent($filename, $source, $target) {
+  if (!file_exists($filename)) return false;
+  $content = file_get_contents($filename); 
+  if (strpos($target, "/*") !== false && //note target 
+      strpos($content, $target) !== false) return false;
+  $content = str_replace($source, $target, $content);
+  file_put_contents($filename, $content);
 }
 
 /**
@@ -83,9 +98,13 @@ function format_systempath($path, $from_ostype = OS_LINUX) {
 
 //project visual studio script file dirs
 $g_scriptdirs = array(
-  "gateway applications/gateway/scripts",
+  "billing applications/billing/scripts",
+  "sharememory applications/sharememory/scripts",
+  "login applications/login/scripts",
+  "center applications/center/scripts",
   "pf_simple applications/pf_simple/scripts",
   "pf_core pf/core/scripts",
+  "plugin_pak pf/plugin/pak/scripts",
 
 ); //not use EOF, if you want it work not just use output
 
@@ -113,6 +132,26 @@ function get_scriptdir($modelname) {
     }
   }
   $result = complementpath($result);
+  return $result;
+}
+
+/**
+ * get server visual studio script dir(full path)
+ * @param string $modelname
+ * @return string
+ */
+function get_model_configfile($modelname) {
+  $result = PROJECTPATH;
+  $isplugin = strpos($modelname, "plugin");
+  if ("pf_core" === $modelname) {
+    $result .= "pf/core/include/pf/base/";
+  } elseif ($isplugin !== false) {
+    $modelname = str_replace("plugin_", "", $modelname);
+    $result .= "pf/plugin/".$modelname."/include/".$modelname."/";
+  } else {
+    $result .= "applications/".$modelname."/include/application/";
+  }
+  $result .= "config.h";
   return $result;
 }
 
@@ -184,8 +223,7 @@ function rewrite_vcscript($modelname = NULL,
   if (-1 == $revert && $needrevert) $revert = true;
   if (true === $revert) {
     echo '['.$modelname.'] will revret to standard.',"\n";
-  }
-  else {
+  } else {
     echo '['.$modelname.'] will rename the all scripts',"\n";
   }
   if (false == $revert && $needrevert) {
@@ -224,8 +262,7 @@ function rewrite_vcscript($modelname = NULL,
           $new_sourcefile_name = //del random str
             str_replace($randsuffix_str, '', $new_sourcefile_name);
         }
-      }
-      else {
+      } else {
         $new_sourcefile_name .= 
           true === $randsuffix ? '_'.time().rand(1, 1000) : '';
         $new_sourcefile_name .= '_'.$sourcefile_name;
@@ -260,12 +297,21 @@ cn:
     如果你不清楚该文件的用途，则不要删除它。
 EOF;
  
+  $notrename_macro = "#define NOT_RENAME_SOURCE";
+  $notrename_macronote = "/*#define NOT_RENAME_SOURCE*/";
+  $model_configfile = get_model_configfile($modelname);
   if (true === $revert) { 
+    replace_filecontent($model_configfile, 
+                        $notrename_macronote, 
+                        $notrename_macro);
     @unlink($model_scriptpath.'vcscript_revert');
-  }
-  else {
+  } else {
+    replace_filecontent($model_configfile, 
+                        $notrename_macro, 
+                        $notrename_macronote);
     file_put_contents($model_scriptpath.'vcscript_revert', $revert_fileinfo);
   }
+  return true;
 }
 
 /**
@@ -314,11 +360,11 @@ function main() {
   $revert = -1;
   if (3 == $argc && 'yes' === $argv[2]) $revert = true;
   if (3 == $argc && 'no' === $argv[2]) $revert = false;
-  $models = explode(' ', $argv[1]);
+  $models = explode('|', $argv[1]);
   foreach ($models as $k => $model) {
     $result = 
       2 == $argc ? rewrite_vcscript($model) : rewrite_vcscript($model, $revert);
-    if (!$result) return 1;
+    //if (!$result) return 1;
   }
   return 0;
 }

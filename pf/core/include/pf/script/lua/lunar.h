@@ -492,21 +492,21 @@ inline void gettable_number_byindex(lua_State *L,
                                     int32_t table_index, 
                                     int32_t index, 
                                     T& number);
-void gettable_string(lua_State *L, 
+PF_API void gettable_string(lua_State *L, 
                      int32_t table_index, 
                      const char *key, 
                      char *string, 
                      int32_t length);
-void gettable_string_byindex(lua_State *L, 
+PF_API void gettable_string_byindex(lua_State *L, 
                              int32_t table_index, 
                              int32_t index, 
                              char *string, 
                              int32_t length);
-bool istable_numbervalue(lua_State *L, int32_t table_index, int32_t index);
-int32_t gettable(lua_State *L, int32_t table_index, const char *key);
-int32_t gettable(lua_State *L, int32_t table_index, int index);
-int32_t dofile(lua_State *L, const char *filename);
-int32_t dofile(lua_State *L);
+PF_API bool istable_numbervalue(lua_State *L, int32_t table_index, int32_t index);
+PF_API int32_t gettable(lua_State *L, int32_t table_index, const char *key);
+PF_API int32_t gettable(lua_State *L, int32_t table_index, int index);
+PF_API int32_t dofile(lua_State *L, const char *filename);
+PF_API int32_t dofile(lua_State *L);
 
 
 template <typename T>

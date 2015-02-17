@@ -94,6 +94,11 @@ void FactoryManager::set_function_isvalid_packetid(
   function_isvalid_packetid_ = function;
 }
 
+void FactoryManager::set_function_isencrypt_packetid(
+    function_isvalid_packetid function) {
+  function_isencrypt_packetid_ = function;
+}
+
 Base *FactoryManager::createpacket(uint16_t packetid) {
   __ENTER_FUNCTION
     bool isfind = idindexs_.isfind(packetid);
@@ -190,6 +195,17 @@ bool FactoryManager::isvalid_packetid(uint16_t id) {
   __LEAVE_FUNCTION
     return result;
 }
+
+bool FactoryManager::isencrypt_packetid(uint16_t id) {
+  bool result = false;
+  __ENTER_FUNCTION
+    if (!function_isencrypt_packetid_) return false;
+    result = (*function_isencrypt_packetid_)(id);
+    return result;
+  __LEAVE_FUNCTION
+    return result;
+}
+
 
 } //namespace packet
 

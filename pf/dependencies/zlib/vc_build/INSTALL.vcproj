@@ -1,14 +1,22 @@
-<?xml version="1.0" encoding = "Windows-1252"?>
+<?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
 	Name="INSTALL"
 	ProjectGUID="{77E9A2BE-329C-4326-857C-3FF3F82516C4}"
-	Keyword="Win32Proj">
+	Keyword="Win32Proj"
+	TargetFrameworkVersion="0"
+	>
 	<Platforms>
 		<Platform
-			Name="Win32"/>
+			Name="Win32"
+		/>
+		<Platform
+			Name="x64"
+		/>
 	</Platforms>
+	<ToolFiles>
+	</ToolFiles>
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
@@ -16,41 +24,32 @@
 			IntermediateDirectory="INSTALL.dir\Debug"
 			ConfigurationType="10"
 			UseOfMFC="0"
-			ATLMinimizesCRunTimeLibraryUsage="FALSE"
-			CharacterSet="2">
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			CharacterSet="2"
+			>
 			<Tool
-				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib;E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build;"
-				AssemblerListingLocation="Debug/"
-				ExceptionHandling="0"
-				PreprocessorDefinitions="CMAKE_INTDIR=\&quot;Debug\&quot;"
-				ObjectFile="$(IntDir)\"
-/>
+				Name="VCPreBuildEventTool"
+			/>
 			<Tool
-				Name="VCCustomBuildTool"/>
-			<Tool
-				Name="VCResourceCompilerTool"
-				AdditionalIncludeDirectories="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib;E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build;"
-				PreprocessorDefinitions="CMAKE_INTDIR=\&quot;Debug\&quot;"/>
+				Name="VCCustomBuildTool"
+			/>
 			<Tool
 				Name="VCMIDLTool"
 				AdditionalIncludeDirectories="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib;E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build;"
-				MkTypLibCompatible="FALSE"
+				MkTypLibCompatible="false"
 				TargetEnvironment="1"
-				GenerateStublessProxies="TRUE"
+				GenerateStublessProxies="true"
 				TypeLibraryName="$(InputName).tlb"
 				OutputDirectory="$(IntDir)"
 				HeaderFileName="$(InputName).h"
 				DLLDataFileName=""
 				InterfaceIdentifierFileName="$(InputName)_i.c"
-				ProxyFileName="$(InputName)_p.c"/>
-			<Tool
-				Name="VCPreBuildEventTool"/>
-			<Tool
-				Name="VCPreLinkEventTool"/>
+				ProxyFileName="$(InputName)_p.c"
+			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-CommandLine="&quot;C:\Program Files (x86)\CMake 2.8\bin\cmake.exe&quot; -DBUILD_TYPE=$(OutDir) -P cmake_install.cmake&#x0D;&#x0A;if errorlevel 1 goto :VCReportError"/>
+				CommandLine="&quot;C:\Program Files (x86)\CMake 2.8\bin\cmake.exe&quot; -DBUILD_TYPE=$(OutDir) -P cmake_install.cmake&#x0D;&#x0A;if errorlevel 1 goto :VCReportError&#x0D;&#x0A;"
+			/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
@@ -58,41 +57,32 @@ CommandLine="&quot;C:\Program Files (x86)\CMake 2.8\bin\cmake.exe&quot; -DBUILD_
 			IntermediateDirectory="INSTALL.dir\Release"
 			ConfigurationType="10"
 			UseOfMFC="0"
-			ATLMinimizesCRunTimeLibraryUsage="FALSE"
-			CharacterSet="2">
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			CharacterSet="2"
+			>
 			<Tool
-				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib;E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build;"
-				AssemblerListingLocation="Release/"
-				ExceptionHandling="0"
-				PreprocessorDefinitions="CMAKE_INTDIR=\&quot;Release\&quot;"
-				ObjectFile="$(IntDir)\"
-/>
+				Name="VCPreBuildEventTool"
+			/>
 			<Tool
-				Name="VCCustomBuildTool"/>
-			<Tool
-				Name="VCResourceCompilerTool"
-				AdditionalIncludeDirectories="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib;E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build;"
-				PreprocessorDefinitions="CMAKE_INTDIR=\&quot;Release\&quot;"/>
+				Name="VCCustomBuildTool"
+			/>
 			<Tool
 				Name="VCMIDLTool"
 				AdditionalIncludeDirectories="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib;E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build;"
-				MkTypLibCompatible="FALSE"
+				MkTypLibCompatible="false"
 				TargetEnvironment="1"
-				GenerateStublessProxies="TRUE"
+				GenerateStublessProxies="true"
 				TypeLibraryName="$(InputName).tlb"
 				OutputDirectory="$(IntDir)"
 				HeaderFileName="$(InputName).h"
 				DLLDataFileName=""
 				InterfaceIdentifierFileName="$(InputName)_i.c"
-				ProxyFileName="$(InputName)_p.c"/>
-			<Tool
-				Name="VCPreBuildEventTool"/>
-			<Tool
-				Name="VCPreLinkEventTool"/>
+				ProxyFileName="$(InputName)_p.c"
+			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-CommandLine="&quot;C:\Program Files (x86)\CMake 2.8\bin\cmake.exe&quot; -DBUILD_TYPE=$(OutDir) -P cmake_install.cmake&#x0D;&#x0A;if errorlevel 1 goto :VCReportError"/>
+				CommandLine="&quot;C:\Program Files (x86)\CMake 2.8\bin\cmake.exe&quot; -DBUILD_TYPE=$(OutDir) -P cmake_install.cmake&#x0D;&#x0A;if errorlevel 1 goto :VCReportError&#x0D;&#x0A;"
+			/>
 		</Configuration>
 		<Configuration
 			Name="MinSizeRel|Win32"
@@ -100,41 +90,32 @@ CommandLine="&quot;C:\Program Files (x86)\CMake 2.8\bin\cmake.exe&quot; -DBUILD_
 			IntermediateDirectory="INSTALL.dir\MinSizeRel"
 			ConfigurationType="10"
 			UseOfMFC="0"
-			ATLMinimizesCRunTimeLibraryUsage="FALSE"
-			CharacterSet="2">
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			CharacterSet="2"
+			>
 			<Tool
-				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib;E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build;"
-				AssemblerListingLocation="MinSizeRel/"
-				ExceptionHandling="0"
-				PreprocessorDefinitions="CMAKE_INTDIR=\&quot;MinSizeRel\&quot;"
-				ObjectFile="$(IntDir)\"
-/>
+				Name="VCPreBuildEventTool"
+			/>
 			<Tool
-				Name="VCCustomBuildTool"/>
-			<Tool
-				Name="VCResourceCompilerTool"
-				AdditionalIncludeDirectories="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib;E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build;"
-				PreprocessorDefinitions="CMAKE_INTDIR=\&quot;MinSizeRel\&quot;"/>
+				Name="VCCustomBuildTool"
+			/>
 			<Tool
 				Name="VCMIDLTool"
 				AdditionalIncludeDirectories="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib;E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build;"
-				MkTypLibCompatible="FALSE"
+				MkTypLibCompatible="false"
 				TargetEnvironment="1"
-				GenerateStublessProxies="TRUE"
+				GenerateStublessProxies="true"
 				TypeLibraryName="$(InputName).tlb"
 				OutputDirectory="$(IntDir)"
 				HeaderFileName="$(InputName).h"
 				DLLDataFileName=""
 				InterfaceIdentifierFileName="$(InputName)_i.c"
-				ProxyFileName="$(InputName)_p.c"/>
-			<Tool
-				Name="VCPreBuildEventTool"/>
-			<Tool
-				Name="VCPreLinkEventTool"/>
+				ProxyFileName="$(InputName)_p.c"
+			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-CommandLine="&quot;C:\Program Files (x86)\CMake 2.8\bin\cmake.exe&quot; -DBUILD_TYPE=$(OutDir) -P cmake_install.cmake&#x0D;&#x0A;if errorlevel 1 goto :VCReportError"/>
+				CommandLine="&quot;C:\Program Files (x86)\CMake 2.8\bin\cmake.exe&quot; -DBUILD_TYPE=$(OutDir) -P cmake_install.cmake&#x0D;&#x0A;if errorlevel 1 goto :VCReportError&#x0D;&#x0A;"
+			/>
 		</Configuration>
 		<Configuration
 			Name="RelWithDebInfo|Win32"
@@ -142,84 +123,262 @@ CommandLine="&quot;C:\Program Files (x86)\CMake 2.8\bin\cmake.exe&quot; -DBUILD_
 			IntermediateDirectory="INSTALL.dir\RelWithDebInfo"
 			ConfigurationType="10"
 			UseOfMFC="0"
-			ATLMinimizesCRunTimeLibraryUsage="FALSE"
-			CharacterSet="2">
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			CharacterSet="2"
+			>
 			<Tool
-				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib;E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build;"
-				AssemblerListingLocation="RelWithDebInfo/"
-				ExceptionHandling="0"
-				PreprocessorDefinitions="CMAKE_INTDIR=\&quot;RelWithDebInfo\&quot;"
-				ObjectFile="$(IntDir)\"
-/>
+				Name="VCPreBuildEventTool"
+			/>
 			<Tool
-				Name="VCCustomBuildTool"/>
-			<Tool
-				Name="VCResourceCompilerTool"
-				AdditionalIncludeDirectories="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib;E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build;"
-				PreprocessorDefinitions="CMAKE_INTDIR=\&quot;RelWithDebInfo\&quot;"/>
+				Name="VCCustomBuildTool"
+			/>
 			<Tool
 				Name="VCMIDLTool"
 				AdditionalIncludeDirectories="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib;E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build;"
-				MkTypLibCompatible="FALSE"
+				MkTypLibCompatible="false"
 				TargetEnvironment="1"
-				GenerateStublessProxies="TRUE"
+				GenerateStublessProxies="true"
 				TypeLibraryName="$(InputName).tlb"
 				OutputDirectory="$(IntDir)"
 				HeaderFileName="$(InputName).h"
 				DLLDataFileName=""
 				InterfaceIdentifierFileName="$(InputName)_i.c"
-				ProxyFileName="$(InputName)_p.c"/>
-			<Tool
-				Name="VCPreBuildEventTool"/>
-			<Tool
-				Name="VCPreLinkEventTool"/>
+				ProxyFileName="$(InputName)_p.c"
+			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-CommandLine="&quot;C:\Program Files (x86)\CMake 2.8\bin\cmake.exe&quot; -DBUILD_TYPE=$(OutDir) -P cmake_install.cmake&#x0D;&#x0A;if errorlevel 1 goto :VCReportError"/>
+				CommandLine="&quot;C:\Program Files (x86)\CMake 2.8\bin\cmake.exe&quot; -DBUILD_TYPE=$(OutDir) -P cmake_install.cmake&#x0D;&#x0A;if errorlevel 1 goto :VCReportError&#x0D;&#x0A;"
+			/>
+		</Configuration>
+		<Configuration
+			Name="Debug|x64"
+			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
+			ConfigurationType="10"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			CharacterSet="2"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				AdditionalIncludeDirectories="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib;E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build;"
+				MkTypLibCompatible="false"
+				TargetEnvironment="3"
+				GenerateStublessProxies="true"
+				TypeLibraryName="$(InputName).tlb"
+				OutputDirectory="$(IntDir)"
+				HeaderFileName="$(InputName).h"
+				DLLDataFileName=""
+				InterfaceIdentifierFileName="$(InputName)_i.c"
+				ProxyFileName="$(InputName)_p.c"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+				CommandLine="&quot;C:\Program Files (x86)\CMake 2.8\bin\cmake.exe&quot; -DBUILD_TYPE=$(OutDir) -P cmake_install.cmake&#x0D;&#x0A;if errorlevel 1 goto :VCReportError&#x0D;&#x0A;"
+			/>
+		</Configuration>
+		<Configuration
+			Name="Release|x64"
+			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
+			ConfigurationType="10"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			CharacterSet="2"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				AdditionalIncludeDirectories="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib;E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build;"
+				MkTypLibCompatible="false"
+				TargetEnvironment="3"
+				GenerateStublessProxies="true"
+				TypeLibraryName="$(InputName).tlb"
+				OutputDirectory="$(IntDir)"
+				HeaderFileName="$(InputName).h"
+				DLLDataFileName=""
+				InterfaceIdentifierFileName="$(InputName)_i.c"
+				ProxyFileName="$(InputName)_p.c"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+				CommandLine="&quot;C:\Program Files (x86)\CMake 2.8\bin\cmake.exe&quot; -DBUILD_TYPE=$(OutDir) -P cmake_install.cmake&#x0D;&#x0A;if errorlevel 1 goto :VCReportError&#x0D;&#x0A;"
+			/>
+		</Configuration>
+		<Configuration
+			Name="MinSizeRel|x64"
+			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
+			ConfigurationType="10"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			CharacterSet="2"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				AdditionalIncludeDirectories="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib;E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build;"
+				MkTypLibCompatible="false"
+				TargetEnvironment="3"
+				GenerateStublessProxies="true"
+				TypeLibraryName="$(InputName).tlb"
+				OutputDirectory="$(IntDir)"
+				HeaderFileName="$(InputName).h"
+				DLLDataFileName=""
+				InterfaceIdentifierFileName="$(InputName)_i.c"
+				ProxyFileName="$(InputName)_p.c"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+				CommandLine="&quot;C:\Program Files (x86)\CMake 2.8\bin\cmake.exe&quot; -DBUILD_TYPE=$(OutDir) -P cmake_install.cmake&#x0D;&#x0A;if errorlevel 1 goto :VCReportError&#x0D;&#x0A;"
+			/>
+		</Configuration>
+		<Configuration
+			Name="RelWithDebInfo|x64"
+			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
+			ConfigurationType="10"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			CharacterSet="2"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				AdditionalIncludeDirectories="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib;E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build;"
+				MkTypLibCompatible="false"
+				TargetEnvironment="3"
+				GenerateStublessProxies="true"
+				TypeLibraryName="$(InputName).tlb"
+				OutputDirectory="$(IntDir)"
+				HeaderFileName="$(InputName).h"
+				DLLDataFileName=""
+				InterfaceIdentifierFileName="$(InputName)_i.c"
+				ProxyFileName="$(InputName)_p.c"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+				CommandLine="&quot;C:\Program Files (x86)\CMake 2.8\bin\cmake.exe&quot; -DBUILD_TYPE=$(OutDir) -P cmake_install.cmake&#x0D;&#x0A;if errorlevel 1 goto :VCReportError&#x0D;&#x0A;"
+			/>
 		</Configuration>
 	</Configurations>
+	<References>
+	</References>
 	<Files>
 		<Filter
 			Name="CMake Rules"
-			Filter="">
+			>
 			<File
-				RelativePath="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build\CMakeFiles\INSTALL_force.rule">
+				RelativePath="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build\CMakeFiles\INSTALL_force.rule"
+				>
 				<FileConfiguration
-					Name="Debug|Win32">
+					Name="Debug|Win32"
+					>
 					<Tool
-					Name="VCCustomBuildTool"
-					Description=" "
-					CommandLine="cd .&#x0D;&#x0A;if errorlevel 1 goto :VCReportError"
-					AdditionalDependencies="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build\CMakeFiles\INSTALL_force.rule"
-					Outputs="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build\CMakeFiles\INSTALL_force"/>
+						Name="VCCustomBuildTool"
+						Description=" "
+						CommandLine="cd .&#x0D;&#x0A;if errorlevel 1 goto :VCReportError&#x0D;&#x0A;"
+						AdditionalDependencies="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build\CMakeFiles\INSTALL_force.rule"
+						Outputs="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build\CMakeFiles\INSTALL_force"
+					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release|Win32">
+					Name="Release|Win32"
+					>
 					<Tool
-					Name="VCCustomBuildTool"
-					Description=" "
-					CommandLine="cd .&#x0D;&#x0A;if errorlevel 1 goto :VCReportError"
-					AdditionalDependencies="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build\CMakeFiles\INSTALL_force.rule"
-					Outputs="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build\CMakeFiles\INSTALL_force"/>
+						Name="VCCustomBuildTool"
+						Description=" "
+						CommandLine="cd .&#x0D;&#x0A;if errorlevel 1 goto :VCReportError&#x0D;&#x0A;"
+						AdditionalDependencies="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build\CMakeFiles\INSTALL_force.rule"
+						Outputs="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build\CMakeFiles\INSTALL_force"
+					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="MinSizeRel|Win32">
+					Name="MinSizeRel|Win32"
+					>
 					<Tool
-					Name="VCCustomBuildTool"
-					Description=" "
-					CommandLine="cd .&#x0D;&#x0A;if errorlevel 1 goto :VCReportError"
-					AdditionalDependencies="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build\CMakeFiles\INSTALL_force.rule"
-					Outputs="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build\CMakeFiles\INSTALL_force"/>
+						Name="VCCustomBuildTool"
+						Description=" "
+						CommandLine="cd .&#x0D;&#x0A;if errorlevel 1 goto :VCReportError&#x0D;&#x0A;"
+						AdditionalDependencies="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build\CMakeFiles\INSTALL_force.rule"
+						Outputs="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build\CMakeFiles\INSTALL_force"
+					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="RelWithDebInfo|Win32">
+					Name="RelWithDebInfo|Win32"
+					>
 					<Tool
-					Name="VCCustomBuildTool"
-					Description=" "
-					CommandLine="cd .&#x0D;&#x0A;if errorlevel 1 goto :VCReportError"
-					AdditionalDependencies="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build\CMakeFiles\INSTALL_force.rule"
-					Outputs="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build\CMakeFiles\INSTALL_force"/>
+						Name="VCCustomBuildTool"
+						Description=" "
+						CommandLine="cd .&#x0D;&#x0A;if errorlevel 1 goto :VCReportError&#x0D;&#x0A;"
+						AdditionalDependencies="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build\CMakeFiles\INSTALL_force.rule"
+						Outputs="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build\CMakeFiles\INSTALL_force"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|x64"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description=" "
+						CommandLine="cd .&#x0D;&#x0A;if errorlevel 1 goto :VCReportError&#x0D;&#x0A;"
+						AdditionalDependencies="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build\CMakeFiles\INSTALL_force.rule"
+						Outputs="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build\CMakeFiles\INSTALL_force"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|x64"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description=" "
+						CommandLine="cd .&#x0D;&#x0A;if errorlevel 1 goto :VCReportError&#x0D;&#x0A;"
+						AdditionalDependencies="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build\CMakeFiles\INSTALL_force.rule"
+						Outputs="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build\CMakeFiles\INSTALL_force"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="MinSizeRel|x64"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description=" "
+						CommandLine="cd .&#x0D;&#x0A;if errorlevel 1 goto :VCReportError&#x0D;&#x0A;"
+						AdditionalDependencies="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build\CMakeFiles\INSTALL_force.rule"
+						Outputs="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build\CMakeFiles\INSTALL_force"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="RelWithDebInfo|x64"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description=" "
+						CommandLine="cd .&#x0D;&#x0A;if errorlevel 1 goto :VCReportError&#x0D;&#x0A;"
+						AdditionalDependencies="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build\CMakeFiles\INSTALL_force.rule"
+						Outputs="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build\CMakeFiles\INSTALL_force"
+					/>
 				</FileConfiguration>
 			</File>
 		</Filter>

@@ -12,14 +12,17 @@
 		<Platform
 			Name="Win32"
 		/>
+		<Platform
+			Name="x64"
+		/>
 	</Platforms>
 	<ToolFiles>
 	</ToolFiles>
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="Debug"
-			IntermediateDirectory="zlib.dir\Debug"
+			OutputDirectory="$(PlatformName)/$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectName).dir/$(PlatformName)/$(ConfigurationName)/"
 			ConfigurationType="2"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -39,7 +42,7 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
-				AdditionalIncludeDirectories="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib;E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build;"
+				AdditionalIncludeDirectories="..\..\zlib;..\vc_build;"
 				MkTypLibCompatible="false"
 				TargetEnvironment="1"
 				GenerateStublessProxies="true"
@@ -71,7 +74,7 @@
 			<Tool
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG;NO_FSEEKO;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;CMAKE_INTDIR=\&quot;Debug\&quot;;ZLIB_DLL"
-				AdditionalIncludeDirectories="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib;E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build;"
+				AdditionalIncludeDirectories="..\..\zlib;..\vc_build;"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -79,15 +82,14 @@
 			<Tool
 				Name="VCLinkerTool"
 				LinkLibraryDependencies="false"
-				AdditionalOptions=" /machine:X86 /debug"
 				AdditionalDependencies="$(NOINHERIT) kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib "
-				OutputFile=".\dll\$(ConfigurationName)\zlib.dll"
+				OutputFile="./dll/$(OutDir)/$(ProjectName)d.dll"
 				Version="1.2"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories=""
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build\Debug\zlibd.pdb"
-				ImportLibrary="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build\Debug\zlibd.lib"
+				ProgramDatabaseFile="./dll/$(OutDir)/$(ProjectName)d.pdb"
+				ImportLibrary="./dll/$(OutDir)/$(ProjectName)d.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -109,12 +111,13 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="xcopy .\dll\$(PlatformName)\$(ConfigurationName)\$(ProjectName)d.dll .\..\..\dll\$(PlatformName)\$(ConfigurationName)\ /S /R /Y&#x0D;&#x0A;xcopy .\dll\$(PlatformName)\$(ConfigurationName)\$(ProjectName)d.lib .\..\..\dll\$(PlatformName)\$(ConfigurationName)\ /S /R /Y"
 			/>
 		</Configuration>
 		<Configuration
-			Name="Release|Win32"
-			OutputDirectory="Release"
-			IntermediateDirectory="zlib.dir\Release"
+			Name="Debug|x64"
+			OutputDirectory="$(PlatformName)/$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectName).dir/$(PlatformName)/$(ConfigurationName)/"
 			ConfigurationType="2"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -134,7 +137,103 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
-				AdditionalIncludeDirectories="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib;E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build;"
+				AdditionalIncludeDirectories="..\..\zlib;..\vc_build;"
+				MkTypLibCompatible="false"
+				TargetEnvironment="3"
+				GenerateStublessProxies="true"
+				TypeLibraryName="$(InputName).tlb"
+				OutputDirectory="$(IntDir)"
+				HeaderFileName="$(InputName).h"
+				DLLDataFileName=""
+				InterfaceIdentifierFileName="$(InputName)_i.c"
+				ProxyFileName="$(InputName)_p.c"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				InlineFunctionExpansion="0"
+				AdditionalIncludeDirectories="..\..\..\dependencies\zlib;..\..\..\dependencies\zlib\vc_build"
+				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG;NO_FSEEKO;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;CMAKE_INTDIR=\&quot;Debug\&quot;;ZLIB_DLL"
+				ExceptionHandling="0"
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="3"
+				AssemblerListingLocation="Debug/"
+				ObjectFile="$(IntDir)\"
+				WarningLevel="3"
+				DebugInformationFormat="3"
+				CompileAs="1"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG;NO_FSEEKO;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;CMAKE_INTDIR=\&quot;Debug\&quot;;ZLIB_DLL"
+				AdditionalIncludeDirectories="../"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				LinkLibraryDependencies="false"
+				AdditionalDependencies="$(NOINHERIT) kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib "
+				OutputFile="./dll/$(OutDir)/$(ProjectName)d.dll"
+				Version="1.2"
+				LinkIncremental="2"
+				AdditionalLibraryDirectories=""
+				GenerateDebugInformation="true"
+				ProgramDatabaseFile="..\vc_build\Debug\zlibd.pdb"
+				ImportLibrary="./dll/$(OutDir)/$(ProjectName)d.lib"
+				TargetMachine="17"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+				CommandLine="xcopy .\dll\$(PlatformName)\$(ConfigurationName)\$(ProjectName)d.dll .\..\..\dll\$(PlatformName)\$(ConfigurationName)\ /S /R /Y&#x0D;&#x0A;xcopy .\dll\$(PlatformName)\$(ConfigurationName)\$(ProjectName)d.lib .\..\..\dll\$(PlatformName)\$(ConfigurationName)\ /S /R /Y"
+			/>
+		</Configuration>
+		<Configuration
+			Name="Release|Win32"
+			OutputDirectory="$(PlatformName)/$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectName).dir/$(PlatformName)/$(ConfigurationName)/"
+			ConfigurationType="2"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			CharacterSet="2"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				AdditionalIncludeDirectories="..\..\zlib;..\vc_build;"
 				MkTypLibCompatible="false"
 				TargetEnvironment="1"
 				GenerateStublessProxies="true"
@@ -172,14 +271,13 @@
 			<Tool
 				Name="VCLinkerTool"
 				LinkLibraryDependencies="false"
-				AdditionalOptions=" /machine:X86"
 				AdditionalDependencies="$(NOINHERIT) kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib "
-				OutputFile=".\dll\$(ConfigurationName)\zlib.dll"
+				OutputFile="./dll/$(OutDir)/$(ProjectName).dll"
 				Version="1.2"
-				LinkIncremental="1"
+				LinkIncremental="2"
 				AdditionalLibraryDirectories=""
-				ProgramDatabaseFile=".\dll\Release\zlib.pdb"
-				ImportLibrary=".\dll\Release\zlib.lib"
+				ProgramDatabaseFile="./dll/$(OutDir)/$(ProjectName).pdb"
+				ImportLibrary="./dll/$(OutDir)/$(ProjectName).lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -201,6 +299,100 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="xcopy .\dll\$(PlatformName)\$(ConfigurationName)\$(ProjectName).dll .\..\..\dll\$(PlatformName)\$(ConfigurationName)\ /S /R /Y&#x0D;&#x0A;xcopy .\dll\$(PlatformName)\$(ConfigurationName)\$(ProjectName).lib .\..\..\dll\$(PlatformName)\$(ConfigurationName)\ /S /R /Y"
+			/>
+		</Configuration>
+		<Configuration
+			Name="Release|x64"
+			OutputDirectory="$(PlatformName)/$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectName).dir/$(PlatformName)/$(ConfigurationName)/"
+			ConfigurationType="2"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			CharacterSet="2"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				AdditionalIncludeDirectories="..\..\zlib;..\vc_build;"
+				MkTypLibCompatible="false"
+				TargetEnvironment="3"
+				GenerateStublessProxies="true"
+				TypeLibraryName="$(InputName).tlb"
+				OutputDirectory="$(IntDir)"
+				HeaderFileName="$(InputName).h"
+				DLLDataFileName=""
+				InterfaceIdentifierFileName="$(InputName)_i.c"
+				ProxyFileName="$(InputName)_p.c"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="2"
+				InlineFunctionExpansion="2"
+				AdditionalIncludeDirectories="..\..\..\dependencies\zlib;..\..\..\dependencies\zlib\vc_build"
+				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;NO_FSEEKO;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;CMAKE_INTDIR=\&quot;Release\&quot;;ZLIB_DLL"
+				ExceptionHandling="0"
+				RuntimeLibrary="2"
+				AssemblerListingLocation="Release/"
+				ObjectFile="$(IntDir)\"
+				WarningLevel="3"
+				CompileAs="1"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;NO_FSEEKO;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;CMAKE_INTDIR=\&quot;Release\&quot;;ZLIB_DLL"
+				AdditionalIncludeDirectories="../"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				LinkLibraryDependencies="false"
+				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib $(NOINHERIT)"
+				OutputFile="./dll/$(OutDir)/$(ProjectName).dll"
+				Version="1.2"
+				LinkIncremental="1"
+				AdditionalLibraryDirectories=""
+				ProgramDatabaseFile=".\dll\Release\zlib.pdb"
+				ImportLibrary="./dll/$(OutDir)/$(ProjectName).lib"
+				TargetMachine="17"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+				CommandLine="xcopy .\dll\$(PlatformName)\$(ConfigurationName)\$(ProjectName).dll .\..\..\dll\$(PlatformName)\$(ConfigurationName)\ /S /R /Y&#x0D;&#x0A;xcopy .\dll\$(PlatformName)\$(ConfigurationName)\$(ProjectName).lib .\..\..\dll\$(PlatformName)\$(ConfigurationName)\ /S /R /Y"
 			/>
 		</Configuration>
 		<Configuration
@@ -226,7 +418,7 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
-				AdditionalIncludeDirectories="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib;E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build;"
+				AdditionalIncludeDirectories="..\..\zlib;..\vc_build;"
 				MkTypLibCompatible="false"
 				TargetEnvironment="1"
 				GenerateStublessProxies="true"
@@ -256,7 +448,7 @@
 			<Tool
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;NO_FSEEKO;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;CMAKE_INTDIR=\&quot;MinSizeRel\&quot;;ZLIB_DLL"
-				AdditionalIncludeDirectories="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib;E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build;"
+				AdditionalIncludeDirectories="..\..\zlib;..\vc_build;"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -270,8 +462,101 @@
 				Version="1.2"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories=""
-				ProgramDatabaseFile="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build\MinSizeRel\zlib.pdb"
-				ImportLibrary="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build\MinSizeRel\zlib.lib"
+				ProgramDatabaseFile="..\vc_build\MinSizeRel\zlib.pdb"
+				ImportLibrary="..\vc_build\MinSizeRel\zlib.lib"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
+		<Configuration
+			Name="MinSizeRel|x64"
+			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
+			ConfigurationType="2"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			CharacterSet="2"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				AdditionalIncludeDirectories="..\..\zlib;..\vc_build;"
+				MkTypLibCompatible="false"
+				TargetEnvironment="3"
+				GenerateStublessProxies="true"
+				TypeLibraryName="$(InputName).tlb"
+				OutputDirectory="$(IntDir)"
+				HeaderFileName="$(InputName).h"
+				DLLDataFileName=""
+				InterfaceIdentifierFileName="$(InputName)_i.c"
+				ProxyFileName="$(InputName)_p.c"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="1"
+				InlineFunctionExpansion="1"
+				AdditionalIncludeDirectories="..\..\..\dependencies\zlib;..\..\..\dependencies\zlib\vc_build"
+				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;NO_FSEEKO;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;CMAKE_INTDIR=\&quot;MinSizeRel\&quot;;ZLIB_DLL"
+				ExceptionHandling="0"
+				RuntimeLibrary="2"
+				AssemblerListingLocation="MinSizeRel/"
+				ObjectFile="$(IntDir)\"
+				WarningLevel="3"
+				CompileAs="1"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;NO_FSEEKO;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;CMAKE_INTDIR=\&quot;MinSizeRel\&quot;;ZLIB_DLL"
+				AdditionalIncludeDirectories="..\..\zlib;..\vc_build;"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				LinkLibraryDependencies="false"
+				AdditionalOptions=" /machine:X86"
+				AdditionalDependencies="$(NOINHERIT) kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib "
+				OutputFile=".\dll\$(ConfigurationName)\zlib.dll"
+				Version="1.2"
+				LinkIncremental="1"
+				AdditionalLibraryDirectories=""
+				ProgramDatabaseFile="..\vc_build\MinSizeRel\zlib.pdb"
+				ImportLibrary="..\vc_build\MinSizeRel\zlib.lib"
+				TargetMachine="17"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -318,7 +603,7 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
-				AdditionalIncludeDirectories="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib;E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build;"
+				AdditionalIncludeDirectories="..\..\zlib;..\vc_build;"
 				MkTypLibCompatible="false"
 				TargetEnvironment="1"
 				GenerateStublessProxies="true"
@@ -349,7 +634,7 @@
 			<Tool
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;NO_FSEEKO;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;CMAKE_INTDIR=\&quot;RelWithDebInfo\&quot;;ZLIB_DLL"
-				AdditionalIncludeDirectories="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib;E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build;"
+				AdditionalIncludeDirectories="..\..\zlib;..\vc_build;"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -364,8 +649,103 @@
 				LinkIncremental="2"
 				AdditionalLibraryDirectories=""
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build\RelWithDebInfo\zlib.pdb"
-				ImportLibrary="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build\RelWithDebInfo\zlib.lib"
+				ProgramDatabaseFile="..\vc_build\RelWithDebInfo\zlib.pdb"
+				ImportLibrary="..\vc_build\RelWithDebInfo\zlib.lib"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
+		<Configuration
+			Name="RelWithDebInfo|x64"
+			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
+			ConfigurationType="2"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			CharacterSet="2"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				AdditionalIncludeDirectories="..\..\zlib;..\vc_build;"
+				MkTypLibCompatible="false"
+				TargetEnvironment="3"
+				GenerateStublessProxies="true"
+				TypeLibraryName="$(InputName).tlb"
+				OutputDirectory="$(IntDir)"
+				HeaderFileName="$(InputName).h"
+				DLLDataFileName=""
+				InterfaceIdentifierFileName="$(InputName)_i.c"
+				ProxyFileName="$(InputName)_p.c"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="2"
+				InlineFunctionExpansion="1"
+				AdditionalIncludeDirectories="..\..\..\dependencies\zlib;..\..\..\dependencies\zlib\vc_build"
+				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;NO_FSEEKO;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;CMAKE_INTDIR=\&quot;RelWithDebInfo\&quot;;ZLIB_DLL"
+				ExceptionHandling="0"
+				RuntimeLibrary="2"
+				AssemblerListingLocation="RelWithDebInfo/"
+				ObjectFile="$(IntDir)\"
+				WarningLevel="3"
+				DebugInformationFormat="3"
+				CompileAs="1"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;NO_FSEEKO;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;CMAKE_INTDIR=\&quot;RelWithDebInfo\&quot;;ZLIB_DLL"
+				AdditionalIncludeDirectories="..\..\zlib;..\vc_build;"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				LinkLibraryDependencies="false"
+				AdditionalOptions=" /machine:X86 /debug"
+				AdditionalDependencies="$(NOINHERIT) kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib "
+				OutputFile=".\dll\$(ConfigurationName)\zlib.dll"
+				Version="1.2"
+				LinkIncremental="2"
+				AdditionalLibraryDirectories=""
+				GenerateDebugInformation="true"
+				ProgramDatabaseFile="..\vc_build\RelWithDebInfo\zlib.pdb"
+				ImportLibrary="..\vc_build\RelWithDebInfo\zlib.lib"
+				TargetMachine="17"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -397,67 +777,67 @@
 			Name="Source Files"
 			>
 			<File
-				RelativePath="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\adler32.c"
+				RelativePath="..\adler32.c"
 				>
 			</File>
 			<File
-				RelativePath="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\compress.c"
+				RelativePath="..\compress.c"
 				>
 			</File>
 			<File
-				RelativePath="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\crc32.c"
+				RelativePath="..\crc32.c"
 				>
 			</File>
 			<File
-				RelativePath="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\deflate.c"
+				RelativePath="..\deflate.c"
 				>
 			</File>
 			<File
-				RelativePath="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\gzclose.c"
+				RelativePath="..\gzclose.c"
 				>
 			</File>
 			<File
-				RelativePath="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\gzlib.c"
+				RelativePath="..\gzlib.c"
 				>
 			</File>
 			<File
-				RelativePath="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\gzread.c"
+				RelativePath="..\gzread.c"
 				>
 			</File>
 			<File
-				RelativePath="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\gzwrite.c"
+				RelativePath="..\gzwrite.c"
 				>
 			</File>
 			<File
-				RelativePath="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\infback.c"
+				RelativePath="..\infback.c"
 				>
 			</File>
 			<File
-				RelativePath="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\inffast.c"
+				RelativePath="..\inffast.c"
 				>
 			</File>
 			<File
-				RelativePath="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\inflate.c"
+				RelativePath="..\inflate.c"
 				>
 			</File>
 			<File
-				RelativePath="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\inftrees.c"
+				RelativePath="..\inftrees.c"
 				>
 			</File>
 			<File
-				RelativePath="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\trees.c"
+				RelativePath="..\trees.c"
 				>
 			</File>
 			<File
-				RelativePath="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\uncompr.c"
+				RelativePath="..\uncompr.c"
 				>
 			</File>
 			<File
-				RelativePath="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\win32\zlib1.rc"
+				RelativePath="..\win32\zlib1.rc"
 				>
 			</File>
 			<File
-				RelativePath="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\zutil.c"
+				RelativePath="..\zutil.c"
 				>
 			</File>
 		</Filter>
@@ -465,98 +845,50 @@
 			Name="Header Files"
 			>
 			<File
-				RelativePath="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\crc32.h"
+				RelativePath="..\crc32.h"
 				>
 			</File>
 			<File
-				RelativePath="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\deflate.h"
+				RelativePath="..\deflate.h"
 				>
 			</File>
 			<File
-				RelativePath="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\gzguts.h"
+				RelativePath="..\gzguts.h"
 				>
 			</File>
 			<File
-				RelativePath="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\inffast.h"
+				RelativePath="..\inffast.h"
 				>
 			</File>
 			<File
-				RelativePath="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\inffixed.h"
+				RelativePath="..\inffixed.h"
 				>
 			</File>
 			<File
-				RelativePath="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\inflate.h"
+				RelativePath="..\inflate.h"
 				>
 			</File>
 			<File
-				RelativePath="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\inftrees.h"
+				RelativePath="..\inftrees.h"
 				>
 			</File>
 			<File
-				RelativePath="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\trees.h"
+				RelativePath="..\trees.h"
 				>
 			</File>
 			<File
-				RelativePath="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build\zconf.h"
+				RelativePath="..\vc_build\zconf.h"
 				>
 			</File>
 			<File
-				RelativePath="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\zlib.h"
+				RelativePath="..\zlib.h"
 				>
 			</File>
 			<File
-				RelativePath="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\zutil.h"
+				RelativePath="..\zutil.h"
 				>
 			</File>
 		</Filter>
-		<File
-			RelativePath="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\CMakeLists.txt"
-			>
-			<FileConfiguration
-				Name="Debug|Win32"
-				>
-				<Tool
-					Name="VCCustomBuildTool"
-					Description="Building Custom Rule E:/develop/workspace/GitHub/test/plainframework/pf/dependencies/zlib/CMakeLists.txt"
-					CommandLine="&quot;C:\Program Files (x86)\CMake 2.8\bin\cmake.exe&quot; -HE:/develop/workspace/GitHub/test/plainframework/pf/dependencies/zlib -BE:/develop/workspace/GitHub/test/plainframework/pf/dependencies/zlib/vc_build --check-stamp-file E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build\CMakeFiles\generate.stamp&#x0D;&#x0A;if errorlevel 1 goto :VCReportError&#x0D;&#x0A;"
-					AdditionalDependencies="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\CMakeLists.txt;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeVS9FindMake.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeDetermineSystem.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeSystem.cmake.in&quot;;E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build\CMakeFiles\2.8.12.2\CMakeSystem.cmake;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeDetermineCCompiler.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeDetermineCompiler.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeDetermineCompilerId.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CompilerId\VS-7.vcproj.in&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeClDeps.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeFindBinUtils.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCCompiler.cmake.in&quot;;E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build\CMakeFiles\2.8.12.2\CMakeCCompiler.cmake;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeSystemSpecificInformation.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeGenericSystem.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\Windows.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\WindowsPaths.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCInformation.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\Windows-MSVC-C.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\Windows-MSVC.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeDetermineRCCompiler.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeRCCompiler.cmake.in&quot;;E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build\CMakeFiles\2.8.12.2\CMakeRCCompiler.cmake;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeRCInformation.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeTestRCCompiler.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCommonLanguageInclude.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeTestCCompiler.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeTestCompilerCommon.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeDetermineCompilerABI.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeParseImplicitLinkInfo.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCCompilerABI.c&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCCompiler.cmake.in&quot;;E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build\CMakeFiles\2.8.12.2\CMakeCCompiler.cmake;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CheckTypeSize.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CheckIncludeFile.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CheckFunctionExists.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CheckIncludeFile.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CheckCSourceCompiles.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CheckIncludeFile.c.in&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CheckIncludeFile.c.in&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CheckIncludeFile.c.in&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CheckTypeSize.c.in&quot;;E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build\CMakeFiles\CheckTypeSize\OFF64_T.c;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CheckFunctionExists.c&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CheckIncludeFile.c.in&quot;;E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\zlib.pc.cmakein;E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\zconf.h.cmakein;E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\CMakeLists.txt;"
-					Outputs="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build\CMakeFiles\generate.stamp"
-				/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="Release|Win32"
-				>
-				<Tool
-					Name="VCCustomBuildTool"
-					Description="Building Custom Rule E:/develop/workspace/GitHub/test/plainframework/pf/dependencies/zlib/CMakeLists.txt"
-					CommandLine="&quot;C:\Program Files (x86)\CMake 2.8\bin\cmake.exe&quot; -HE:/develop/workspace/GitHub/test/plainframework/pf/dependencies/zlib -BE:/develop/workspace/GitHub/test/plainframework/pf/dependencies/zlib/vc_build --check-stamp-file E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build\CMakeFiles\generate.stamp&#x0D;&#x0A;if errorlevel 1 goto :VCReportError&#x0D;&#x0A;"
-					AdditionalDependencies="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\CMakeLists.txt;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeVS9FindMake.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeDetermineSystem.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeSystem.cmake.in&quot;;E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build\CMakeFiles\2.8.12.2\CMakeSystem.cmake;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeDetermineCCompiler.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeDetermineCompiler.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeDetermineCompilerId.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CompilerId\VS-7.vcproj.in&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeClDeps.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeFindBinUtils.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCCompiler.cmake.in&quot;;E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build\CMakeFiles\2.8.12.2\CMakeCCompiler.cmake;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeSystemSpecificInformation.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeGenericSystem.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\Windows.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\WindowsPaths.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCInformation.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\Windows-MSVC-C.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\Windows-MSVC.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeDetermineRCCompiler.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeRCCompiler.cmake.in&quot;;E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build\CMakeFiles\2.8.12.2\CMakeRCCompiler.cmake;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeRCInformation.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeTestRCCompiler.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCommonLanguageInclude.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeTestCCompiler.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeTestCompilerCommon.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeDetermineCompilerABI.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeParseImplicitLinkInfo.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCCompilerABI.c&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCCompiler.cmake.in&quot;;E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build\CMakeFiles\2.8.12.2\CMakeCCompiler.cmake;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CheckTypeSize.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CheckIncludeFile.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CheckFunctionExists.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CheckIncludeFile.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CheckCSourceCompiles.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CheckIncludeFile.c.in&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CheckIncludeFile.c.in&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CheckIncludeFile.c.in&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CheckTypeSize.c.in&quot;;E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build\CMakeFiles\CheckTypeSize\OFF64_T.c;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CheckFunctionExists.c&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CheckIncludeFile.c.in&quot;;E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\zlib.pc.cmakein;E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\zconf.h.cmakein;E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\CMakeLists.txt;"
-					Outputs="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build\CMakeFiles\generate.stamp"
-				/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="MinSizeRel|Win32"
-				>
-				<Tool
-					Name="VCCustomBuildTool"
-					Description="Building Custom Rule E:/develop/workspace/GitHub/test/plainframework/pf/dependencies/zlib/CMakeLists.txt"
-					CommandLine="&quot;C:\Program Files (x86)\CMake 2.8\bin\cmake.exe&quot; -HE:/develop/workspace/GitHub/test/plainframework/pf/dependencies/zlib -BE:/develop/workspace/GitHub/test/plainframework/pf/dependencies/zlib/vc_build --check-stamp-file E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build\CMakeFiles\generate.stamp&#x0D;&#x0A;if errorlevel 1 goto :VCReportError&#x0D;&#x0A;"
-					AdditionalDependencies="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\CMakeLists.txt;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeVS9FindMake.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeDetermineSystem.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeSystem.cmake.in&quot;;E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build\CMakeFiles\2.8.12.2\CMakeSystem.cmake;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeDetermineCCompiler.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeDetermineCompiler.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeDetermineCompilerId.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CompilerId\VS-7.vcproj.in&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeClDeps.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeFindBinUtils.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCCompiler.cmake.in&quot;;E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build\CMakeFiles\2.8.12.2\CMakeCCompiler.cmake;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeSystemSpecificInformation.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeGenericSystem.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\Windows.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\WindowsPaths.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCInformation.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\Windows-MSVC-C.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\Windows-MSVC.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeDetermineRCCompiler.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeRCCompiler.cmake.in&quot;;E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build\CMakeFiles\2.8.12.2\CMakeRCCompiler.cmake;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeRCInformation.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeTestRCCompiler.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCommonLanguageInclude.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeTestCCompiler.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeTestCompilerCommon.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeDetermineCompilerABI.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeParseImplicitLinkInfo.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCCompilerABI.c&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCCompiler.cmake.in&quot;;E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build\CMakeFiles\2.8.12.2\CMakeCCompiler.cmake;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CheckTypeSize.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CheckIncludeFile.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CheckFunctionExists.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CheckIncludeFile.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CheckCSourceCompiles.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CheckIncludeFile.c.in&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CheckIncludeFile.c.in&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CheckIncludeFile.c.in&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CheckTypeSize.c.in&quot;;E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build\CMakeFiles\CheckTypeSize\OFF64_T.c;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CheckFunctionExists.c&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CheckIncludeFile.c.in&quot;;E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\zlib.pc.cmakein;E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\zconf.h.cmakein;E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\CMakeLists.txt;"
-					Outputs="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build\CMakeFiles\generate.stamp"
-				/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="RelWithDebInfo|Win32"
-				>
-				<Tool
-					Name="VCCustomBuildTool"
-					Description="Building Custom Rule E:/develop/workspace/GitHub/test/plainframework/pf/dependencies/zlib/CMakeLists.txt"
-					CommandLine="&quot;C:\Program Files (x86)\CMake 2.8\bin\cmake.exe&quot; -HE:/develop/workspace/GitHub/test/plainframework/pf/dependencies/zlib -BE:/develop/workspace/GitHub/test/plainframework/pf/dependencies/zlib/vc_build --check-stamp-file E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build\CMakeFiles\generate.stamp&#x0D;&#x0A;if errorlevel 1 goto :VCReportError&#x0D;&#x0A;"
-					AdditionalDependencies="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\CMakeLists.txt;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeVS9FindMake.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeDetermineSystem.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeSystem.cmake.in&quot;;E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build\CMakeFiles\2.8.12.2\CMakeSystem.cmake;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeDetermineCCompiler.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeDetermineCompiler.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeDetermineCompilerId.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CompilerId\VS-7.vcproj.in&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeClDeps.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeFindBinUtils.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCCompiler.cmake.in&quot;;E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build\CMakeFiles\2.8.12.2\CMakeCCompiler.cmake;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeSystemSpecificInformation.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeGenericSystem.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\Windows.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\WindowsPaths.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCInformation.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\Windows-MSVC-C.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\Windows-MSVC.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeDetermineRCCompiler.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeRCCompiler.cmake.in&quot;;E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build\CMakeFiles\2.8.12.2\CMakeRCCompiler.cmake;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeRCInformation.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeTestRCCompiler.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCommonLanguageInclude.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeTestCCompiler.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeTestCompilerCommon.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeDetermineCompilerABI.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeParseImplicitLinkInfo.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCCompilerABI.c&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCCompiler.cmake.in&quot;;E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build\CMakeFiles\2.8.12.2\CMakeCCompiler.cmake;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CheckTypeSize.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CheckIncludeFile.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CheckFunctionExists.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CheckIncludeFile.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CheckCSourceCompiles.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CheckIncludeFile.c.in&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CheckIncludeFile.c.in&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CheckIncludeFile.c.in&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CheckTypeSize.c.in&quot;;E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build\CMakeFiles\CheckTypeSize\OFF64_T.c;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CheckFunctionExists.c&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CheckIncludeFile.c.in&quot;;E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\zlib.pc.cmakein;E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\zconf.h.cmakein;E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\CMakeLists.txt;"
-					Outputs="E:\develop\workspace\GitHub\test\plainframework\pf\dependencies\zlib\vc_build\CMakeFiles\generate.stamp"
-				/>
-			</FileConfiguration>
-		</File>
 	</Files>
 	<Globals>
 	</Globals>

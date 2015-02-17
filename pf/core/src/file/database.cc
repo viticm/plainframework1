@@ -457,10 +457,8 @@ bool Database::open_from_memory_binary(const char *memory,
     for (i = 0; i < field_number_; ++i) {
       if (field_type[i] != kTypeString) continue;
       std::string str;
-      int32_t _field_number;
       int32_t j;
       for (j = 0; j < record_number_; ++j) {
-        _field_number = get_field_number();
         data_buffer_[i + field_number_ + j].string_value += 
           reinterpret_cast<uint64_t>(string_buffer_); 
       }

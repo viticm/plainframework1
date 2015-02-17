@@ -182,7 +182,7 @@ bool VM::callfunction(const char *name,
       ++i;
     }
     va_end(vlist);
-    int32_t call_result = lua_pcall(lua_state_, args_number, result, NULL);
+    int32_t call_result = lua_pcall(lua_state_, args_number, result, 0);
     if (call_result != 0) {
       on_scripterror(kErrorCodeExecute, result);
       return false;
@@ -216,7 +216,8 @@ bool VM::callfunction(const char *function) {
                        static_cast<lua_Number>(atof(value)));
       }
     }
-    int32_t call_result = lua_pcall(lua_state_, (int)array.size() - 1, result, NULL);
+    int32_t call_result = 
+      lua_pcall(lua_state_, (int)array.size() - 1, result, 0);
     if (call_result != 0) {
       on_scripterror(kErrorCodeExecute, result);
       return false;
@@ -233,7 +234,7 @@ bool VM::callfunction(const char *name, int32_t result) {
       return false;
     }
     lua_getglobal(lua_state_, name);
-    int32_t call_result = lua_pcall(lua_state_, 0, result, NULL);
+    int32_t call_result = lua_pcall(lua_state_, 0, result, 0);
     if (call_result != 0) {
       on_scripterror(kErrorCodeExecute, result);
       return false;
@@ -251,7 +252,7 @@ bool VM::callfunction(const char *name, int32_t result, int64_t param0) {
     }
     lua_getglobal(lua_state_, name);
     lua_pushnumber(lua_state_, static_cast<lua_Number>(param0));
-    int32_t call_result = lua_pcall(lua_state_, 1, result, NULL);
+    int32_t call_result = lua_pcall(lua_state_, 1, result, 0);
     if (call_result != 0) {
       on_scripterror(kErrorCodeExecute, result);
       return false;
@@ -273,7 +274,7 @@ bool VM::callfunction(const char *name,
     lua_getglobal(lua_state_, name);
     lua_pushnumber(lua_state_, static_cast<lua_Number>(param0));
     lua_pushnumber(lua_state_, static_cast<lua_Number>(param1));
-    int32_t call_result = lua_pcall(lua_state_, 2, result, NULL);
+    int32_t call_result = lua_pcall(lua_state_, 2, result, 0);
     if (call_result != 0) {
       on_scripterror(kErrorCodeExecute, result);
       return false;
@@ -297,7 +298,7 @@ bool VM::callfunction(const char *name,
     lua_pushnumber(lua_state_, static_cast<lua_Number>(param0));
     lua_pushnumber(lua_state_, static_cast<lua_Number>(param1));
     lua_pushnumber(lua_state_, static_cast<lua_Number>(param2));
-    int32_t call_result = lua_pcall(lua_state_, 3, result, NULL);
+    int32_t call_result = lua_pcall(lua_state_, 3, result, 0);
     if (call_result != 0) {
       on_scripterror(kErrorCodeExecute, result);
       return false;
@@ -323,7 +324,7 @@ bool VM::callfunction(const char *name,
     lua_pushnumber(lua_state_, static_cast<lua_Number>(param1));
     lua_pushnumber(lua_state_, static_cast<lua_Number>(param2));
     lua_pushnumber(lua_state_, static_cast<lua_Number>(param3));
-    int32_t call_result = lua_pcall(lua_state_, 4, result, NULL);
+    int32_t call_result = lua_pcall(lua_state_, 4, result, 0);
     if (call_result != 0) {
       on_scripterror(kErrorCodeExecute, result);
       return false;
@@ -351,7 +352,7 @@ bool VM::callfunction(const char *name,
     lua_pushnumber(lua_state_, static_cast<lua_Number>(param2));
     lua_pushnumber(lua_state_, static_cast<lua_Number>(param3));
     lua_pushnumber(lua_state_, static_cast<lua_Number>(param4));
-    int32_t call_result = lua_pcall(lua_state_, 5, result, NULL);
+    int32_t call_result = lua_pcall(lua_state_, 5, result, 0);
     if (call_result != 0) {
       on_scripterror(kErrorCodeExecute, result);
       return false;
@@ -381,7 +382,7 @@ bool VM::callfunction(const char *name,
     lua_pushnumber(lua_state_, static_cast<lua_Number>(param3));
     lua_pushnumber(lua_state_, static_cast<lua_Number>(param4));
     lua_pushnumber(lua_state_, static_cast<lua_Number>(param5));
-    int32_t call_result = lua_pcall(lua_state_, 6, result, NULL);
+    int32_t call_result = lua_pcall(lua_state_, 6, result, 0);
     if (call_result != 0) {
       on_scripterror(kErrorCodeExecute, result);
       return false;
@@ -413,7 +414,7 @@ bool VM::callfunction(const char *name,
     lua_pushnumber(lua_state_, static_cast<lua_Number>(param4));
     lua_pushnumber(lua_state_, static_cast<lua_Number>(param5));
     lua_pushnumber(lua_state_, static_cast<lua_Number>(param6));
-    int32_t call_result = lua_pcall(lua_state_, 7, result, NULL);
+    int32_t call_result = lua_pcall(lua_state_, 7, result, 0);
     if (call_result != 0) {
       on_scripterror(kErrorCodeExecute, result);
       return false;
@@ -447,7 +448,7 @@ bool VM::callfunction(const char *name,
     lua_pushnumber(lua_state_, static_cast<lua_Number>(param5));
     lua_pushnumber(lua_state_, static_cast<lua_Number>(param6));
     lua_pushnumber(lua_state_, static_cast<lua_Number>(param7));
-    int32_t call_result = lua_pcall(lua_state_, 8, result, NULL);
+    int32_t call_result = lua_pcall(lua_state_, 8, result, 0);
     if (call_result != 0) {
       on_scripterror(kErrorCodeExecute, result);
       return false;
@@ -473,7 +474,7 @@ bool VM::callfunction(const char *name,
     lua_pushnumber(lua_state_, static_cast<lua_Number>(param1));
     lua_pushnumber(lua_state_, static_cast<lua_Number>(param2));
     lua_pushnumber(lua_state_, static_cast<lua_Number>(param3));
-    int32_t call_result = lua_pcall(lua_state_, 4, result, NULL);
+    int32_t call_result = lua_pcall(lua_state_, 4, result, 0);
     if (call_result != 0) {
       on_scripterror(kErrorCodeExecute, result);
       return false;
@@ -499,7 +500,7 @@ bool VM::callfunction(const char *name,
     lua_pushnumber(lua_state_, static_cast<lua_Number>(param1));
     lua_pushstring(lua_state_, param2);
     lua_pushstring(lua_state_, param3);
-    int32_t call_result = lua_pcall(lua_state_, 4, result, NULL);
+    int32_t call_result = lua_pcall(lua_state_, 4, result, 0);
     if (call_result != 0) {
       on_scripterror(kErrorCodeExecute, result);
       return false;

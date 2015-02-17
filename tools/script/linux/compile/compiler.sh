@@ -12,12 +12,12 @@
 
 currentdir=`pwd`
 project_rootpath=${currentdir}/../../../../
-gateway_path=${project_rootpath}applications/gateway
+billing_path=${project_rootpath}applications/billing
 center_path=${project_rootpath}applications/center
 login_path=${project_rootpath}applications/login
 server_path=${project_rootpath}applications/server
 
-compile_gateway="not compile"
+compile_billing="not compile"
 compile_center="not compile"
 compile_login="not compile"
 compile_server="not compile"
@@ -56,23 +56,23 @@ function main() {
   if [[ $? != 0 ]] ; then
     error_message "not found lua in your system, at lest version 5.1"
   fi
-  echo -n "do you want to complie gateway [y/n]:"
-  read compile_gateway
+  echo -n "do you want to complie billing [y/n]:"
+  read compile_billing
 
   #update all cmakelists
   cd $update_luadir && lua $update_luafile
   cd $currentdir
-  if [[ $compile_gateway == "y" ]] ; then
-    debug_message "begine complie gateway `date`"
-    cd $gateway_path && cmake ./ && make
+  if [[ $compile_billing == "y" ]] ; then
+    debug_message "begine complie billing `date`"
+    cd $billing_path && cmake ./ && make
     if [[ $? != 0 ]] ; then
-      compile_gateway="gateway compile have error, code:"$?
+      compile_billing="billing compile have error, code:"$?
     else
-      compile_gateway="gateway compile success"
+      compile_billing="billing compile success"
     fi
-    debug_message "end complie gateway `date`"
+    debug_message "end complie billing `date`"
   else
-    compile_gateway="gateway not compile"
+    compile_billing="billing not compile"
   fi
   cd $currentdir
 
@@ -80,7 +80,7 @@ function main() {
   echo ""
   echo "************************[result]**************************"
   debug_message "compile end"
-  debug_message $compile_gateway
+  debug_message $compile_billing
   echo "************************[result]**************************"
 }
 

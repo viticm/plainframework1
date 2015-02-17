@@ -104,7 +104,7 @@ class PF_API Ini {
 
  private:
    char file_name_[FILENAME_MAX];
-   int64_t data_length_;
+   int32_t data_length_;
    char *data_info_;
    int32_t section_number_; //索引的数量（[]的数目）
    int32_t *section_indexlist_; //数据索引列表

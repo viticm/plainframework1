@@ -31,8 +31,11 @@ class PF_API OutputStream : public Stream {
      socket::Base* socket, 
        uint32_t bufferlength = SOCKETOUTPUT_BUFFERSIZE_DEFAULT,
        uint32_t bufferlength_max = SOCKETOUTPUT_DISCONNECT_MAXSIZE)
-     : Stream(socket, bufferlength, bufferlength_max) {};
-   ~OutputStream() {};
+     : Stream(socket, bufferlength, bufferlength_max), tail_(0) {};
+   virtual ~OutputStream() {};
+
+ public:
+   void cleanup();
 
  public:
    uint32_t write(const char *buffer, uint32_t length);
@@ -51,6 +54,19 @@ class PF_API OutputStream : public Stream {
    bool write_string(const char *value);
    bool write_float(float value);
    bool write_dobule(double value);
+
+ private: //compress mode is enable, use this functions replace normals.
+   uint32_t get_floortail();
+   void compressenable(bool enable);
+   bool compress(uint32_t tail);
+   int32_t compressflush();
+   int32_t rawflush();
+   bool raw_isempty() const;
+   void rawprepare(uint32_t tail);
+
+
+ private:
+   uint32_t tail_; //compress mode is enable, tail_ will replace streamdata.tail
 
 };
 

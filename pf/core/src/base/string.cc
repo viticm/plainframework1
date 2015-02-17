@@ -82,8 +82,8 @@ void replace_all(std::string& str,
                  const std::string source, 
                  const std::string destination) {
   __ENTER_FUNCTION
-    int32_t position = str.find(source, 0);
-    while (position != static_cast<int32_t>(std::string::npos)) {
+    size_t position = str.find(source, 0);
+    while (position != std::string::npos) {
       str.replace(position, source.length(), destination);
       position = str.find(source, position);
     }

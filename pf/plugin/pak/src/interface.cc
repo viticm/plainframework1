@@ -715,7 +715,7 @@ file_t *fileopen(archive_t *archive, const char *name, uint64_t &result) {
     //the SFILE_OPEN_BY_INDEX value of dwSearchScopemust be entered. 
     //This check will allow to find code places that are incompatible
     //with the new behavior.
-    if (name != NULL) Assert((uint64_t *)name > 0x10000);
+    if (name != NULL) Assert((uint64_t *)name > (uint64_t *)0x10000);
 #endif
     //check parameters
     if (!util::isvalid_archivepointer(archive) ||

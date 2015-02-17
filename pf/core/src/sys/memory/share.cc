@@ -36,12 +36,13 @@ namespace api {
 
 #if __LINUX__
 int32_t create(uint32_t key, uint32_t size) {
+  int32_t handle = 0;
 #elif __WINDOWS__
 HANDLE create(uint32_t key, uint32_t size) {
+    HANDLE handle = NULL;
 #endif
   __ENTER_FUNCTION
 #if __LINUX__
-    int32_t handle;
     handle = shmget(key, size, IPC_CREAT | IPC_EXCL | 0666);
     SLOW_ERRORLOG(
         APPLICATION_NAME,
@@ -51,7 +52,6 @@ HANDLE create(uint32_t key, uint32_t size) {
         key, 
         errno);
 #elif __WINDOWS__
-    HANDLE handle;
     char buffer[65];
     memset(buffer, '\0', sizeof(buffer));
     snprintf(buffer, sizeof(buffer) - 1, "%d", key);
@@ -64,17 +64,18 @@ HANDLE create(uint32_t key, uint32_t size) {
 #endif
     return handle;
   __LEAVE_FUNCTION
-    return NULL;
+    return handle;
 }
 #if __LINUX__
 int32_t open(uint32_t key, uint32_t size) {
+  int32_t handle = 0;
 #elif __WINDOWS__
 HANDLE open(uint32_t key, uint32_t size) {
+  HANDLE handle = NULL;
 #endif
   __ENTER_FUNCTION
     USE_PARAM(size);
 #if __LINUX__
-    int32_t handle;
     handle = shmget(key, size, 0);
     SLOW_ERRORLOG(
         APPLICATION_NAME, 
@@ -84,7 +85,6 @@ HANDLE open(uint32_t key, uint32_t size) {
         key, 
         errno);
 #elif __WINDOWS__
-    HANDLE handle;
     char buffer[65];
     memset(buffer, '\0', sizeof(buffer));
     snprintf(buffer, sizeof(buffer) - 1, "%"PRIu64, key);
@@ -92,7 +92,7 @@ HANDLE open(uint32_t key, uint32_t size) {
 #endif
     return handle;
   __LEAVE_FUNCTION
-    return NULL;
+    return handle;
 }
 
 #if __LINUX__
@@ -201,7 +201,11 @@ void Base::destory() {
     }
     if (handle_) {
       api::close(handle_);
+#if __LINUX__
+      handle_ = 0;
+#elif __WINDOWS__
       handle_ = NULL;
+#endif
     }
     size_ = 0;
   __LEAVE_FUNCTION

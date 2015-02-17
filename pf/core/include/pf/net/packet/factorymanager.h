@@ -23,6 +23,7 @@ namespace packet {
 
 typedef bool (__stdcall *function_registerfactories)();
 typedef bool (__stdcall *function_isvalid_packetid)(uint16_t id);
+typedef bool (__stdcall *function_isencrypt_packetid)(uint16_t id);
 
 class PF_API FactoryManager : public pf_base::Singleton<FactoryManager> {
 
@@ -51,8 +52,10 @@ class PF_API FactoryManager : public pf_base::Singleton<FactoryManager> {
    void setsize(uint16_t size);
    uint16_t getsize() const;
    void addfactory(Factory *factory);
+   bool isencrypt_packetid(uint16_t id); //packetid is encrypt id
    void set_function_registerfactories(function_registerfactories function);
    void set_function_isvalid_packetid(function_isvalid_packetid function);
+   void set_function_isencrypt_packetid(function_isvalid_packetid function);
    bool isinit() const;
 
  private:
@@ -64,6 +67,7 @@ class PF_API FactoryManager : public pf_base::Singleton<FactoryManager> {
    bool isinit_; //凡是有内存的初始化都需加上这个标记，以检测再次初始化的情况
    function_registerfactories function_registerfactories_;
    function_isvalid_packetid function_isvalid_packetid_;
+   function_isencrypt_packetid function_isencrypt_packetid_;
 
 };
 

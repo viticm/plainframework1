@@ -16,6 +16,7 @@ cPhpMakefile=/home/Makefile
 iSystemType=`getconf LONG_BIT`
 Arr_OpenPortList=""
 cTestDomain=www.baidu.com
+SYSVERSION=`cat /etc/redhat-release | awk '{print $4}' | awk -F . '{print $1}'`
 
 ##### mysql config #####
 cMysqlDefaultPasswd=mysql
@@ -58,7 +59,7 @@ return 0
 # on OEL, /etc/issue states "Enterprise Linux Enterprise Linux Server"
 SUPPORTED_OS='CentOS|Red Hat Enterprise Linux Server|Enterprise Linux Enterprise Linux Server|Fedora|SUSE|Debian GNU/Linux|Ubuntu|Oracle Linux Server'
 
-if ! egrep -q "$SUPPORTED_OS" /etc/issue ; then
+if ! egrep -q "$SUPPORTED_OS" /etc/issue && ! egrep -q "$SUPPORTED_OS" /etc/redhat-release ; then
 cat <<EOF
 
 Unable to install: Your distribution is not suitable for installation using
@@ -124,6 +125,10 @@ function InstallBasePackage()
       echo -e "\e[0;35;1myour network is worked,now will download from your network.\e[0m"
     fi
   fi
+
+#fixbug
+  fixbug
+
   if [[ ${cBase} == "no" ]] ; then
 #vim
 #    yum -y install vim
@@ -258,6 +263,10 @@ function InstallMysql()
   cd ${cMysqlInstallPath} && chown -R mysql . &&  chgrp -R mysql .
   echo "Database startup is complete"
   sleep 3
+
+  #for system include
+  mkdir -p /usr/local/include/mysql/
+  ln -s ${cMysqlInstallPath}/include/* /usr/local/include/
   
   echo "Change your password after 10 seconds"
   sleep 10
@@ -306,6 +315,10 @@ function InstallNginx()
       echo now will download ${cNginxPackage} from network.
       wget -c http://tengine.taobao.org/download/${cNginxPackage}
     fi
+
+#fix bug
+    #fixbug
+
 #openssl
     if [[ -f ${cInstallFile}openssl-1.0.1c.tar.gz ]] ; then
       echo openssl-1.0.1c.tar.gz is found.
@@ -381,7 +394,7 @@ function InstallNginx()
   iptables -I OUTPUT -p tcp --sport 80 -j ACCEPT
   iptables -I INPUT -p tcp --dport 3306 -j ACCEPT
   iptables -I OUTPUT -p tcp --sport 3306 -j ACCEPT
-  /etc/rc.d/init.d/iptables save
+  service iptables save
   service iptables restart
   echo
   echo "***********************************************"
@@ -472,10 +485,38 @@ function InstallPHP()
   fi
   echo "install some plugin for php"
 #1
+#compatible
+  if [[ $SYSVERSION != "" && $SYSVERSION -ge 7 ]] ; then
+    if [[ -f libiconv-glibc-2.16.patch.tar.gz ]] ; then
+      tar -xzvf libiconv-glibc-2.16.patch.tar.gz
+    else
+#generate patch for centos 7+
+cat > libiconv-glibc-2.16.patch <<EOF
+--- srclib/stdio.in.h.orig	2011-08-07 16:42:06.000000000 +0300
++++ srclib/stdio.in.h	2013-01-10 15:53:03.000000000 +0200
+@@ -695,7 +695,9 @@
+ /* It is very rare that the developer ever has full control of stdin,
+    so any use of gets warrants an unconditional warning.  Assume it is
+    always declared, since it is required by C89.  */
+-_GL_WARN_ON_USE (gets, "gets is a security hole - use fgets instead");
++#if defined(__GLIBC__) && !defined(__UCLIBC__) && !__GLIBC_PREREQ(2, 16)
++ _GL_WARN_ON_USE (gets, "gets is a security hole - use fgets instead");
++#endif
+ #endif
+ 
+
+EOF
+    fi
+  fi
   if [[ -d libiconv-1.14/ ]] ; then
     PRINTUSEDIR libiconv-1.14/
   else
     tar -zxvf libiconv-1.14.tar.gz && cd libiconv-1.14/
+    if [[ $SYSVERSION != "" && $SYSVERSION -ge 7 ]] ; then
+      cd srclib
+      patch -p1 < ../../libiconv-glibc-2.16.patch
+      cd ..
+    fi
   fi
   ./configure --prefix=/usr/local
   make -s -j4 && make install && cd ../
@@ -559,6 +600,8 @@ function InstallPHP()
   --enable-fpm \
   --with-xmlrpc --enable-zip --enable-soap \
   --without-pear;
+  #fix bugs
+  sed -i "/EXTRA_LIBS = /s/$/ -llber/" Makefile
   make -s -j4 ZEND_EXTRA_LIBS='-liconv'
   make install
   cp php.ini-production ${cInstallPhpPath}etc/php.ini
@@ -566,7 +609,7 @@ function InstallPHP()
 #now we can config php.ini
   sed "538 c\display_errors = ${cDisplay_Errors}" -i ${cInstallPhpPath}etc/php.ini
   sed "521 c\error_reporting = ${cError_Reporting}" -i ${cInstallPhpPath}etc/php.ini
-  sed "334 c\allow_call_time_pass_reference = ${cAllow_Call_Time_Pass_Reference}" -i ${cInstallPhpPath}etc/php.ini
+#sed "334 c\allow_call_time_pass_reference = ${cAllow_Call_Time_Pass_Reference}" -i ${cInstallPhpPath}etc/php.ini
   sed "1008 c\date.timezone = ${cDate_TimeZone}" -i ${cInstallPhpPath}etc/php.ini
   bExit=`echo $?`
   if [[ ${bExit} != 0 ]] ; then
@@ -625,6 +668,7 @@ function InstallPHP()
   cp ${cInstallFile}${cPhpPackageDir}/sapi/fpm/init.d.php-fpm /etc/rc.d/init.d/php-fpm
   chmod +x /etc/rc.d/init.d/php-fpm 
   echo service php-fpm start >> /etc/rc.d/rc.local
+  service php-fpm stop #stop it first? why not use restart
   service php-fpm start
   bExit=`echo $?`
   if [[ ${bExit} != 0 ]] ; then
@@ -632,6 +676,19 @@ function InstallPHP()
     exit 1
   else
     echo -e "\e[0;34;1mgood luck! you install Extensions for PHP is secess! \e[0m"
+  fi
+}
+
+#fix bug for system
+function fixbug()
+{
+  if [[ $SYSVERSION != "" && $SYSVERSION -ge 7 ]] ; then #centos 7+
+    local pod2man_file=`which pod2man`
+    sed -i 's/$parser->parse_from_file/#$parser->parse_from_file/g' $pod2man_file
+    systemctl stop firewalld
+    systemctl mask firewalld
+    yum -y install iptables-services
+    systemctl enable iptables
   fi
 }
 
@@ -649,6 +706,7 @@ function DownloadTip()
     tar -xzvf ${cOtherOfflinePackageFile} -C ${cInstallFile}
   fi
 }
+
 #this function can use insert string above last line
 #this have two parameters,one is string another is file path.
 #string ervery line must be division by '|'
@@ -684,7 +742,7 @@ function SetIptables()
     iptables -I INPUT -i eth0 -p tcp --dport ${port} -j ACCEPT 
     iptables -I OUTPUT -o eth0 -p tcp --sport ${port} -j ACCEPT
   done
-  /etc/init.d/iptables save
+  service iptables save
   service iptables restart
 }
 #@desc: print array list

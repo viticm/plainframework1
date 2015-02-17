@@ -26,7 +26,7 @@ class PF_API Epoll : public Base {
 
  public:
    Epoll();
-   ~Epoll();
+   virtual ~Epoll();
 
  public:
    virtual bool init(uint16_t connectionmax = NET_CONNECTION_MAX,

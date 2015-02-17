@@ -28,8 +28,10 @@ INCLUDE_DIRECTORIES("../../core/include",
 
 
 SET (SOURCEFILES_UTIL_COMPRESSOR_LIST
+	../src/util/compressor/assistant.cc
 	../src/util/compressor/mini.cc
 	../src/util/compressor/minilzo.c
+	../src/util/compressor/minimanager.cc
 )
 
 SET (SOURCEFILES_UTIL_LIST
@@ -84,7 +86,9 @@ SET (SOURCEFILES_NET_PACKET_LIST
 SET (SOURCEFILES_NET_SOCKET_LIST
 	../src/net/socket/api.cc
 	../src/net/socket/base.cc
+	../src/net/socket/compressor.cc
 	../src/net/socket/encode.cc
+	../src/net/socket/encryptor.cc
 	../src/net/socket/inputstream.cc
 	../src/net/socket/outputstream.cc
 	../src/net/socket/server.cc
@@ -151,11 +155,13 @@ SET (SOURCEFILES_LIST
 )
 
 SET (HEADERFILES_UTIL_COMPRESSOR_LIST
+	../include/pf/util/compressor/assistant.h
 	../include/pf/util/compressor/config.h
 	../include/pf/util/compressor/lzoconf.h
 	../include/pf/util/compressor/lzodefs.h
 	../include/pf/util/compressor/mini.h
 	../include/pf/util/compressor/minilzo.h
+	../include/pf/util/compressor/minimanager.h
 )
 
 SET (HEADERFILES_UTIL_LIST
@@ -216,8 +222,10 @@ SET (HEADERFILES_FILE_LIST
 SET (HEADERFILES_NET_SOCKET_LIST
 	../include/pf/net/socket/api.h
 	../include/pf/net/socket/base.h
+	../include/pf/net/socket/compressor.h
 	../include/pf/net/socket/config.h
 	../include/pf/net/socket/encode.h
+	../include/pf/net/socket/encryptor.h
 	../include/pf/net/socket/extend.inl
 	../include/pf/net/socket/inputstream.h
 	../include/pf/net/socket/outputstream.h

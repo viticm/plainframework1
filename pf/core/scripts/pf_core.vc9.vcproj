@@ -12,14 +12,17 @@
 		<Platform
 			Name="Win32"
 		/>
+		<Platform
+			Name="x64"
+		/>
 	</Platforms>
 	<ToolFiles>
 	</ToolFiles>
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(ConfigurationName)"
-			IntermediateDirectory="$(ProjectName).dir/$(ConfigurationName)/"
+			OutputDirectory="$(PlatformName)/$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectName).dir/$(PlatformName)/$(ConfigurationName)/"
 			ConfigurationType="2"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			CharacterSet="2"
@@ -69,7 +72,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="..\bin\$(ConfigurationName)\$(ProjectName).dll"
+				AdditionalDependencies="ws2_32.lib psapi.lib ../../dependencies/dll/$(PlatformName)/$(ConfigurationName)/iconvd.lib ../../dependencies/dll/$(PlatformName)/$(ConfigurationName)/luad.lib"
+				OutputFile="..\dll\$(OutDir)\$(ProjectName)d.dll"
+				Version="1.0.2"
 				LinkIncremental="2"
 				IgnoreDefaultLibraryNames="libcd.lib"
 				GenerateDebugInformation="true"
@@ -77,7 +82,7 @@
 				SubSystem="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="..\lib\$(ConfigurationName)\$(ProjectName).lib"
+				ImportLibrary="..\dll\$(OutDir)\$(ProjectName)d.lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -104,9 +109,99 @@
 			/>
 		</Configuration>
 		<Configuration
+			Name="Debug|x64"
+			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectName).dir/$(PlatformName)/$(ConfigurationName)/"
+			ConfigurationType="2"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+			CharacterSet="2"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				TargetEnvironment="3"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				AdditionalIncludeDirectories="../include;../../dependencies/lua/src;../../dependencies/iconv/include"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;PF_BUILD_AS_DLL;PF_CORE;_CRT_SECURE_NO_DEPRECATE"
+				MinimalRebuild="true"
+				ExceptionHandling="2"
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="3"
+				BufferSecurityCheck="true"
+				EnableFunctionLevelLinking="false"
+				EnableEnhancedInstructionSet="0"
+				UsePrecompiledHeader="0"
+				WarningLevel="4"
+				Detect64BitPortabilityProblems="true"
+				DebugInformationFormat="3"
+				DisableSpecificWarnings="4819"
+				ShowIncludes="false"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="ws2_32.lib psapi.lib ../../dependencies/dll/$(PlatformName)/$(ConfigurationName)/iconvd.lib ../../dependencies/dll/$(PlatformName)/$(ConfigurationName)/luad.lib"
+				OutputFile="..\dll\$(OutDir)\$(ProjectName)d.dll"
+				Version="1.0.2"
+				LinkIncremental="2"
+				IgnoreDefaultLibraryNames="libcd.lib"
+				GenerateDebugInformation="true"
+				ProgramDatabaseFile="$(IntDir)/$(ProjectName).pdb"
+				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
+				ImportLibrary="..\dll\$(OutDir)\$(ProjectName)d.lib"
+				TargetMachine="17"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+				CommandLine=""
+			/>
+		</Configuration>
+		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(ConfigurationName)"
-			IntermediateDirectory="$(ProjectName).dir/$(ConfigurationName)/"
+			OutputDirectory="$(PlatformName)/$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectName).dir/$(PlatformName)/$(ConfigurationName)/"
 			ConfigurationType="2"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			CharacterSet="2"
@@ -157,10 +252,96 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ws2_32.lib psapi.lib ../../dependencies/dll/Release/iconv.lib ../../dependencies/dll/Release/lua.lib"
-				OutputFile="..\dll\$(ConfigurationName)\$(ProjectName).dll"
+				AdditionalDependencies="ws2_32.lib psapi.lib ../../dependencies/dll/$(PlatformName)/$(ConfigurationName)/iconv.lib ../../dependencies/dll/$(PlatformName)/$(ConfigurationName)/lua.lib"
+				OutputFile="..\dll\$(OutDir)\$(ProjectName)_$(PlatformName).dll"
+				Version="1.0.2"
 				GenerateDebugInformation="true"
-				ImportLibrary="..\lib\$(ConfigurationName)\$(ProjectName).lib"
+				ImportLibrary="..\dll\$(OutDir)\$(ProjectName).lib"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+				CommandLine=""
+			/>
+		</Configuration>
+		<Configuration
+			Name="Release|x64"
+			OutputDirectory="$(PlatformName)/$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectName).dir/$(PlatformName)/$(ConfigurationName)/"
+			ConfigurationType="2"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+			CharacterSet="2"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				TargetEnvironment="3"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="2"
+				InlineFunctionExpansion="2"
+				FavorSizeOrSpeed="0"
+				OmitFramePointers="false"
+				EnableFiberSafeOptimizations="false"
+				AdditionalIncludeDirectories="../include;../../dependencies/lua/src;../../dependencies/iconv/include"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_DEPRECATE;PF_BUILD_AS_DLL;PF_CORE"
+				StringPooling="false"
+				MinimalRebuild="true"
+				RuntimeLibrary="2"
+				BufferSecurityCheck="false"
+				EnableEnhancedInstructionSet="0"
+				UsePrecompiledHeader="0"
+				WarningLevel="4"
+				Detect64BitPortabilityProblems="true"
+				DebugInformationFormat="3"
+				DisableSpecificWarnings="4819"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="ws2_32.lib psapi.lib ../../dependencies/dll/$(PlatformName)/$(ConfigurationName)/iconv.lib ../../dependencies/dll/$(PlatformName)/$(ConfigurationName)/lua.lib"
+				OutputFile="..\dll\$(OutDir)\$(ProjectName).dll"
+				Version="1.0.2"
+				GenerateDebugInformation="true"
+				ImportLibrary="..\dll\$(OutDir)\$(ProjectName).lib"
+				TargetMachine="17"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -187,8 +368,8 @@
 		</Configuration>
 		<Configuration
 			Name="DebugLib|Win32"
-			OutputDirectory="$(ConfigurationName)"
-			IntermediateDirectory="$(ProjectName).dir/$(ConfigurationName)/"
+			OutputDirectory="$(PlatformName)/$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectName).dir/$(PlatformName)/$(ConfigurationName)/"
 			ConfigurationType="4"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			CharacterSet="2"
@@ -236,7 +417,78 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="..\lib\$(ConfigurationName)\$(ProjectName).lib"
+				OutputFile="..\lib\$(OutDir)\$(ProjectName)d.lib"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+				CommandLine=""
+			/>
+		</Configuration>
+		<Configuration
+			Name="DebugLib|x64"
+			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectName).dir/$(PlatformName)/$(ConfigurationName)/"
+			ConfigurationType="4"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+			CharacterSet="2"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				TargetEnvironment="3"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				AdditionalIncludeDirectories="../include;../../dependencies/lua/src;../../dependencies/iconv/include"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_DEPRECATE"
+				MinimalRebuild="true"
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="3"
+				BufferSecurityCheck="false"
+				EnableFunctionLevelLinking="false"
+				EnableEnhancedInstructionSet="2"
+				UsePrecompiledHeader="0"
+				WarningLevel="3"
+				Detect64BitPortabilityProblems="true"
+				DebugInformationFormat="3"
+				DisableSpecificWarnings="4819"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLibrarianTool"
+				OutputFile="..\lib\$(OutDir)\$(ProjectName)d.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -257,8 +509,8 @@
 		</Configuration>
 		<Configuration
 			Name="ReleaseLib|Win32"
-			OutputDirectory="$(ConfigurationName)"
-			IntermediateDirectory="$(ProjectName).dir/$(ConfigurationName)/"
+			OutputDirectory="$(PlatformName)/$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectName).dir/$(PlatformName)/$(ConfigurationName)/"
 			ConfigurationType="4"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			CharacterSet="2"
@@ -308,7 +560,80 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="..\lib\$(ConfigurationName)\$(ProjectName).lib"
+				OutputFile="..\lib\$(OutDir)\$(ProjectName).lib"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+				CommandLine=""
+			/>
+		</Configuration>
+		<Configuration
+			Name="ReleaseLib|x64"
+			OutputDirectory="$(PlatformName)/$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectName).dir/$(PlatformName)/$(ConfigurationName)/"
+			ConfigurationType="4"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+			CharacterSet="2"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				TargetEnvironment="3"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				InlineFunctionExpansion="1"
+				FavorSizeOrSpeed="1"
+				OmitFramePointers="true"
+				EnableFiberSafeOptimizations="true"
+				AdditionalIncludeDirectories="../include;../../dependencies/lua/src;../../dependencies/iconv/include"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_DEPRECATE"
+				StringPooling="false"
+				MinimalRebuild="true"
+				RuntimeLibrary="2"
+				BufferSecurityCheck="false"
+				EnableEnhancedInstructionSet="0"
+				UsePrecompiledHeader="0"
+				WarningLevel="3"
+				Detect64BitPortabilityProblems="true"
+				DebugInformationFormat="3"
+				DisableSpecificWarnings="4819"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLibrarianTool"
+				OutputFile="..\lib\$(OutDir)\$(ProjectName).lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -343,11 +668,19 @@
 					Name="compressor"
 					>
 					<File
+						RelativePath="..\src\util\compressor\assistant.cc"
+						>
+					</File>
+					<File
 						RelativePath="..\src\util\compressor\mini.cc"
 						>
 					</File>
 					<File
 						RelativePath="..\src\util\compressor\minilzo.c"
+						>
+					</File>
+					<File
+						RelativePath="..\src\util\compressor\minimanager.cc"
 						>
 					</File>
 				</Filter>
@@ -491,7 +824,15 @@
 						>
 					</File>
 					<File
+						RelativePath="..\src\net\socket\compressor.cc"
+						>
+					</File>
+					<File
 						RelativePath="..\src\net\socket\encode.cc"
+						>
+					</File>
+					<File
+						RelativePath="..\src\net\socket\encryptor.cc"
 						>
 					</File>
 					<File
@@ -665,6 +1006,10 @@
 					Name="compressor"
 					>
 					<File
+						RelativePath="..\include\pf\util\compressor\assistant.h"
+						>
+					</File>
+					<File
 						RelativePath="..\include\pf\util\compressor\config.h"
 						>
 					</File>
@@ -682,6 +1027,10 @@
 					</File>
 					<File
 						RelativePath="..\include\pf\util\compressor\minilzo.h"
+						>
+					</File>
+					<File
+						RelativePath="..\include\pf\util\compressor\minimanager.h"
 						>
 					</File>
 				</Filter>
@@ -857,11 +1206,19 @@
 						>
 					</File>
 					<File
+						RelativePath="..\include\pf\net\socket\compressor.h"
+						>
+					</File>
+					<File
 						RelativePath="..\include\pf\net\socket\config.h"
 						>
 					</File>
 					<File
 						RelativePath="..\include\pf\net\socket\encode.h"
+						>
+					</File>
+					<File
+						RelativePath="..\include\pf\net\socket\encryptor.h"
 						>
 					</File>
 					<File

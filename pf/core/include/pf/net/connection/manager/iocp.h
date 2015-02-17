@@ -26,7 +26,7 @@ class PF_API Iocp : public Base {
 
  public:
    Iocp();
-   ~Iocp();
+   virtual ~Iocp();
 
 };
 

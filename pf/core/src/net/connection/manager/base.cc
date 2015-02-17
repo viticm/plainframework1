@@ -211,7 +211,7 @@ connection::Base *Base::accept() {
     bool result = false;
     connection::Base *newconnection = NULL;
     newconnection = pool_->create();
-    if (NULL == newconnection) return false;
+    if (NULL == newconnection) return NULL;
     step = 5;
     newconnection->init();
     newconnection->cleanup();

@@ -40,7 +40,7 @@ class PF_API System {
 
  public:
    System();
-   ~System();
+   virtual ~System();
 
  public:
    bool init(const char *connectionname,

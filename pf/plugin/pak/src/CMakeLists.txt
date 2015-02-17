@@ -51,10 +51,10 @@ SET (SRC_LIST
 )
 
 SET (MISC_BZIP2_LIST
-	../misc/bzip2/blocksort.c
-	../misc/bzip2/bzlib.c
 	../misc/bzip2/bzlib.h
 	../misc/bzip2/bzlib_private.h
+	../misc/bzip2/blocksort.c
+	../misc/bzip2/bzlib.c
 	../misc/bzip2/compress.c
 	../misc/bzip2/crctable.c
 	../misc/bzip2/decompress.c
@@ -63,8 +63,8 @@ SET (MISC_BZIP2_LIST
 )
 
 SET (MISC_HUFFMAN_LIST
-	../misc/huffman/huff.cpp
 	../misc/huffman/huff.h
+	../misc/huffman/huff.cpp
 )
 
 SET (MISC_PKLIB_LIST
@@ -80,10 +80,10 @@ SET (MISC_WAVE_LIST
 )
 
 SET (MISC_LIST
-	../misc/crc32.cpp
 	../misc/crc32.h
-	../misc/md5.cpp
 	../misc/md5.h
+	../misc/crc32.cpp
+	../misc/md5.cpp
 )
 
 

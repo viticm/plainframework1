@@ -58,7 +58,7 @@ class PF_API System : public pf_base::Singleton<System> {
    //注册事件处理函数
    virtual void registerhandle(const std::string &name,
                                function_eventhandle handle,
-                               uint32_t ownerdata = NULL);
+                               uint32_t ownerdata = 0);
    //处理
    virtual void processall();
    //取消注册事件处理函数

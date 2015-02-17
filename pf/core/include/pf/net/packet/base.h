@@ -15,10 +15,10 @@
 #include "pf/net/socket/inputstream.h"
 #include "pf/net/socket/outputstream.h"
 
-#define GET_PACKETINDEX(a) ((a) >> 24)
-#define SET_PACKETINDEX(a,index) ((a) = (((a) & 0xffffff) + ((index) << 24)))
-#define GET_PACKETLENGTH(a) ((a) & 0xffffff)
-#define SET_PACKETLENGTH(a,length) ((a) = ((a) & 0xff000000) + (length))
+#define NET_PACKET_GETINDEX(a) ((a) >> 24)
+#define NET_PACKET_SETINDEX(a,index) ((a) = (((a) & 0xffffff) + ((index) << 24)))
+#define NET_PACKET_GETLENGTH(a) ((a) & 0xffffff)
+#define NET_PACKET_SETLENGTH(a,length) ((a) = ((a) & 0xff000000) + (length))
 //note cn:
 //消息头中包括：uint16_t - 2字节；uint32_t - 4字节中高位一个字节为消息序列号，
 //其余三个字节为消息长度
@@ -26,7 +26,7 @@
 //可以取得UINT数据里面的消息序列号和长度
 //通过SET_PACKETINDEX和SET_PACKETLENGTH宏，
 //可以设置UINT数据里面的消息序列号和长度
-#define PACKET_HEADERSIZE (sizeof(uint16_t) + sizeof(uint32_t))
+#define NET_PACKET_HEADERSIZE (sizeof(uint16_t) + sizeof(uint32_t))
 
 typedef enum {
   kPacketExecuteStatusError = 0, //表示出现严重错误，当前连接需要被强制断开 

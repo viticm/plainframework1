@@ -59,9 +59,9 @@ class Template {
      __ENTER_FUNCTION
        iterator_t iterator = hashmap_.find(key);
        if (iterator != hashmap_.end()) return iterator->second;
-       return NULL;
+       return 0;
      __LEAVE_FUNCTION
-       return NULL;
+       return 0;
    }
    bool isfind(T_key key) {
      __ENTER_FUNCTION

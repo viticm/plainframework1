@@ -146,7 +146,7 @@ int32_t System::call_noclosure(lua_State *L) {
           } //for
           int32_t _result = -1;
           int32_t call_result = 
-            lua_pcall(L, argc - paramindex_begin, _result, NULL);
+            lua_pcall(L, argc - paramindex_begin, _result, 0);
           int32_t argnow = lua_gettop(L);
           _result = argnow - argc;
           for (int32_t index = 1; index <= _result; ++index) {

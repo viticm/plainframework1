@@ -26,7 +26,7 @@ class PF_API Kernel {
 
  public:
    Kernel();
-   ~Kernel();
+   virtual ~Kernel();
 
  public: //kernel sys functions
    virtual bool init();

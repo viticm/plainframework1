@@ -134,6 +134,7 @@ enum {
 #include <sys/epoll.h>
 #include <sys/stat.h>
 #include <sys/resource.h>
+#include <unistd.h>
 #endif
 #include "pf/sys/assert.h"
 #include "pf/base/io.h"
@@ -320,6 +321,16 @@ enum {
 
 //unreachable code
 #pragma warning (disable: 4702)
+
+#endif
+
+#if __WINDOWS__
+
+//check the rename script
+#define NOT_RENAME_SOURCE
+#ifdef NOT_RENAME_SOURCE
+#error "not rename vc script, are you forget use the tools/script/bat/rename_forvsbuild.bat?"
+#endif //NOT_RENAME_SOURCE
 
 #endif
 

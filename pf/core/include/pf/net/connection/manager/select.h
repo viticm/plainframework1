@@ -26,7 +26,7 @@ class PF_API Select : public Base {
 
  public:
    Select();
-   ~Select();
+   virtual ~Select();
 
  public:
    virtual bool init(uint16_t connectionmax = NET_CONNECTION_MAX,

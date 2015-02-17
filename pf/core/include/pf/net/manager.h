@@ -38,7 +38,7 @@ class PF_API Manager : public connection::manager::Select {
 
  public:
    Manager();
-   ~Manager();
+   virtual ~Manager();
 
  public:
    virtual bool init(uint16_t connectionmax = NET_CONNECTION_MAX,

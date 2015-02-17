@@ -184,7 +184,7 @@ uint32_t TimeManager::tm_todword() {
 void TimeManager::dword_totm(uint32_t time, tm* _tm) {
   __ENTER_FUNCTION
     Assert(_tm);
-    memset(_tm, 0 , sizeof(_tm));
+    memset(_tm, 0 , sizeof(*_tm));
     _tm->tm_year = (time / 100000000) + 2000 - 1900;
     _tm->tm_mon = (time % 100000000) / 1000000 - 1;
     _tm->tm_mday = (time % 1000000) / 10000;
@@ -243,7 +243,7 @@ uint32_t TimeManager::get_run_time() {
 void TimeManager::time_totm(uint32_t time, tm* _tm) {
   __ENTER_FUNCTION
     Assert(_tm);
-    memset(_tm, 0, sizeof(_tm));
+    memset(_tm, 0, sizeof(*_tm));
     _tm->tm_year = (time >> 24) & 0xff;
     _tm->tm_mon  = (time >> 20) & 0xf;
     _tm->tm_mday = (time >> 15) & 0x1f;

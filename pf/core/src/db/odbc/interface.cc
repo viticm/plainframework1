@@ -854,7 +854,7 @@ bool Interface::is_connected() {
     return false;
 }
 
-int Interface::get_affect_row_count() {
+int32_t Interface::get_affect_row_count() {
   __ENTER_FUNCTION
     return affect_count_;
   __LEAVE_FUNCTION

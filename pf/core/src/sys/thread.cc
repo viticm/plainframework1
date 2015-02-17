@@ -158,7 +158,7 @@ uint64_t get_current_thread_id() {
 #endif
     return result;
   __LEAVE_FUNCTION
-    return NULL;
+    return 0;
 }
 
 } //namespace pf_sys

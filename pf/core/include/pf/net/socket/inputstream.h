@@ -48,6 +48,11 @@ class PF_API InputStream : public Stream {
    float read_float();
    double read_double();
 
+ public: //compress and encrypt mode
+   void compressenable(bool enable);
+   uint32_t write(const char *buffer, uint32_t length); //why? not receive just copy from memory
+                                                        //outputstream have same name function
+
 };
 
 }; //namespace socket

@@ -42,7 +42,7 @@ bool istable_numbervalue(lua_State *L, int32_t table_index, int32_t index) {
   __ENTER_FUNCTION
     lua_pushvalue(L, table_index);
     lua_rawgeti(L, -1, index);
-    bool result = lua_isnumber(L, -1);
+    bool result = lua_isnumber(L, -1) > 0;
     return result;
   __LEAVE_FUNCTION
     return false;
