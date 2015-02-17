@@ -124,6 +124,12 @@ Encryptor *Stream::getencryptor() {
   return &encryptor_;
 }
 
+void Stream::encrypt_setkey(const char * key) {
+  __ENTER_FUNCTION
+    encryptor_.setkey(key);
+  __LEAVE_FUNCTION
+}
+
 }; //namespace socket
 
 }; //namespace pf_net

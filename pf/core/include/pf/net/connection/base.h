@@ -101,6 +101,8 @@ class PF_API Base {
    uint32_t getstatus() const;
    void set_compressmode(uint8_t mode);
    uint8_t get_compressmode() const;
+   void encryptenable(bool enable);
+   void encrypt_setkey(const char *key);
 
  public:
    uint32_t get_receive_bytes(); //获取流中接收的字节数，获取一次则重新计数

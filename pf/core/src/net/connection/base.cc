@@ -508,6 +508,20 @@ uint8_t Base::get_compressmode() const {
   return compressmode_;
 }
 
+void Base::encryptenable(bool enable) {
+  __ENTER_FUNCTION
+    socket_inputstream_->encryptenable(enable);
+    socket_outputstream_->encryptenable(enable);
+  __LEAVE_FUNCTION
+}
+
+void Base::encrypt_setkey(const char *key) {
+  __ENTER_FUNCTION
+    socket_inputstream_->encrypt_setkey(key);
+    socket_outputstream_->encrypt_setkey(key);
+  __LEAVE_FUNCTION
+}
+
 } //namespace connection
 
 } //namespace pf_net
