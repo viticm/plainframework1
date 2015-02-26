@@ -87,6 +87,7 @@ bool Base::processinput() {
     } catch(...) {
       SaveErrorLog();
     }
+    process_compressinput(); //compress
     return result;
   __LEAVE_FUNCTION
     return false;
