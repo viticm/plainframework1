@@ -67,7 +67,6 @@ bool Base::processinput() {
     if (isdisconnect()) return true;
     try {
       int32_t fillresult = socket_inputstream_->fill();
-      
       if (fillresult <= SOCKET_ERROR) {
         char errormessage[FILENAME_MAX];
         memset(errormessage, '\0', sizeof(errormessage));
@@ -226,22 +225,25 @@ bool Base::processoutput() {
 bool Base::processcommand(bool option) {
   __ENTER_FUNCTION
     bool result = false;
-    char packetheader[NET_PACKET_HEADERSIZE] = {'\0'};
-    uint16_t packetid;
+    char packetheader[NET_PACKET_HEADERSIZE + 1] = {0};
+    uint16_t packetid = 0;
     uint32_t packetcheck, packetsize, packetindex;
-    packet::Base* packet = NULL;
+    packet::Base *packet = NULL;
     if (isdisconnect()) return true;
     try {
       if (option) { //执行选项操作
       }
       uint32_t i;
       for (i = 0; i < execute_count_pretick_; ++i) {
-        if (!socket_inputstream_->peek(&packetheader[0], NET_PACKET_HEADERSIZE)) {
+        if (!socket_inputstream_->peek(&packetheader[0], 
+                                       sizeof(packetheader) - 1)) {
           //数据不能填充消息头
           break;
         }
-        memcpy(&packetid, &packetheader[0], sizeof(uint16_t));
-        memcpy(&packetcheck, &packetheader[sizeof(uint16_t)], sizeof(uint32_t));
+        memcpy(&packetid, &packetheader[0], sizeof(packetid));
+        memcpy(&packetcheck, 
+               &packetheader[sizeof(packetid)], 
+               sizeof(packetcheck));
         packetsize = NET_PACKET_GETLENGTH(packetcheck);
         packetindex = NET_PACKET_GETINDEX(packetcheck);
         if (!g_packetfactory_manager->isvalid_packetid(packetid)) {
@@ -333,7 +335,8 @@ bool Base::sendpacket(packet::Base* packet) {
       result = socket_outputstream_->writepacket(packet);
       Assert(result);
       uint32_t after_writesize = socket_outputstream_->reallength();
-      if (packet->getsize() != after_writesize - before_writesize - 6) {
+      if (packet->getsize() != 
+          after_writesize - before_writesize - NET_PACKET_HEADERSIZE) {
         FAST_ERRORLOG(kApplicationLogFile,
                       "[net.connection] (Base::sendpacket) size error"
                       "id = %d(write: %d, should: %d)",

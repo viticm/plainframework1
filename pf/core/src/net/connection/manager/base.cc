@@ -266,6 +266,7 @@ connection::Base *Base::accept() {
     } catch(...) {
       step += 100000;
     }
+    newconnection->setdisconnect(false); //connect is success
     FAST_LOG(kNetLogFile,
              "[net.connection.manager] (Base::accept)"
              " host: %s id: %d socketid: %d",

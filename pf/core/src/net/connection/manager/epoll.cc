@@ -232,8 +232,9 @@ bool Epoll::processcommand() {
         Base::remove(connection);
       } else { //connection is ok
         try {
-          if (!connection->processcommand(false)) 
+          if (!connection->processcommand(false)) {
             Base::remove(connection);
+          }
         } catch(...) {
           Base::remove(connection);
         }

@@ -92,7 +92,11 @@ uint32_t Stream::reallength() const {
 
 void Stream::cleanup() {
   __ENTER_FUNCTION
-    init();
+    streamdata_.head = 0;
+    streamdata_.tail = 0;
+    receive_bytes_ = send_bytes_ = 0;
+    compressor_.sethead(NET_SOCKET_COMPRESSOR_HEADER_SIZE);
+    compressor_.settail(NET_SOCKET_COMPRESSOR_HEADER_SIZE);
   __LEAVE_FUNCTION
 }
 
