@@ -44,6 +44,8 @@ class PF_API Stream {
    void encryptenable(bool enable);
    void compressenable(bool enable);
    void encrypt_setkey(const char * key);
+   bool isinit() const;
+   void set_isinit(bool isinit);
 
  protected:
    Base *socket_;
@@ -53,6 +55,7 @@ class PF_API Stream {
    bool encrypt_isenable_;
    uint64_t send_bytes_;
    uint64_t receive_bytes_;
+   bool isinit_;
 
 };
 

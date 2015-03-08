@@ -1,5 +1,4 @@
 #include "pf/base/util.h"
-#include "pf/net/socket/encode.h"
 #include "pf/net/socket/inputstream.h"
 
 namespace pf_net {
@@ -12,34 +11,38 @@ uint32_t InputStream::read(char *buffer, uint32_t length) {
     if (0 == length || length > reallength()) {
       return 0;
     }
-    uint32_t bufferlength = streamdata_.bufferlength;
-    uint32_t head = streamdata_.head;
-    uint32_t tail = streamdata_.tail;
-    char *stream_buffer = streamdata_.buffer;
-    if (head < tail) {
+    if (streamdata_.head < streamdata_.tail) {
       if (encrypt_isenable()) {
-        encryptor_.decrypt(buffer, &(stream_buffer[head]), length);
+        encryptor_.decrypt(buffer, 
+                           &(streamdata_.buffer[streamdata_.head]), 
+                           length);
       } else {
-        memcpy(buffer, &(stream_buffer[head]), length);
+        memcpy(buffer, &(streamdata_.buffer[streamdata_.head]), length);
       }
     } else {
-      uint32_t rightlength = bufferlength - head;
+      uint32_t rightlength = streamdata_.bufferlength - streamdata_.head;
       if (length < rightlength) {
         if (encrypt_isenable()) {
-          encryptor_.decrypt(&buffer[0], &(stream_buffer[head]), length);
+          encryptor_.decrypt(&buffer[0], 
+                             &(streamdata_.buffer[streamdata_.head]), 
+                             length);
         } else {
-          memcpy(&buffer[0], &(stream_buffer[head]), length);
+          memcpy(&buffer[0], &(streamdata_.buffer[streamdata_.head]), length);
         }
       } else {
         if (encrypt_isenable()) {
-          encryptor_.decrypt(&buffer[0], &(stream_buffer[head]), rightlength);
+          encryptor_.decrypt(&buffer[0], 
+                             &(streamdata_.buffer[streamdata_.head]), 
+                             rightlength);
           encryptor_.decrypt(&buffer[rightlength], 
-                             &(stream_buffer[0]), 
+                             &(streamdata_.buffer[0]), 
                              length - rightlength);
         } else {
-          memcpy(&buffer[0], &(stream_buffer[head]), rightlength);
+          memcpy(&buffer[0], 
+                 &(streamdata_.buffer[streamdata_.head]), 
+                 rightlength);
           memcpy(&buffer[rightlength], 
-                 &(stream_buffer[0]), 
+                 &(streamdata_.buffer[0]), 
                  length - rightlength);
         }
       }
@@ -66,34 +69,37 @@ bool InputStream::peek(char *buffer, uint32_t length) {
     if (0 == length || length > reallength()) {
       return false;
     }
-    uint32_t bufferlength = streamdata_.bufferlength;
-    uint32_t head = streamdata_.head;
-    uint32_t tail = streamdata_.tail;
-    char *stream_buffer = streamdata_.buffer;
-    if (head < tail) {
+    if (streamdata_.head < streamdata_.tail) {
       if (encrypt_isenable()) {
-        encryptor_.decrypt(buffer, &(stream_buffer[head]), length);
+        encryptor_.decrypt(buffer, 
+                           &(streamdata_.buffer[streamdata_.head]), length);
       } else {
-        memcpy(buffer, &(stream_buffer[head]), length);
+        memcpy(buffer, &(streamdata_.buffer[streamdata_.head]), length);
       }
     } else {
-      uint32_t rightlength = bufferlength - head;
+      uint32_t rightlength = streamdata_.bufferlength - streamdata_.head;
       if (length < rightlength) {
         if (encrypt_isenable()) {
-          encryptor_.decrypt(&buffer[0], &(stream_buffer[head]), length);
+          encryptor_.decrypt(&buffer[0], 
+                             &(streamdata_.buffer[streamdata_.head]), 
+                             length);
         } else {
-          memcpy(&buffer[0], &(stream_buffer[head]), length);
+          memcpy(&buffer[0], &(streamdata_.buffer[streamdata_.head]), length);
         }
       } else {
         if (encrypt_isenable()) {
-          encryptor_.decrypt(&buffer[0], &(stream_buffer[head]), rightlength);
+          encryptor_.decrypt(&buffer[0], 
+                             &(streamdata_.buffer[streamdata_.head]), 
+                             rightlength);
           encryptor_.decrypt(&buffer[rightlength], 
-                             &(stream_buffer[0]), 
+                             &(streamdata_.buffer[0]), 
                              length - rightlength);
         } else {
-          memcpy(&buffer[0], &(stream_buffer[head]), rightlength);
+          memcpy(&buffer[0], 
+                 &(streamdata_.buffer[streamdata_.head]), 
+                 rightlength);
           memcpy(&buffer[rightlength], 
-                 &(stream_buffer[0]), 
+                 &(streamdata_.buffer[0]), 
                  length - rightlength);
         }
       }
@@ -121,43 +127,111 @@ int32_t InputStream::fill() {
     uint32_t fillcount = 0;
     int32_t receivecount = 0;
     uint32_t freecount = 0;
-    uint32_t bufferlength = streamdata_.bufferlength;
-    uint32_t bufferlength_max = streamdata_.bufferlength_max;
-    uint32_t head = streamdata_.head;
-    uint32_t tail = streamdata_.tail;
-    char *stream_buffer = streamdata_.buffer;
+    if (NULL == streamdata_.buffer) return -1;
     // head tail length=10
     // 0123456789
     // abcd......
-    if (head < tail) {
-      freecount = 0 == head ? 
-                  bufferlength - tail - 1 : 
-                  bufferlength - head;
-    } else {
-      freecount = head - tail - 1;
-    }
-    if (freecount != 0) {
-      receivecount = socket_->receive(&stream_buffer[tail], freecount);
-      if (SOCKET_ERROR_WOULD_BLOCK == receivecount) return 0;
-      if (SOCKET_ERROR == receivecount) return SOCKET_ERROR - 1;
-      if (0 == receivecount) return SOCKET_ERROR - 2;
-      streamdata_.tail += receivecount;
-      fillcount += receivecount;
-    }
-    if (static_cast<uint32_t>(receivecount) == freecount) {
-      uint32_t available = socket_->available();
-      if (available < 0) return fillcount;
-      if ((bufferlength + available + 1) > bufferlength_max) {
-        init();
-        return SOCKET_ERROR - 3;
+
+    if (streamdata_.head <= streamdata_.tail) {
+      if (0 == streamdata_.head) {
+        receivecount = 0;
+        freecount = streamdata_.bufferlength - streamdata_.tail - 1;
+        if (freecount != 0) {
+          receivecount = socket_->receive(
+              &streamdata_.buffer[streamdata_.tail], freecount);
+          if (SOCKET_ERROR_WOULD_BLOCK == receivecount) return 0;
+          if (SOCKET_ERROR == receivecount) return SOCKET_ERROR - 1;
+          if (0 == receivecount) return SOCKET_ERROR - 2;
+          streamdata_.tail += receivecount;
+          fillcount += receivecount;
+          if (static_cast<uint32_t>(receivecount) == freecount) {
+            uint32_t available = socket_->available();
+            if (available <= 0) return fillcount;
+            if ((streamdata_.bufferlength + available + 1) > 
+                streamdata_.bufferlength_max) {
+              init();
+              return SOCKET_ERROR - 3;
+            }
+            if (!resize(available + 1)) return 0;
+            receivecount = socket_->receive(
+                &streamdata_.buffer[streamdata_.tail], available);
+            if (SOCKET_ERROR_WOULD_BLOCK == receivecount) return 0;
+            if (SOCKET_ERROR == receivecount) return SOCKET_ERROR - 4;
+            if (0 == receivecount) return SOCKET_ERROR - 5;
+            streamdata_.tail += receivecount;
+            fillcount += receivecount; 
+          }
+        }
+      } else { // 0 == head
+        freecount = streamdata_.bufferlength - streamdata_.tail;
+        receivecount = socket_->receive(
+            &streamdata_.buffer[streamdata_.tail], freecount);
+        if (SOCKET_ERROR_WOULD_BLOCK == receivecount) return 0;
+        if (SOCKET_ERROR == receivecount) return SOCKET_ERROR - 6;
+        if (0 == receivecount) return SOCKET_ERROR - 7;
+        streamdata_.tail = 
+          (streamdata_.tail + receivecount) % streamdata_.bufferlength;
+        fillcount += receivecount;
+        if (static_cast<uint32_t>(receivecount) == freecount) {
+          receivecount = 0;
+          freecount = streamdata_.head - 1;
+          if (freecount != 0) {
+            receivecount = socket_->receive(
+                &streamdata_.buffer[0], freecount);
+            if (SOCKET_ERROR_WOULD_BLOCK == receivecount) return 0;
+            if (SOCKET_ERROR == receivecount) return SOCKET_ERROR - 8;
+            if (0 == receivecount) return SOCKET_ERROR - 9;
+            streamdata_.tail += receivecount;
+            fillcount += receivecount;
+          }
+          if (static_cast<uint32_t>(receivecount) == freecount) {
+            uint32_t available = socket_->available();
+            if (available <= 0) return fillcount;
+            if ((streamdata_.bufferlength + available + 1) > 
+                streamdata_.bufferlength_max) {
+              init();
+              return SOCKET_ERROR - 10;
+            }
+            if (!resize(available + 1)) return 0;
+            receivecount = socket_->receive(
+                &streamdata_.buffer[streamdata_.tail], available);
+            if (SOCKET_ERROR_WOULD_BLOCK == receivecount) return 0;
+            if (SOCKET_ERROR == receivecount) return SOCKET_ERROR - 11;
+            if (0 == receivecount) return SOCKET_ERROR - 12;
+            streamdata_.tail += receivecount;
+            fillcount += receivecount; 
+          }
+        }
       }
-      if (!resize(available + 1)) return 0;
-      receivecount = socket_->receive(&stream_buffer[tail], available);
-      if (SOCKET_ERROR_WOULD_BLOCK == receivecount) return 0;
-      if (SOCKET_ERROR == receivecount) return SOCKET_ERROR - 4;
-      if (0 == receivecount) return SOCKET_ERROR - 5;
-      streamdata_.tail += receivecount;
-      fillcount += receivecount; 
+    } else { //streamdata_.head <= streamdata_.tail
+      receivecount = 0;
+      freecount = streamdata_.head - streamdata_.tail - 1;
+      if (freecount != 0) {
+        receivecount = socket_->receive(
+            &streamdata_.buffer[streamdata_.tail], freecount);
+        if (SOCKET_ERROR_WOULD_BLOCK == receivecount) return 0;
+        if (SOCKET_ERROR == receivecount) return SOCKET_ERROR - 13;
+        if (0 == receivecount) return SOCKET_ERROR - 14;
+        streamdata_.tail += receivecount;
+        fillcount += receivecount;
+      }
+      if (static_cast<uint32_t>(receivecount) == freecount) {
+        uint32_t available = socket_->available();
+        if (available <= 0) return fillcount;
+        if ((streamdata_.bufferlength + available + 1) > 
+            streamdata_.bufferlength_max) {
+          init();
+          return SOCKET_ERROR - 15;
+        }
+        if (!resize(available + 1)) return 0;
+        receivecount = socket_->receive(
+            &streamdata_.buffer[streamdata_.tail], available);
+        if (SOCKET_ERROR_WOULD_BLOCK == receivecount) return 0;
+        if (SOCKET_ERROR == receivecount) return SOCKET_ERROR - 16;
+        if (0 == receivecount) return SOCKET_ERROR - 17;
+        streamdata_.tail += receivecount;
+        fillcount += receivecount; 
+      }
     }
     return fillcount;
   __LEAVE_FUNCTION

@@ -1,4 +1,3 @@
-#include "pf/net/socket/encode.h"
 #include "pf/net/socket/outputstream.h"
 
 namespace pf_net {

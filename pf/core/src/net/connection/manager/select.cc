@@ -34,11 +34,13 @@ bool Select::init(uint16_t connectionmax,
                   const char *listenip) {
   __ENTER_FUNCTION
     if (!Base::init(connectionmax, listenport, listenip)) return false;
-    FD_SET(socketid_, &readfds_[kSelectFull]);
-    FD_SET(socketid_, &exceptfds_[kSelectFull]);
-    minfd_ = maxfd_ = socketid_;
-    timeout_[kSelectFull].tv_sec = 0;
-    timeout_[kSelectFull].tv_usec = 0;
+    if (is_servermode_) {
+      FD_SET(socketid_, &readfds_[kSelectFull]);
+      FD_SET(socketid_, &exceptfds_[kSelectFull]);
+      minfd_ = maxfd_ = socketid_;
+      timeout_[kSelectFull].tv_sec = 0;
+      timeout_[kSelectFull].tv_usec = 0;
+    }
     return true;    
   __LEAVE_FUNCTION
     return false;
@@ -46,6 +48,8 @@ bool Select::init(uint16_t connectionmax,
 
 bool Select::select() {
   __ENTER_FUNCTION
+	if (SOCKET_INVALID == minfd_ && SOCKET_INVALID == maxfd_)
+      return true; //no connection
     timeout_[kSelectUse].tv_sec = timeout_[kSelectFull].tv_sec;
     timeout_[kSelectUse].tv_usec = timeout_[kSelectFull].tv_usec;
     readfds_[kSelectUse] = readfds_[kSelectFull];
@@ -97,7 +101,7 @@ bool Select::processinput() {
         } else {
           try {
             if (!connection->processinput()) { 
-            Base::remove(connection);
+              Base::remove(connection);
             } else {
               receive_bytes_ += connection->get_receive_bytes();
             }
@@ -115,7 +119,7 @@ bool Select::processinput() {
 bool Select::processoutput() {
   __ENTER_FUNCTION
     if (SOCKET_INVALID == maxfd_&& SOCKET_INVALID == minfd_)
-      return false;
+      return true;
     uint16_t i;
     uint16_t connectioncount = Base::getcount();
     for (i = 0; i < connectioncount; ++i) {
@@ -174,7 +178,7 @@ bool Select::processexception() {
 bool Select::processcommand() {
   __ENTER_FUNCTION
     if (SOCKET_INVALID == maxfd_&& SOCKET_INVALID == minfd_)
-      return false;
+      return true;
     uint16_t i;
     uint16_t connectioncount = Base::getcount();
     for (i = 0; i < connectioncount; ++i) {
@@ -223,7 +227,7 @@ bool Select::removesocket(int32_t socketid) {
   __ENTER_FUNCTION
     connection::Base *connection = NULL;
     uint16_t i;
-    Assert(minfd_ != SOCKET_INVALID && maxfd_ != SOCKET_INVALID);   
+    Assert(minfd_ != SOCKET_INVALID || maxfd_ != SOCKET_INVALID);   
     if (socketid == minfd_) { //the first connection
       int32_t socketid_max = maxfd_;
       uint16_t connectioncount = Base::getcount();

@@ -56,6 +56,11 @@ bool Base::connect() {
     memset(&connect_sockaddr_in, 0, sizeof(connect_sockaddr_in));
     connect_sockaddr_in.sin_family = AF_INET;
     connect_sockaddr_in.sin_addr.s_addr = inet_addr(host_);
+#if __WINDOWS__
+	if (0 == strcmp(host_, "0.0.0.0")) {
+      connect_sockaddr_in.sin_addr.s_addr = inet_addr("127.0.0.1");
+	}
+#endif
     connect_sockaddr_in.sin_port = htons(port_);
     result = api::connectex(
         socketid_, 

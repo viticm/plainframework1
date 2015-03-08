@@ -17,8 +17,7 @@ Database::Database(uint32_t id) {
 
 Database::~Database() {
   __ENTER_FUNCTION
-    if (string_buffer_) SAFE_DELETE_ARRAY(string_buffer_);
-    string_buffer_ = NULL;
+    SAFE_DELETE_ARRAY(string_buffer_);
   __LEAVE_FUNCTION
 }
 

@@ -56,23 +56,20 @@ class OutputStream;
 class Encryptor;
 class Compressor;
 
-typedef struct {
+typedef struct streamdata_struct {
   char *buffer;
   uint32_t bufferlength;
   uint32_t bufferlength_max;
   uint32_t head;
   uint32_t tail;
+  streamdata_struct() {
+    buffer = NULL;
+    bufferlength = 0;
+    bufferlength_max = 0;
+    head = 0;
+    tail = 0;
+  }
 } streamdata_t;
-
-typedef struct {
-  unsigned char *in;
-  uint32_t insize;
-  unsigned char *out;
-  uint32_t outsize;
-  unsigned char const *key;
-  uint32_t keysize;
-  uint32_t param[2];
-} encodeparam_t;
 
 }; //namespace socket
 

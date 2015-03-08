@@ -9,18 +9,13 @@ Stream::Stream(Base *socket,
                uint32_t bufferlength_max) {
   __ENTER_FUNCTION
     socket_ = socket;
-    memset(&streamdata_, 0, sizeof(streamdata_));
     streamdata_.bufferlength = bufferlength;
     streamdata_.bufferlength_max = bufferlength_max;
-    streamdata_.head = 0;
-    streamdata_.tail = 0;
-    streamdata_.buffer = new char[sizeof(char) * bufferlength];
-    memset(streamdata_.buffer, 0, streamdata_.bufferlength);
-    send_bytes_ = 0;
-    receive_bytes_ = 0;
     compressor_.sethead(NET_SOCKET_COMPRESSOR_HEADER_SIZE);
     compressor_.settail(NET_SOCKET_COMPRESSOR_HEADER_SIZE);
     compressor_.setencryptor(&encryptor_);
+    encrypt_isenable_ = false;
+    isinit_ = false;
   __LEAVE_FUNCTION
 }
 
@@ -32,14 +27,17 @@ Stream::~Stream() {
 
 void Stream::init() {
   __ENTER_FUNCTION
+    if (isinit()) return;
+    streamdata_.buffer = new char[sizeof(char) * streamdata_.bufferlength];
+    Assert(streamdata_.buffer);
+    memset(streamdata_.buffer, 0, sizeof(char) * streamdata_.bufferlength);
     streamdata_.head = 0;
     streamdata_.tail = 0;
-    SAFE_DELETE_ARRAY(streamdata_.buffer);
-    streamdata_.buffer = new char[sizeof(char) * streamdata_.bufferlength];
-    memset(streamdata_.buffer, 0, sizeof(char) * streamdata_.bufferlength);
+    encrypt_isenable_ = false;
     receive_bytes_ = send_bytes_ = 0;
     compressor_.sethead(NET_SOCKET_COMPRESSOR_HEADER_SIZE);
     compressor_.settail(NET_SOCKET_COMPRESSOR_HEADER_SIZE);
+    set_isinit(true);
   __LEAVE_FUNCTION
 }
 
@@ -133,6 +131,15 @@ void Stream::encrypt_setkey(const char * key) {
     encryptor_.setkey(key);
   __LEAVE_FUNCTION
 }
+
+bool Stream::isinit() const {
+  return isinit_;
+}
+   
+void Stream::set_isinit(bool isinit) {
+  isinit_ = isinit;
+}
+
 
 }; //namespace socket
 

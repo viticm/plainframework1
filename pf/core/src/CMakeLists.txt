@@ -87,7 +87,6 @@ SET (SOURCEFILES_NET_SOCKET_LIST
 	../src/net/socket/api.cc
 	../src/net/socket/base.cc
 	../src/net/socket/compressor.cc
-	../src/net/socket/encode.cc
 	../src/net/socket/encryptor.cc
 	../src/net/socket/inputstream.cc
 	../src/net/socket/outputstream.cc
@@ -224,7 +223,6 @@ SET (HEADERFILES_NET_SOCKET_LIST
 	../include/pf/net/socket/base.h
 	../include/pf/net/socket/compressor.h
 	../include/pf/net/socket/config.h
-	../include/pf/net/socket/encode.h
 	../include/pf/net/socket/encryptor.h
 	../include/pf/net/socket/extend.inl
 	../include/pf/net/socket/inputstream.h

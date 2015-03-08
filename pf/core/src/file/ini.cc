@@ -27,11 +27,11 @@ Ini::Ini(const char *file_name) {
 Ini::~Ini() {
   __ENTER_FUNCTION
     if (data_length_ > 0) {
-      SAFE_DELETE(data_info_);
+      SAFE_FREE(data_info_);
       data_length_ = 0;
     }
     if (section_number_ > 0) {
-      SAFE_DELETE(section_indexlist_);
+      SAFE_DELETE_ARRAY(section_indexlist_);
       section_number_ = 0;
     }
   __LEAVE_FUNCTION
@@ -54,8 +54,8 @@ bool Ini::open(const char *file_name) {
     }
     if (data_length_ > 0) {
       data_info_ = 
-        static_cast<char*>(malloc(static_cast<size_t>(data_length_)));
-      memset(data_info_, '\0', sizeof(*data_info_));
+        static_cast<char *>(malloc(static_cast<size_t>(data_length_)));
+      memset(data_info_, '\0', sizeof(data_length_));
       FILE* fp;
       fp = fopen(file_name_, "rb");
       AssertEx(fp != NULL, file_name_);
@@ -66,8 +66,8 @@ bool Ini::open(const char *file_name) {
     } else {
       data_length_ = 1;
       data_info_ = 
-        static_cast<char*>(malloc(static_cast<size_t>(data_length_)));
-      memset(data_info_, '\0', sizeof(*data_info_));
+        static_cast<char *>(malloc(static_cast<size_t>(data_length_)));
+      memset(data_info_, '\0', sizeof(data_length_));
       init_section();
     }
     return result;
@@ -78,11 +78,11 @@ bool Ini::open(const char *file_name) {
 void Ini::close() {
   __ENTER_FUNCTION
     if (data_length_ > 0) {
-      SAFE_DELETE(data_info_);
+      SAFE_FREE(data_info_);
       data_length_ = 0;
     }
     if (section_number_ > 0) {
-      SAFE_DELETE(section_indexlist_);
+      SAFE_FREE(section_indexlist_);
       section_number_ = 0;
     }
   __LEAVE_FUNCTION
@@ -140,7 +140,7 @@ void Ini::init_section() { //初始化节点数据
         ++section_number_;
       }
     }
-    SAFE_DELETE(section_indexlist_);
+    SAFE_DELETE_ARRAY(section_indexlist_);
     if (section_number_ > 0) section_indexlist_ = new int32_t[section_number_];
     int32_t n = 0;
     for (i = 0; i < data_length_; ++i) {
@@ -187,7 +187,8 @@ int32_t Ini::find_key_index(int32_t position, const char *key) {
 
 int32_t Ini::goto_next_line(int32_t position) {
   __ENTER_FUNCTION
-    int32_t i;
+    if (-1 == position) return -1;
+    int32_t i = -1;
     for (i = position; i < data_length_; ++i) {
       if ('\n' == data_info_[i]) return i + 1;
     }
@@ -199,12 +200,10 @@ int32_t Ini::goto_next_line(int32_t position) {
 char *Ini::find_key(int32_t &position) {
   __ENTER_FUNCTION
     char _char;
-    char *ret;
     int32_t m, i;
-    uint16_t kKeyLength = 64;
     m = 0;
-    ret = new char[kKeyLength];
-    memset(ret, '\0', kKeyLength);
+    static char ret[64] = {0};
+    memset(ret, '\0', sizeof(ret));
     for (i = position; i < data_length_; ++i) {
       _char = data_info_[i];
       if ('\r' == _char || '\n' == _char || '=' == _char || ';' == _char) {
@@ -221,11 +220,13 @@ char *Ini::find_key(int32_t &position) {
 
 char *Ini::readstring(int32_t position) {
   __ENTER_FUNCTION
-    char _char;
-    char *ret;
+    if (-1 == position) return NULL;
+    char _char = 0;
+    char *ret = NULL;
     int32_t n = position, m = 0, i;
     int32_t line_number = goto_next_line(position) - position + 1;
     ret = static_cast<char*>(value_);
+    if (data_length_ <= 1) return ret;
     memset(ret, '\0', line_number);
     for (i = 0; i < data_length_ - position; ++i) {
       _char = data_info_[n];
@@ -455,6 +456,7 @@ int64_t Ini::read_int64(const char *section, const char *key) {
     int32_t section_index = find_section_index(section);
     AssertEx(section_index != -1, temp);
     int32_t data_index = find_key_index(section_index, key);
+    if (-1 == data_index) return -1;
     AssertEx(data_index, temp);
     char *str = readstring(data_index);
     int64_t result = ERROR_DATA;

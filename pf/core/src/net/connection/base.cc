@@ -44,17 +44,17 @@ bool Base::init() {
     if (isinit()) return true; //防止再次初始化，会出错
     socket_ = new socket::Base();
     Assert(socket_);
-    socket_inputstream_ = new socket::InputStream(
-        socket_,
+    socket_inputstream_ = new socket::InputStream(socket_,
         SOCKETINPUT_BUFFERSIZE_DEFAULT,
-        64 * 1024 * 1024
-        );
+        64 * 1024 * 1024);
     Assert(socket_inputstream_);
+    socket_inputstream_->init();
     socket_outputstream_ = new socket::OutputStream(
         socket_,
         SOCKETOUTPUT_BUFFERSIZE_DEFAULT,
         64 * 1024 * 1024);
     Assert(socket_outputstream_);
+    socket_outputstream_->init();
     isinit_ = true;
     return true;
   __LEAVE_FUNCTION
@@ -142,7 +142,7 @@ void Base::process_compressinput() {
           return;
         }
       } else {
-        if (!socket_inputstream_->peek(packetheader, sizeof(packetheader)))
+        if (!socket_inputstream_->peek(&packetheader[0], sizeof(packetheader)))
           break;
         memcpy(&packetid, &packetheader[0], sizeof(packetid));
         memcpy(&packetcheck, 
@@ -235,8 +235,10 @@ bool Base::processcommand(bool option) {
       }
       uint32_t i;
       for (i = 0; i < execute_count_pretick_; ++i) {
+        memset(packetheader, 0, sizeof(packetheader));
+        if (!socket_inputstream_) return true;
         if (!socket_inputstream_->peek(&packetheader[0], 
-                                       sizeof(packetheader) - 1)) {
+                                       NET_PACKET_HEADERSIZE)) {
           //数据不能填充消息头
           break;
         }
@@ -308,8 +310,9 @@ bool Base::processcommand(bool option) {
             SaveErrorLog();
             exception = true;
           }
-          if (packet && needremove) 
+          if (packet && needremove) { 
             g_packetfactory_manager->removepacket(packet);
+          }
           if (exception) return false;
         } catch(...) {
           SaveErrorLog();

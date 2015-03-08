@@ -25,6 +25,8 @@ Eyes::Eyes() {
     receivebytes_ = 0;
     last_printtime_ = 0;
     printinfo_interval_ = PERFORMANCE_EYES_PRINT_INTERVAL_DEFAULT;
+    onlinecount_ = 0;
+    connectioncount_ = 0;
   __LEAVE_FUNCTION
 }
 

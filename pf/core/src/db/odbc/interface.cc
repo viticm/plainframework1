@@ -30,9 +30,10 @@ Interface::Interface() {
     column_nullable_ = NULL;
     column_values_ = NULL;
     column_valuelengths_ = NULL;
-    column_info_allocator_.init(column_info_buffer, sizeof(column_info_buffer));
-    column_value_allocator_.init(column_value_buffer, 
-                                 sizeof(column_value_buffer));
+    column_info_allocator_.init(column_info_buffer_, 
+                                sizeof(column_info_buffer_));
+    column_value_allocator_.init(column_value_buffer_, 
+                                 sizeof(column_value_buffer_));
   __LEAVE_FUNCTION
 }
 

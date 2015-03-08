@@ -39,7 +39,8 @@ FactoryManager::~FactoryManager() {
     for (i = 0; i < size_; ++i) {
       SAFE_DELETE(factories_[i]);
     }
-    SAFE_DELETE(packet_alloccount_);
+    SAFE_DELETE_ARRAY(factories_);
+    SAFE_DELETE_ARRAY(packet_alloccount_);
   __LEAVE_FUNCTION
 }
 
@@ -107,7 +108,7 @@ Base *FactoryManager::createpacket(uint16_t packetid) {
       Assert(false);
       return NULL;
     }
-    Base* packet = NULL;
+    Base *packet = NULL;
     lock();
     try {
       packet = factories_[index]->createpacket();
@@ -143,17 +144,27 @@ uint32_t FactoryManager::getpacket_maxsize(uint16_t packetid) {
     return 0;
 }
 
-void FactoryManager::removepacket(Base* packet) {
+void FactoryManager::removepacket(Base *packet) {
   __ENTER_FUNCTION
     if (NULL == packet) {
       Assert(false);
       return;
     }
     uint16_t packetid = packet->getid();
+    bool isfind = idindexs_.isfind(packetid);
+    uint16_t index = idindexs_.get(packetid);
     lock();
     try {
       SAFE_DELETE(packet);
-      --(packet_alloccount_[packetid]);
+      if (!isfind) {
+        SLOW_ERRORLOG(
+            NET_MODULENAME, 
+            "[net.packet] (FactoryManager::removesocket) error,"
+            " can't find id index for packeid: %d",
+            packetid);
+      } else {
+        --(packet_alloccount_[index]);
+      }
     } catch(...) {
       unlock();
     }

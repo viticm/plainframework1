@@ -24,7 +24,7 @@ Thread::~Thread() {
 void Thread::start() {
   __ENTER_FUNCTION
     if (status_ != kReady) return;
-#if __LINUX__
+ #if __LINUX__
     int32_t result = pthread_create(reinterpret_cast<pthread_t *>(&id_), 
                                     NULL, 
                                     ps_thread_process, 
@@ -37,6 +37,7 @@ void Thread::start() {
                result);
       AssertEx(false, msg);
     }
+    pthread_detach(id_);
 #elif __WINDOWS__
     thread_handle_ = 
       ::CreateThread(NULL, 0, ps_thread_process, this, CREATE_SUSPENDED, &id_);
@@ -72,7 +73,7 @@ void *ps_thread_process(void *derived_thread) {
 DWORD WINAPI ps_thread_process(void *derived_thread) {
 #endif
   __ENTER_FUNCTION
-    Thread* thread = static_cast<Thread*>(derived_thread);
+    Thread *thread = static_cast<Thread*>(derived_thread);
     if (NULL == thread) return NULL;
     thread->set_status(Thread::kRunning);
     thread->run();
@@ -83,6 +84,13 @@ DWORD WINAPI ps_thread_process(void *derived_thread) {
     g_thread_lock.lock();
     ++g_thread_quit_count;
     g_thread_lock.unlock();
+#if __LINUX__
+    void *result = (void *)thread->get_id();
+    pthread_join(thread->get_id(), NULL); //为资源回收，创建时已设置，这里再次设置？
+    return result;
+#elif __WINDOWS__
+    return 0;
+#endif
   __LEAVE_FUNCTION
     return NULL;
 }

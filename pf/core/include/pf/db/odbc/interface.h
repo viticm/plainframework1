@@ -62,9 +62,9 @@ class PF_API Interface {
    char **column_values_;
    SQLINTEGER *column_valuelengths_;
    pf_sys::memory::StaticAllocator column_info_allocator_;
-   char column_info_buffer[COLUMN_INFO_BUFFER_MAX];
+   char column_info_buffer_[COLUMN_INFO_BUFFER_MAX];
    pf_sys::memory::StaticAllocator column_value_allocator_;
-   char column_value_buffer[COLUMN_VALUE_BUFFER_MAX];
+   char column_value_buffer_[COLUMN_VALUE_BUFFER_MAX];
    /* column about } */
 
    pf_util::compressor::Mini compressor_;

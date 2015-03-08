@@ -31,6 +31,7 @@ Base::Base() {
 
 Base::~Base() {
   __ENTER_FUNCTION
+    SAFE_DELETE(g_packetfactory_manager);
     SAFE_DELETE(pool_);
     SAFE_DELETE(serversocket_);
     SAFE_DELETE_ARRAY(connection_idset_);

@@ -73,12 +73,12 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="ws2_32.lib psapi.lib ../../dependencies/dll/$(PlatformName)/$(ConfigurationName)/iconvd.lib ../../dependencies/dll/$(PlatformName)/$(ConfigurationName)/luad.lib"
-				OutputFile="..\dll\$(OutDir)\$(ProjectName)d.dll"
-				Version="1.0.2"
+				OutputFile="..\dll\$(OutDir)\$(ProjectName)d_$(PlatformName).dll"
+				Version="1.0.3"
 				LinkIncremental="2"
 				IgnoreDefaultLibraryNames="libcd.lib"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(IntDir)/$(ProjectName).pdb"
+				ProgramDatabaseFile="$(TargetDir)$(TargetName).pdb"
 				SubSystem="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
@@ -163,12 +163,12 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="ws2_32.lib psapi.lib ../../dependencies/dll/$(PlatformName)/$(ConfigurationName)/iconvd.lib ../../dependencies/dll/$(PlatformName)/$(ConfigurationName)/luad.lib"
-				OutputFile="..\dll\$(OutDir)\$(ProjectName)d.dll"
-				Version="1.0.2"
+				OutputFile="..\dll\$(OutDir)\$(ProjectName)d_$(PlatformName).dll"
+				Version="1.0.3"
 				LinkIncremental="2"
 				IgnoreDefaultLibraryNames="libcd.lib"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(IntDir)/$(ProjectName).pdb"
+				ProgramDatabaseFile="$(TargetDir)$(TargetName).pdb"
 				SubSystem="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
@@ -254,7 +254,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="ws2_32.lib psapi.lib ../../dependencies/dll/$(PlatformName)/$(ConfigurationName)/iconv.lib ../../dependencies/dll/$(PlatformName)/$(ConfigurationName)/lua.lib"
 				OutputFile="..\dll\$(OutDir)\$(ProjectName)_$(PlatformName).dll"
-				Version="1.0.2"
+				Version="1.0.3"
 				GenerateDebugInformation="true"
 				ImportLibrary="..\dll\$(OutDir)\$(ProjectName).lib"
 			/>
@@ -337,8 +337,8 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="ws2_32.lib psapi.lib ../../dependencies/dll/$(PlatformName)/$(ConfigurationName)/iconv.lib ../../dependencies/dll/$(PlatformName)/$(ConfigurationName)/lua.lib"
-				OutputFile="..\dll\$(OutDir)\$(ProjectName).dll"
-				Version="1.0.2"
+				OutputFile="..\dll\$(OutDir)\$(ProjectName)_$(PlatformName).dll"
+				Version="1.0.3"
 				GenerateDebugInformation="true"
 				ImportLibrary="..\dll\$(OutDir)\$(ProjectName).lib"
 				TargetMachine="17"
@@ -828,10 +828,6 @@
 						>
 					</File>
 					<File
-						RelativePath="..\src\net\socket\encode.cc"
-						>
-					</File>
-					<File
 						RelativePath="..\src\net\socket\encryptor.cc"
 						>
 					</File>
@@ -1211,10 +1207,6 @@
 					</File>
 					<File
 						RelativePath="..\include\pf\net\socket\config.h"
-						>
-					</File>
-					<File
-						RelativePath="..\include\pf\net\socket\encode.h"
 						>
 					</File>
 					<File

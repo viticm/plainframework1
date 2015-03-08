@@ -83,12 +83,12 @@
 				Name="VCLinkerTool"
 				LinkLibraryDependencies="false"
 				AdditionalDependencies="$(NOINHERIT) kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib "
-				OutputFile="./dll/$(OutDir)/$(ProjectName)d.dll"
+				OutputFile="./dll/$(OutDir)/$(ProjectName)d_$(PlatformName).dll"
 				Version="1.2"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories=""
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="./dll/$(OutDir)/$(ProjectName)d.pdb"
+				ProgramDatabaseFile="$(TargetDir)$(TargetName).pdb"
 				ImportLibrary="./dll/$(OutDir)/$(ProjectName)d.lib"
 			/>
 			<Tool
@@ -111,7 +111,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="xcopy .\dll\$(PlatformName)\$(ConfigurationName)\$(ProjectName)d.dll .\..\..\dll\$(PlatformName)\$(ConfigurationName)\ /S /R /Y&#x0D;&#x0A;xcopy .\dll\$(PlatformName)\$(ConfigurationName)\$(ProjectName)d.lib .\..\..\dll\$(PlatformName)\$(ConfigurationName)\ /S /R /Y"
+				CommandLine="xcopy .\dll\$(PlatformName)\$(ConfigurationName)\$(ProjectName)d_$(PlatformName).dll .\..\..\dll\$(PlatformName)\$(ConfigurationName)\ /S /R /Y&#x0D;&#x0A;xcopy .\dll\$(PlatformName)\$(ConfigurationName)\$(ProjectName)d.lib .\..\..\dll\$(PlatformName)\$(ConfigurationName)\ /S /R /Y&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
@@ -178,12 +178,12 @@
 				Name="VCLinkerTool"
 				LinkLibraryDependencies="false"
 				AdditionalDependencies="$(NOINHERIT) kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib "
-				OutputFile="./dll/$(OutDir)/$(ProjectName)d.dll"
+				OutputFile="./dll/$(OutDir)/$(ProjectName)d_$(PlatformName).dll"
 				Version="1.2"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories=""
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="..\vc_build\Debug\zlibd.pdb"
+				ProgramDatabaseFile="$(TargetDir)$(TargetName).pdb"
 				ImportLibrary="./dll/$(OutDir)/$(ProjectName)d.lib"
 				TargetMachine="17"
 			/>
@@ -207,7 +207,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="xcopy .\dll\$(PlatformName)\$(ConfigurationName)\$(ProjectName)d.dll .\..\..\dll\$(PlatformName)\$(ConfigurationName)\ /S /R /Y&#x0D;&#x0A;xcopy .\dll\$(PlatformName)\$(ConfigurationName)\$(ProjectName)d.lib .\..\..\dll\$(PlatformName)\$(ConfigurationName)\ /S /R /Y"
+				CommandLine="xcopy .\dll\$(PlatformName)\$(ConfigurationName)\$(ProjectName)d_$(PlatformName).dll .\..\..\dll\$(PlatformName)\$(ConfigurationName)\ /S /R /Y&#x0D;&#x0A;xcopy .\dll\$(PlatformName)\$(ConfigurationName)\$(ProjectName)d.lib .\..\..\dll\$(PlatformName)\$(ConfigurationName)\ /S /R /Y&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
@@ -272,11 +272,12 @@
 				Name="VCLinkerTool"
 				LinkLibraryDependencies="false"
 				AdditionalDependencies="$(NOINHERIT) kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib "
-				OutputFile="./dll/$(OutDir)/$(ProjectName).dll"
+				OutputFile="./dll/$(OutDir)/$(ProjectName)_$(PlatformName).dll"
 				Version="1.2"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories=""
-				ProgramDatabaseFile="./dll/$(OutDir)/$(ProjectName).pdb"
+				GenerateDebugInformation="true"
+				ProgramDatabaseFile="$(TargetDir)$(TargetName).pdb"
 				ImportLibrary="./dll/$(OutDir)/$(ProjectName).lib"
 			/>
 			<Tool
@@ -299,7 +300,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="xcopy .\dll\$(PlatformName)\$(ConfigurationName)\$(ProjectName).dll .\..\..\dll\$(PlatformName)\$(ConfigurationName)\ /S /R /Y&#x0D;&#x0A;xcopy .\dll\$(PlatformName)\$(ConfigurationName)\$(ProjectName).lib .\..\..\dll\$(PlatformName)\$(ConfigurationName)\ /S /R /Y"
+				CommandLine="xcopy .\dll\$(PlatformName)\$(ConfigurationName)\$(ProjectName)_$(PlatformName).dll .\..\..\dll\$(PlatformName)\$(ConfigurationName)\ /S /R /Y&#x0D;&#x0A;xcopy .\dll\$(PlatformName)\$(ConfigurationName)\$(ProjectName).lib .\..\..\dll\$(PlatformName)\$(ConfigurationName)\ /S /R /Y&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
@@ -364,11 +365,12 @@
 				Name="VCLinkerTool"
 				LinkLibraryDependencies="false"
 				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib $(NOINHERIT)"
-				OutputFile="./dll/$(OutDir)/$(ProjectName).dll"
+				OutputFile="./dll/$(OutDir)/$(ProjectName)_$(PlatformName).dll"
 				Version="1.2"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories=""
-				ProgramDatabaseFile=".\dll\Release\zlib.pdb"
+				GenerateDebugInformation="true"
+				ProgramDatabaseFile="$(TargetDir)$(TargetName).pdb"
 				ImportLibrary="./dll/$(OutDir)/$(ProjectName).lib"
 				TargetMachine="17"
 			/>
@@ -392,7 +394,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="xcopy .\dll\$(PlatformName)\$(ConfigurationName)\$(ProjectName).dll .\..\..\dll\$(PlatformName)\$(ConfigurationName)\ /S /R /Y&#x0D;&#x0A;xcopy .\dll\$(PlatformName)\$(ConfigurationName)\$(ProjectName).lib .\..\..\dll\$(PlatformName)\$(ConfigurationName)\ /S /R /Y"
+				CommandLine="xcopy .\dll\$(PlatformName)\$(ConfigurationName)\$(ProjectName)_$(PlatformName).dll .\..\..\dll\$(PlatformName)\$(ConfigurationName)\ /S /R /Y&#x0D;&#x0A;xcopy .\dll\$(PlatformName)\$(ConfigurationName)\$(ProjectName).lib .\..\..\dll\$(PlatformName)\$(ConfigurationName)\ /S /R /Y&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration

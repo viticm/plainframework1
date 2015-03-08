@@ -69,11 +69,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="../dll/$(OutDir)/$(ProjectName)d.dll"
+				OutputFile="../dll/$(OutDir)/$(ProjectName)d_$(PlatformName).dll"
 				LinkIncremental="2"
 				IgnoreDefaultLibraryNames="libcd.lib"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(IntDir)/$(ProjectName).pdb"
+				ProgramDatabaseFile="$(TargetDir)$(TargetName).pdb"
 				SubSystem="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
@@ -100,7 +100,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="xcopy ..\dll\$(PlatformName)\$(ConfigurationName)\$(ProjectName)d.dll .\..\..\dll\$(PlatformName)\$(ConfigurationName)\ /S /R /Y&#x0D;&#x0A;xcopy ..\dll\$(PlatformName)\$(ConfigurationName)\$(ProjectName)d.lib .\..\..\dll\$(PlatformName)\$(ConfigurationName)\ /S /R /Y"
+				CommandLine="xcopy ..\dll\$(PlatformName)\$(ConfigurationName)\$(ProjectName)d_$(PlatformName).dll .\..\..\dll\$(PlatformName)\$(ConfigurationName)\ /S /R /Y&#x0D;&#x0A;xcopy ..\dll\$(PlatformName)\$(ConfigurationName)\$(ProjectName)d.lib .\..\..\dll\$(PlatformName)\$(ConfigurationName)\ /S /R /Y&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
@@ -154,11 +154,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="../dll/$(OutDir)/$(ProjectName)d.dll"
+				OutputFile="../dll/$(OutDir)/$(ProjectName)d_$(PlatformName).dll"
 				LinkIncremental="2"
 				IgnoreDefaultLibraryNames="libcd.lib"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(IntDir)/$(ProjectName).pdb"
+				ProgramDatabaseFile="$(TargetDir)$(TargetName).pdb"
 				SubSystem="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
@@ -185,7 +185,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="xcopy ..\dll\$(PlatformName)\$(ConfigurationName)\$(ProjectName)d.dll .\..\..\dll\$(PlatformName)\$(ConfigurationName)\ /S /R /Y&#x0D;&#x0A;xcopy ..\dll\$(PlatformName)\$(ConfigurationName)\$(ProjectName)d.lib .\..\..\dll\$(PlatformName)\$(ConfigurationName)\ /S /R /Y"
+				CommandLine="xcopy ..\dll\$(PlatformName)\$(ConfigurationName)\$(ProjectName)d_$(PlatformName).dll .\..\..\dll\$(PlatformName)\$(ConfigurationName)\ /S /R /Y&#x0D;&#x0A;xcopy ..\dll\$(PlatformName)\$(ConfigurationName)\$(ProjectName)d.lib .\..\..\dll\$(PlatformName)\$(ConfigurationName)\ /S /R /Y&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
@@ -240,7 +240,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="../dll/$(OutDir)/$(ProjectName).dll"
+				OutputFile="../dll/$(OutDir)/$(ProjectName)_$(PlatformName).dll"
+				GenerateDebugInformation="true"
 				ImportLibrary="../dll/$(OutDir)/$(ProjectName).lib"
 			/>
 			<Tool
@@ -263,7 +264,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="xcopy ..\dll\$(PlatformName)\$(ConfigurationName)\$(ProjectName).dll .\..\..\dll\$(PlatformName)\$(ConfigurationName)\ /S /R /Y&#x0D;&#x0A;xcopy ..\dll\$(PlatformName)\$(ConfigurationName)\$(ProjectName).lib .\..\..\dll\$(PlatformName)\$(ConfigurationName)\ /S /R /Y"
+				CommandLine="xcopy ..\dll\$(PlatformName)\$(ConfigurationName)\$(ProjectName)_$(PlatformName).dll .\..\..\dll\$(PlatformName)\$(ConfigurationName)\ /S /R /Y&#x0D;&#x0A;xcopy ..\dll\$(PlatformName)\$(ConfigurationName)\$(ProjectName).lib .\..\..\dll\$(PlatformName)\$(ConfigurationName)\ /S /R /Y&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
@@ -319,7 +320,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="../dll/$(OutDir)/$(ProjectName).dll"
+				OutputFile="../dll/$(OutDir)/$(ProjectName)_$(PlatformName).dll"
+				GenerateDebugInformation="true"
 				ImportLibrary="../dll/$(OutDir)/$(ProjectName).lib"
 				TargetMachine="17"
 			/>
@@ -343,7 +345,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="xcopy ..\dll\$(PlatformName)\$(ConfigurationName)\$(ProjectName).dll .\..\..\dll\$(PlatformName)\$(ConfigurationName)\ /S /R /Y&#x0D;&#x0A;xcopy ..\dll\$(PlatformName)\$(ConfigurationName)\$(ProjectName).lib .\..\..\dll\$(PlatformName)\$(ConfigurationName)\ /S /R /Y"
+				CommandLine="xcopy ..\dll\$(PlatformName)\$(ConfigurationName)\$(ProjectName)_$(PlatformName).dll .\..\..\dll\$(PlatformName)\$(ConfigurationName)\ /S /R /Y&#x0D;&#x0A;xcopy ..\dll\$(PlatformName)\$(ConfigurationName)\$(ProjectName).lib .\..\..\dll\$(PlatformName)\$(ConfigurationName)\ /S /R /Y&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration

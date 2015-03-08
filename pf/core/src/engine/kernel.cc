@@ -40,6 +40,7 @@ Kernel::Kernel() {
     net_manager_ = NULL;
     db_thread_ = NULL;
     net_manager_ = NULL;
+	  net_thread_ = NULL;
     performance_thread_ = NULL;
     script_thread_ = NULL;
     isactive_ = false;
