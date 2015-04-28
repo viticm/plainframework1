@@ -98,7 +98,7 @@ function format_systempath($path, $from_ostype = OS_LINUX) {
 
 //project visual studio script file dirs
 $g_scriptdirs = array(
-  "billing applications/billing/scripts",
+  "gateway applications/gateway/scripts",
   "sharememory applications/sharememory/scripts",
   "login applications/login/scripts",
   "center applications/center/scripts",
