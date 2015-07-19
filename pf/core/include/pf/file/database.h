@@ -19,11 +19,17 @@ namespace pf_file {
 class PF_API Database {
 
  public:
-   typedef struct {
+   typedef struct file_head_struct {
      uint32_t identify; //标示
      int32_t field_number; //列数
      int32_t record_number; //记录数
      int32_t string_block_size; //字符串区大小
+     file_head_struct() {
+       identify = FILE_DATABASE_INDENTIFY;
+       field_number = -1;
+       record_number = -1;
+       string_block_size = -1;
+     }
    } file_head_t;
    
    typedef enum { //field type
@@ -61,10 +67,10 @@ class PF_API Database {
    bool open_from_memory(const char *memory, 
                          const char *end, 
                          const char *filename = NULL);
-   virtual const field_data* search_index_equal(int32_t index) const;
-   virtual const field_data* search_position(int32_t line, 
+   virtual const field_data *search_index_equal(int32_t index) const;
+   virtual const field_data *search_position(int32_t line, 
                                              int32_t column) const;
-   virtual const field_data* search_first_column_equal(
+   virtual const field_data *search_first_column_equal(
        int32_t column, 
        const field_data &value) const;
    uint32_t get_id() const; //获得ID
@@ -72,6 +78,7 @@ class PF_API Database {
    int32_t get_record_number() const;
    const char *get_fieldname(int32_t index);
    int32_t get_fieldindex(const char *name);
+   const field_data *get_fielddata(int32_t line, const char *name);
    uint8_t get_fieldtype(int32_t index);
    void create_index(int32_t column = 0, const char *filename = 0);
 
@@ -84,6 +91,11 @@ class PF_API Database {
                            const field_data &a, 
                            const field_data &b);
 
+ public:
+   bool save_tobinary(const char *filename);
+   bool save_totext(const char *filename);
+   bool save_totext_line(std::vector<std::string> _data);
+  
  protected:
    typedef hash_map<int32_t, field_data*> field_hashmap;
    uint32_t id_;

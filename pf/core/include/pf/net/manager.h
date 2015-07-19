@@ -48,9 +48,6 @@ class PF_API Manager : public connection::manager::Select {
    virtual void tick(); //外部可能会重写此方法，网络循环处理方法
 
  public:
-   void loop();
-   bool isactive();
-   void setactive(bool active);
    void set_performance_active(bool active);
 
  public:
@@ -58,7 +55,6 @@ class PF_API Manager : public connection::manager::Select {
    void broadcast(packet::Base *packet, int32_t status = -1);
 
  protected:
-   bool active_; //管理器是否激活
    bool performance_active_; //性能监视是否激活，注意只应有一个管理器被激活
 
 };

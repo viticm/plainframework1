@@ -12,6 +12,7 @@
 #define PF_NET_CONNECTION_MANAGER_BASE_H_
 
 #include "pf/net/connection/manager/config.h"
+#include "pf/sys/thread.h"
 #include "pf/net/socket/base.h"
 #include "pf/net/socket/server.h"
 #include "pf/net/packet/base.h"
@@ -43,7 +44,12 @@ class PF_API Base {
    bool add(int16_t id);
    connection::Base *get(int16_t id);
    virtual connection::Base *accept(); //新连接接受处理
+   //以下为连接方法，只应工作在非服务器模式下
+   virtual connection::Base *connect(const char *ip, uint16_t port);
+   virtual connection::Base *connectgroup(const char *ip, uint16_t port);
    virtual bool heartbeat(uint32_t time = 0);
+   //设置poll池，如果是外部设置服务器模式则一定要在此方法之前。
+   virtual bool set_poll_maxcount(uint16_t maxcount);
    //从管理器中移除连接
    virtual bool remove(int16_t id);
    //删除连接包括管理器、socket
@@ -69,6 +75,17 @@ class PF_API Base {
    uint64_t get_send_bytes();
    uint64_t get_receive_bytes();
    bool isinit() const;
+   void set_servermode(bool flag);
+
+ public: //Packet queue, can work in mutli thread.
+   virtual bool sendpacket(packet::Base *packet, 
+                           uint16_t connectionid, 
+                           uint32_t flag = kPacketFlagNone);
+   virtual bool process_cachecommand();
+   virtual bool recvpacket(packet::Base *&packet, 
+                           uint16_t &connectionid, 
+                           uint32_t &flag);
+   bool cacheresize();
 
  protected:
    uint16_t listenport_;
@@ -90,6 +107,8 @@ class PF_API Base {
    uint64_t receive_bytes_; //接收字节数
    int32_t onestep_accept_; //一帧内接受的新连接数量, -1无限制
    connection::Pool *pool_;   
+   cache_t cache_;
+   pf_sys::ThreadLock lock_;
 
 };
 

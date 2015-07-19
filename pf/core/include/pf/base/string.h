@@ -56,6 +56,7 @@ PF_API int32_t explode(const char *source,
                        const char *key,
                        bool one_key,
                        bool ignore_empty);
+PF_API bool checkstr(const char *in, uint32_t size);
 
 
 }; //namespace string

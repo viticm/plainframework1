@@ -59,10 +59,12 @@ class PF_API Base {
  public:
    virtual void cleanup() {};
    virtual bool read(socket::InputStream &inputstream) = 0;
-   virtual bool write(socket::OutputStream &outputstream) const = 0;
-   virtual uint32_t execute(connection::Base *connection) = 0;
+   virtual bool write(socket::OutputStream &outputstream) = 0;
+   virtual uint32_t execute(connection::Base *connection);
    virtual uint16_t getid() const = 0;
    virtual uint32_t getsize() const = 0;
+   virtual void setid(uint16_t id);
+   virtual void setsize(uint32_t size);
    int8_t getindex() const;
    void setindex(int8_t index);
    uint8_t getstatus() const;

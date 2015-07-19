@@ -1,10 +1,11 @@
+#include "pf/db/odbc/interface.h"
 #include "pf/db/manager.h"
 
 namespace pf_db {
 
-Manager::Manager(dbconnector_type_t connector_type) {
+Manager::Manager() {
   __ENTER_FUNCTION
-    connector_type_ = connector_type;
+    connector_type_ = kDBConnectorTypeODBC;
     odbc_system_ = NULL;
     isready_ = false;
   __LEAVE_FUNCTION
@@ -39,8 +40,42 @@ bool Manager::init(const char *connection_or_dbname,
     return false;
 }
 
-dbconnector_type_t Manager::get_connector_type() const {
+int8_t Manager::get_connector_type() const {
   return connector_type_;
+}
+void Manager::set_connector_type(int8_t type) {
+  connector_type_ = type;
+}
+
+int32_t Manager::get_columncount() const {
+  __ENTER_FUNCTION
+    int32_t result = 0;
+    switch (connector_type_) {
+      case kDBConnectorTypeODBC:
+        result = odbc_system_->get_columncount();
+        break;
+      default:
+        break;
+    }
+    return result;
+  __LEAVE_FUNCTION
+    return 0;
+}
+
+bool Manager::getresult() const {
+  __ENTER_FUNCTION
+    bool result = true;
+    switch (connector_type_) {
+      case kDBConnectorTypeODBC:
+        result = odbc_system_->getresult();
+        break;
+      default:
+        result = false;
+        break;
+    }
+    return result;
+  __LEAVE_FUNCTION
+    return false;
 }
 
 bool Manager::query() {
@@ -118,6 +153,7 @@ bool Manager::check_db_connect() {
         result = false;
         break;
     }
+    isready_ = result; //Check connect.
     return result;
   __LEAVE_FUNCTION
     return false;
@@ -358,6 +394,54 @@ int32_t Manager::get_binary_withdecompress(int32_t column_index,
     return result;
   __LEAVE_FUNCTION
     return -1;
+}
+
+const char *Manager::get_columnname(int32_t column_index) const {
+  __ENTER_FUNCTION
+    const char *result = NULL;
+    switch (connector_type_) {
+      case kDBConnectorTypeODBC:
+        result = 
+          odbc_system_->getinterface()->get_name(column_index);
+        break;
+      default:
+        break;
+    }
+    return result;
+  __LEAVE_FUNCTION
+    return NULL;
+}
+
+const char *Manager::get_data(
+    int32_t column_index, const char *_default) const {
+  __ENTER_FUNCTION
+    const char *result = NULL;
+    switch (connector_type_) {
+      case kDBConnectorTypeODBC:
+        result = 
+          odbc_system_->getinterface()->get_data(column_index, _default);
+        break;
+      default:
+        break;
+    }
+    return result;
+  __LEAVE_FUNCTION
+    return NULL;
+}
+
+int8_t Manager::gettype(int32_t column_index) {
+  __ENTER_FUNCTION
+    int8_t type = kDBColumnTypeString;
+    switch (connector_type_) {
+      case kDBConnectorTypeODBC:
+        type = odbc_system_->gettype(column_index);
+        break;
+      default:
+        break;
+    }
+    return type;
+  __LEAVE_FUNCTION
+    return kDBColumnTypeString;
 }
 
 } //namespace pf_db

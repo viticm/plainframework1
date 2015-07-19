@@ -199,6 +199,20 @@ bool string_tobinary(const char *in,
     return false;
 }
 
+void dirname(const char *filepath, char *save) {
+  __ENTER_FUNCTION
+    if (NULL == filepath || NULL == save) return;
+    char _filepath[FILENAME_MAX] = {0};
+    string::safecopy(_filepath, filepath, sizeof(_filepath));
+    uint32_t copysize = 0;
+    const char *find = NULL;
+    path_tounix(_filepath, sizeof(_filepath));
+    find = strrchr(_filepath, '/');
+    if (find) copysize = static_cast<uint32_t>(find - _filepath);
+    string::safecopy(save, _filepath, copysize + 1);
+  __LEAVE_FUNCTION
+}
+
 void sleep(uint32_t million_seconds) {
   __ENTER_FUNCTION
 #if __WINDOWS__
@@ -305,7 +319,9 @@ void disable_windowclose() {
 
 bool makedir(const char *path, uint16_t mode) {
   __ENTER_FUNCTION
+#if __WINDOWS__
     USE_PARAM(mode);
+#endif
     char _path[FILENAME_MAX] = {0};
     int32_t i = 0;
     int32_t result = 0;
@@ -316,10 +332,16 @@ bool makedir(const char *path, uint16_t mode) {
       _path[length] = '/';
       _path[length + 1] = '\0';
     }
+    result = access(_path, 0);
+    if (0 == result) return true;
     int32_t _length = static_cast<int32_t>(strlen(_path));
     for (i = 0; i < _length; ++i) {
       if ('/' ==  _path[i]) {
         _path[i] = '\0';
+        if (0 == strlen(_path)) {
+          _path[i] = '/';
+          continue;
+        }
         result = access(_path, 0);
         if (result != 0 && mkdir(_path, mode) != 0) {
           return false;
@@ -349,6 +371,14 @@ uint32_t get_highsection(uint64_t value) {
 uint32_t get_lowsection(uint64_t value) {
   uint32_t result = static_cast<uint32_t>(value & 0xFFFFFFFF);
   return result;
+}
+
+void complementpath(char *filepath, size_t size, char delimiter) {
+  __ENTER_FUNCTION
+    uint32_t length = static_cast<uint32_t>(strlen(filepath));
+    if (size <= length) return;
+    filepath[length] = delimiter == filepath[length - 1] ? '\0' : delimiter;
+  __LEAVE_FUNCTION
 }
 
 } //namespace util

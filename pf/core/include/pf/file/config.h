@@ -15,5 +15,7 @@
 
 //定义此宏则文件数据库读取的字符串将从GBK转为UTF-8
 #define FILE_DATABASE_CONVERT_GBK_TO_UTF8
+//文件数据标识，只有该类型的二进制文件才会认为正确
+#define FILE_DATABASE_INDENTIFY 0XDDBBCC00 
 
 #endif //PF_FILE_CONFIG_H_

@@ -54,6 +54,9 @@ PF_API uint32_t get_highsection(uint64_t value);
 
 PF_API uint32_t get_lowsection(uint64_t value);
 
+PF_API void dirname(const char *filepath, char *save);
+PF_API void complementpath(char *filepath, size_t size, char delimiter = '/');
+
 } //namespace util
 
 } //namespace pf_base

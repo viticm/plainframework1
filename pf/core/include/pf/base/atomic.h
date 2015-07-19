@@ -25,7 +25,8 @@ typedef atomic_t atword_t;
 #define initword(v,i) ((v).counter = (i))
 #elif __WINDOWS__ /* }{ */
 typedef volatile long atword_t;
-#define initword(v,i) ((v) = (i))
+#define initword(v,i) ((v) = (long)((i)))
+#define atomic_read(v) (*v)
 #endif /* } */
 
 #if __LINUX__

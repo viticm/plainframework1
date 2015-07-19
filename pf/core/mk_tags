@@ -3,7 +3,7 @@
 #@date 2013-12-9 13:53:44
 #@author viticm<viticm@126.com>
 paths="./"
-types="php lua h cpp c cc hpp erl hrl inl"
+types="php lua h cpp c cc hpp erl hrl inl tpp"
 n=0
 
 is_win32=false

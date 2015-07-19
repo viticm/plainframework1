@@ -1,9 +1,9 @@
+#include "pf/base/util.h"
 #include "pf/engine/thread/db.h"
 
 using namespace pf_engine::thread;
 
-DB::DB(dbconnector_type_t connector_type) : 
-  pf_db::Manager(connector_type) {
+DB::DB() {
   isactive_ = false;
 }
 
@@ -25,7 +25,12 @@ bool DB::init(const char *connection_or_dbname,
 void DB::run() {
   __ENTER_FUNCTION
     using namespace pf_db;
-    while (isactive()) Manager::check_db_connect();
+    while (isactive()) {
+      Manager::check_db_connect();
+      int32_t waittime = 
+        static_cast<uint32_t>(1000 / ENGINE_THREAD_FRAME);
+      pf_base::util::sleep(waittime);
+    }
   __LEAVE_FUNCTION
 }
 

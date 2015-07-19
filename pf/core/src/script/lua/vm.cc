@@ -1,5 +1,8 @@
+#ifndef PF_CORE_WITH_NOLUA
+
 #include "pf/base/string.h"
 #include "pf/base/log.h"
+#include "pf/base/util.h"
 #include "pf/sys/memory/dynamic_allocator.h"
 #include "pf/script/lua/vm.h"
 
@@ -52,7 +55,7 @@ bool VM::load(const char *filename) {
     }
     size = filebridge_.size();
     memory::DynamicAllocator memory;
-    if (!memory.malloc(size + 4)) {
+    if (!memory.malloc(static_cast<size_t>(size + 4))) {
       SLOW_ERRORLOG(SCRIPT_MODULENAME,
                     "[script.lua] (VM::load) memory for file %s failed",
                     filename);
@@ -114,96 +117,132 @@ bool VM::executecode() {
     return false;
 }
 
-bool VM::callfunction(const char *name, 
-                      int32_t result, 
-                      const char *format, ...) {
+void VM::checkgc(int32_t freetime) {
   __ENTER_FUNCTION
-    va_list vlist;
-    double number;
-    char *string = NULL;
-    void *pointer = NULL;
-    lua_CFunction cfunction;
-    int32_t i = 0;
-    int32_t args_number = 0;
+    if (!lua_state_) return;
+    int32_t delta = 0;
+    int32_t turn = 0;
+    uint32_t memorycount1;
+    uint32_t memorycount2;
+    int32_t havetime = freetime;
+    int32_t reclaim = 0;
+    uint32_t start_tickcount = TIME_MANAGER_POINTER->get_tickcount();
+    for (turn = 0; turn < 3; ++turn) {
+      memorycount1 = lua_gc(lua_state_, LUA_GCCOUNT, 0);
+      reclaim = havetime * 1;
+      if (1 == lua_gc(lua_state_, LUA_GCSTEP, reclaim)) {
+        lua_gc(lua_state_, LUA_GCRESTART, 0);
+      }
+      memorycount2 = lua_gc(lua_state_, LUA_GCCOUNT, 0);
+      delta += memorycount1 - memorycount2;
+      uint32_t current_tickcount = TIME_MANAGER_POINTER->get_tickcount();
+      havetime -= (current_tickcount - start_tickcount);
+      if (havetime < 40 || delta <= reclaim) break;
+    }
+    if (delta > 1024 * 1024 * 500) {
+      char temp[128] = {0};
+      uint64_t size = static_cast<uint64_t>(delta);
+      pf_base::util::get_sizestr(size, temp, sizeof(temp) - 1);
+      FAST_DEBUGLOG(SCRIPT_MODULENAME,
+                    "[script.lua] VM::checkgc success,"
+                    " freetime: %d, memory: %s",
+                    freetime,
+                    temp);
+    }
+  __LEAVE_FUNCTION
+}
+
+bool VM::callfunction(const char *name,
+                      pf_base::variable_array_t &params,
+                      pf_base::variable_array_t &results) {
+  __ENTER_FUNCTION
+    using namespace pf_base;
     if (!lua_state_) {
       on_scripterror(kErrorCodeStateIsNil);
       return false;
     }
     lua_getglobal(lua_state_, name);
-    va_start(vlist, format);
-    while (format[i]) {
-      switch (format[i]) {
-        case 'n': { //number double
-          number = va_arg(vlist, double);
-          lua_pushnumber(lua_state_, number);
-          ++args_number;
-          break;
-        }
-        case 'd': { //int
-          number = static_cast<lua_Number>(va_arg(vlist, int64_t));
-          lua_pushnumber(lua_state_, number);
-          ++args_number;
-          break;
-        }
-        case 's': { //string
-          string = va_arg(vlist, char *);
-          lua_pushstring(lua_state_, string);
-          ++args_number;
-          break;
-        }
-        case 'N': { //nil
+    uint32_t paramcount = static_cast<uint32_t>(params.size());
+    uint32_t resultcount = static_cast<uint32_t>(results.size());
+    for (uint32_t i = 0; i < paramcount; ++i) {
+      int8_t type = params[i].type;
+      switch (type) {
+        case kVariableTypeInvalid:
           lua_pushnil(lua_state_);
-          ++args_number;
           break;
-        }
-        case 'f': { //c function
-          cfunction = va_arg(vlist, lua_CFunction);
-          lua_pushcfunction(lua_state_, cfunction);
-          ++args_number;
+        case kVariableTypeString:
+          lua_pushstring(lua_state_, params[i].string());
           break;
-        }
-        case 'v': { //stack index type
-          number = va_arg(vlist, int32_t);
-          int32_t index = static_cast<int32_t>(number);
-          lua_pushvalue(lua_state_, index);
-          ++args_number;
+        case kVariableTypeBool:
+          lua_pushboolean(lua_state_, params[i]._bool());
           break;
-        }
-        case 't': { //table
+        default:
+          lua_pushnumber(lua_state_, params[i]._double());
           break;
-        }
-        case 'p': { //pointer
-          pointer = va_arg(vlist, void *);
-          lua_pushlightuserdata(lua_state_, pointer);
-          ++args_number;
-          break;
+      }
+    }
+    int32_t call_result = lua_pcall(lua_state_, paramcount, resultcount, 0);
+    if (call_result != 0) {
+      on_scripterror(kErrorCodeExecute, resultcount);
+      return false;
+    } else {
+      for (uint32_t i = 0; i < resultcount; ++i) {
+        int8_t type = results[i].type;
+        switch (type) {
+          case kVariableTypeString:
+            results[i] = lua_tostring(lua_state_, i - 1);
+            break;
+          case kVariableTypeBool:
+            results[i] = lua_toboolean(lua_state_, i - 1);
+            break;
+          default:
+            results[i] = lua_tonumber(lua_state_, i - 1);
+            break;
         }
       }
-      ++i;
-    }
-    va_end(vlist);
-    int32_t call_result = lua_pcall(lua_state_, args_number, result, 0);
-    if (call_result != 0) {
-      on_scripterror(kErrorCodeExecute, result);
-      return false;
     }
     return true;
   __LEAVE_FUNCTION
     return false;
 }
 
-bool VM::callfunction(const char *function) {
+bool VM::callstring(const char *string) {
   __ENTER_FUNCTION
     using namespace pf_base;
-    int32_t result = 0;
+    int32_t result = 1;
     if (!lua_state_) {
       on_scripterror(kErrorCodeStateIsNil);
       return false;
     }
     std::vector<std::string> array;
-    string::explode(function, array, "\t", true, true);
+    string::explode(string, array, "\t", true, true);
     if (array.size() < 1) return false;
-    lua_getglobal(lua_state_, array[0].c_str());
+    std::vector<std::string> _array;
+    string::explode(array[0].c_str(), _array, ".", true, true);
+    if (2 == _array.size()) {
+      const char *table = _array[0].c_str();
+      const char *field = _array[1].c_str();
+      if (!get_ref(table, field)) register_ref(table, field);
+      if (!get_ref(table, field)) {
+        SLOW_ERRORLOG(SCRIPT_MODULENAME,
+                      "[script.lua] (VM::callfunction) can't get ref,"
+                      " string: %s, table: %s, field: %s",
+                      string,
+                      table,
+                      field);
+        return false;
+      }
+    } else {
+      lua_getglobal(lua_state_, array[0].c_str());
+      if (lua_isnil(lua_state_, -1)) {
+        SLOW_ERRORLOG(SCRIPT_MODULENAME,
+                      "[script.lua] (VM::callfunction) can't get global value,"
+                      " function: %s, string: %s",
+                      string,
+                      array[0].c_str());
+        return false;
+      }
+    }
     for (int32_t i = 1; i < static_cast<int32_t>(array.size()); ++i) {
       char value[512] = {0};
       string::safecopy(value, array[i].c_str(), sizeof(value));
@@ -217,290 +256,7 @@ bool VM::callfunction(const char *function) {
       }
     }
     int32_t call_result = 
-      lua_pcall(lua_state_, (int)array.size() - 1, result, 0);
-    if (call_result != 0) {
-      on_scripterror(kErrorCodeExecute, result);
-      return false;
-    }
-    return true;
-  __LEAVE_FUNCTION
-    return false;
-}
-
-bool VM::callfunction(const char *name, int32_t result) {
-  __ENTER_FUNCTION
-    if (!lua_state_) {
-      on_scripterror(kErrorCodeStateIsNil);
-      return false;
-    }
-    lua_getglobal(lua_state_, name);
-    int32_t call_result = lua_pcall(lua_state_, 0, result, 0);
-    if (call_result != 0) {
-      on_scripterror(kErrorCodeExecute, result);
-      return false;
-    }
-    return true;
-  __LEAVE_FUNCTION
-    return false;
-}
-
-bool VM::callfunction(const char *name, int32_t result, int64_t param0) {
-  __ENTER_FUNCTION
-    if (!lua_state_) {
-      on_scripterror(kErrorCodeStateIsNil);
-      return false;
-    }
-    lua_getglobal(lua_state_, name);
-    lua_pushnumber(lua_state_, static_cast<lua_Number>(param0));
-    int32_t call_result = lua_pcall(lua_state_, 1, result, 0);
-    if (call_result != 0) {
-      on_scripterror(kErrorCodeExecute, result);
-      return false;
-    }
-    return true;
-  __LEAVE_FUNCTION
-    return false;
-}
-
-bool VM::callfunction(const char *name, 
-                      int32_t result, 
-                      int64_t param0,
-                      int64_t param1) {
-  __ENTER_FUNCTION
-    if (!lua_state_) {
-      on_scripterror(kErrorCodeStateIsNil);
-      return false;
-    }
-    lua_getglobal(lua_state_, name);
-    lua_pushnumber(lua_state_, static_cast<lua_Number>(param0));
-    lua_pushnumber(lua_state_, static_cast<lua_Number>(param1));
-    int32_t call_result = lua_pcall(lua_state_, 2, result, 0);
-    if (call_result != 0) {
-      on_scripterror(kErrorCodeExecute, result);
-      return false;
-    }
-    return true;
-  __LEAVE_FUNCTION
-    return false;
-}
-
-bool VM::callfunction(const char *name, 
-                      int32_t result, 
-                      int64_t param0,
-                      int64_t param1,
-                      int64_t param2) {
-  __ENTER_FUNCTION
-    if (!lua_state_) {
-      on_scripterror(kErrorCodeStateIsNil);
-      return false;
-    }
-    lua_getglobal(lua_state_, name);
-    lua_pushnumber(lua_state_, static_cast<lua_Number>(param0));
-    lua_pushnumber(lua_state_, static_cast<lua_Number>(param1));
-    lua_pushnumber(lua_state_, static_cast<lua_Number>(param2));
-    int32_t call_result = lua_pcall(lua_state_, 3, result, 0);
-    if (call_result != 0) {
-      on_scripterror(kErrorCodeExecute, result);
-      return false;
-    }
-    return true;
-  __LEAVE_FUNCTION
-    return false;
-}
-
-bool VM::callfunction(const char *name, 
-                      int32_t result, 
-                      int64_t param0,
-                      int64_t param1,
-                      int64_t param2,
-                      int64_t param3) {
-  __ENTER_FUNCTION
-    if (!lua_state_) {
-      on_scripterror(kErrorCodeStateIsNil);
-      return false;
-    }
-    lua_getglobal(lua_state_, name);
-    lua_pushnumber(lua_state_, static_cast<lua_Number>(param0));
-    lua_pushnumber(lua_state_, static_cast<lua_Number>(param1));
-    lua_pushnumber(lua_state_, static_cast<lua_Number>(param2));
-    lua_pushnumber(lua_state_, static_cast<lua_Number>(param3));
-    int32_t call_result = lua_pcall(lua_state_, 4, result, 0);
-    if (call_result != 0) {
-      on_scripterror(kErrorCodeExecute, result);
-      return false;
-    }
-    return true;
-  __LEAVE_FUNCTION
-    return false;
-}
-
-bool VM::callfunction(const char *name, 
-                      int32_t result, 
-                      int64_t param0,
-                      int64_t param1,
-                      int64_t param2,
-                      int64_t param3,
-                      int64_t param4) {
-  __ENTER_FUNCTION
-    if (!lua_state_) {
-      on_scripterror(kErrorCodeStateIsNil);
-      return false;
-    }
-    lua_getglobal(lua_state_, name);
-    lua_pushnumber(lua_state_, static_cast<lua_Number>(param0));
-    lua_pushnumber(lua_state_, static_cast<lua_Number>(param1));
-    lua_pushnumber(lua_state_, static_cast<lua_Number>(param2));
-    lua_pushnumber(lua_state_, static_cast<lua_Number>(param3));
-    lua_pushnumber(lua_state_, static_cast<lua_Number>(param4));
-    int32_t call_result = lua_pcall(lua_state_, 5, result, 0);
-    if (call_result != 0) {
-      on_scripterror(kErrorCodeExecute, result);
-      return false;
-    }
-    return true;
-  __LEAVE_FUNCTION
-    return false;
-}
-
-bool VM::callfunction(const char *name, 
-                      int32_t result, 
-                      int64_t param0,
-                      int64_t param1,
-                      int64_t param2,
-                      int64_t param3,
-                      int64_t param4,
-                      int64_t param5) {
-  __ENTER_FUNCTION
-    if (!lua_state_) {
-      on_scripterror(kErrorCodeStateIsNil);
-      return false;
-    }
-    lua_getglobal(lua_state_, name);
-    lua_pushnumber(lua_state_, static_cast<lua_Number>(param0));
-    lua_pushnumber(lua_state_, static_cast<lua_Number>(param1));
-    lua_pushnumber(lua_state_, static_cast<lua_Number>(param2));
-    lua_pushnumber(lua_state_, static_cast<lua_Number>(param3));
-    lua_pushnumber(lua_state_, static_cast<lua_Number>(param4));
-    lua_pushnumber(lua_state_, static_cast<lua_Number>(param5));
-    int32_t call_result = lua_pcall(lua_state_, 6, result, 0);
-    if (call_result != 0) {
-      on_scripterror(kErrorCodeExecute, result);
-      return false;
-    }
-    return true;
-  __LEAVE_FUNCTION
-    return false;
-}
-
-bool VM::callfunction(const char *name, 
-                      int32_t result, 
-                      int64_t param0,
-                      int64_t param1,
-                      int64_t param2,
-                      int64_t param3,
-                      int64_t param4,
-                      int64_t param5,
-                      int64_t param6) {
-  __ENTER_FUNCTION
-    if (!lua_state_) {
-      on_scripterror(kErrorCodeStateIsNil);
-      return false;
-    }
-    lua_getglobal(lua_state_, name);
-    lua_pushnumber(lua_state_, static_cast<lua_Number>(param0));
-    lua_pushnumber(lua_state_, static_cast<lua_Number>(param1));
-    lua_pushnumber(lua_state_, static_cast<lua_Number>(param2));
-    lua_pushnumber(lua_state_, static_cast<lua_Number>(param3));
-    lua_pushnumber(lua_state_, static_cast<lua_Number>(param4));
-    lua_pushnumber(lua_state_, static_cast<lua_Number>(param5));
-    lua_pushnumber(lua_state_, static_cast<lua_Number>(param6));
-    int32_t call_result = lua_pcall(lua_state_, 7, result, 0);
-    if (call_result != 0) {
-      on_scripterror(kErrorCodeExecute, result);
-      return false;
-    }
-    return true;
-  __LEAVE_FUNCTION
-    return false;
-}
-
-bool VM::callfunction(const char *name, 
-                      int32_t result, 
-                      int64_t param0,
-                      int64_t param1,
-                      int64_t param2,
-                      int64_t param3,
-                      int64_t param4,
-                      int64_t param5,
-                      int64_t param6,
-                      int64_t param7) {
-  __ENTER_FUNCTION
-    if (!lua_state_) {
-      on_scripterror(kErrorCodeStateIsNil);
-      return false;
-    }
-    lua_getglobal(lua_state_, name);
-    lua_pushnumber(lua_state_, static_cast<lua_Number>(param0));
-    lua_pushnumber(lua_state_, static_cast<lua_Number>(param1));
-    lua_pushnumber(lua_state_, static_cast<lua_Number>(param2));
-    lua_pushnumber(lua_state_, static_cast<lua_Number>(param3));
-    lua_pushnumber(lua_state_, static_cast<lua_Number>(param4));
-    lua_pushnumber(lua_state_, static_cast<lua_Number>(param5));
-    lua_pushnumber(lua_state_, static_cast<lua_Number>(param6));
-    lua_pushnumber(lua_state_, static_cast<lua_Number>(param7));
-    int32_t call_result = lua_pcall(lua_state_, 8, result, 0);
-    if (call_result != 0) {
-      on_scripterror(kErrorCodeExecute, result);
-      return false;
-    }
-    return true;
-  __LEAVE_FUNCTION
-    return false;
-}
-
-bool VM::callfunction(const char *name, 
-                      int32_t result, 
-                      int64_t param0,
-                      int64_t param1,
-                      float param2,
-                      float param3) {
-  __ENTER_FUNCTION
-    if (!lua_state_) {
-      on_scripterror(kErrorCodeStateIsNil);
-      return false;
-    }
-    lua_getglobal(lua_state_, name);
-    lua_pushnumber(lua_state_, static_cast<lua_Number>(param0));
-    lua_pushnumber(lua_state_, static_cast<lua_Number>(param1));
-    lua_pushnumber(lua_state_, static_cast<lua_Number>(param2));
-    lua_pushnumber(lua_state_, static_cast<lua_Number>(param3));
-    int32_t call_result = lua_pcall(lua_state_, 4, result, 0);
-    if (call_result != 0) {
-      on_scripterror(kErrorCodeExecute, result);
-      return false;
-    }
-    return true;
-  __LEAVE_FUNCTION
-    return false;
-}
-
-bool VM::callfunction(const char *name, 
-                      int32_t result, 
-                      int64_t param0,
-                      int64_t param1,
-                      const char *param2,
-                      const char *param3) {
-  __ENTER_FUNCTION
-    if (!lua_state_) {
-      on_scripterror(kErrorCodeStateIsNil);
-      return false;
-    }
-    lua_getglobal(lua_state_, name);
-    lua_pushnumber(lua_state_, static_cast<lua_Number>(param0));
-    lua_pushnumber(lua_state_, static_cast<lua_Number>(param1));
-    lua_pushstring(lua_state_, param2);
-    lua_pushstring(lua_state_, param3);
-    int32_t call_result = lua_pcall(lua_state_, 4, result, 0);
+      lua_pcall(lua_state_, (int32_t)array.size() - 1, result, 0);
     if (call_result != 0) {
       on_scripterror(kErrorCodeExecute, result);
       return false;
@@ -577,6 +333,64 @@ bool VM::register_globalvalue(const char *name, lua_Number value) {
     return false;
 }
 
+bool VM::register_ref(const char *table, const char *field) {
+  __ENTER_FUNCTION
+    lua_getglobal(lua_state_, table);
+    if (lua_isnil(lua_state_, -1 )) return false;
+    lua_getfield(lua_state_, -1, field);
+    if (lua_isnil(lua_state_, -1 )) return false;
+    pf_base::variable_t key = table;
+    key += ".";
+    key += field;
+    if (refs_.find(key.string()) != refs_.end()) return false;
+    int32_t index = luaL_ref(lua_state_, LUA_REGISTRYINDEX);
+    refs_[key.string()] = index;
+    lua_pop(lua_state_, 1);
+    return true;
+  __LEAVE_FUNCTION
+    return false;
+}
+
+bool VM::get_ref(const char *table, const char *field) {
+  __ENTER_FUNCTION
+    pf_base::variable_t key = table;
+    key += ".";
+    key += field;
+    if (refs_.find(key.string()) == refs_.end()) return false;
+    int32_t index = refs_[key.string()];
+    if (LUA_NOREF == index) return false;
+    lua_rawgeti(lua_state_, LUA_REGISTRYINDEX, index);
+    if (lua_isnil(lua_state_, -1 )) return false;
+    return true;
+  __LEAVE_FUNCTION
+    return false;
+}
+
+bool VM::unregister_ref(const char *table, const char *field) {
+  __ENTER_FUNCTION
+    pf_base::variable_t key = table;
+    key += ".";
+    key += field;
+    if (refs_.find(key.string()) == refs_.end()) return false;
+    int32_t index = refs_[key.string()];
+    if (LUA_NOREF == index) return false;
+    luaL_unref(lua_state_, LUA_REGISTRYINDEX, index);
+    refs_.erase(refs_.find(key.string()));
+    return true;
+  __LEAVE_FUNCTION
+    return false;
+}
+
+void VM::unregister_refs() {
+  __ENTER_FUNCTION
+    std::map<std::string, int32_t>::iterator _iterator;
+    for (_iterator = refs_.begin(); _iterator != refs_.end(); ++_iterator) {
+      luaL_unref(lua_state_, LUA_REGISTRYINDEX, _iterator->second);
+    }
+    refs_.clear();
+  __LEAVE_FUNCTION
+}
+ 
 void VM::on_init() {
   __ENTER_FUNCTION
     if (!lua_state_) return;
@@ -588,6 +402,7 @@ void VM::on_init() {
 void VM::release() {
   __ENTER_FUNCTION
     if (!lua_state_) return;
+    unregister_refs();
     lua_close(lua_state_);
     lua_state_ = NULL;
   __LEAVE_FUNCTION
@@ -653,3 +468,5 @@ const char *VM::get_lastresult() {
 } //namespace lua
 
 } //namespace pf_script
+
+#endif

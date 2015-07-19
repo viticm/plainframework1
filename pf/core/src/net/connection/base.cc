@@ -15,6 +15,7 @@ Base::Base() {
     socket_ = NULL;
     socket_inputstream_ = NULL;
     socket_outputstream_ = NULL;
+    socket_compress_inputstream_ = NULL;
     isempty_ = true;
     isdisconnect_ = false;
     isinit_ = false;
@@ -65,8 +66,22 @@ bool Base::processinput() {
   __ENTER_FUNCTION
     bool result = false;
     if (isdisconnect()) return true;
+    pf_util::compressor::Assistant *assistant = NULL;
+    assistant = socket_inputstream_->getcompressor()->getassistant();    
     try {
-      int32_t fillresult = socket_inputstream_->fill();
+      int32_t fillresult = SOCKET_ERROR;
+      if (assistant->isenable()) {
+        if (is_null(socket_compress_inputstream_)) {
+          SLOW_ERRORLOG(NET_MODULENAME,
+                        "[net.connection] (connection::Base::processinput)"
+                        " the socket compress stream is null.");
+          return false;
+        }
+        fillresult = socket_compress_inputstream_->fill();
+      } else {
+        fillresult = socket_inputstream_->fill();
+      }
+
       if (fillresult <= SOCKET_ERROR) {
         char errormessage[FILENAME_MAX];
         memset(errormessage, '\0', sizeof(errormessage));
@@ -86,7 +101,9 @@ bool Base::processinput() {
     } catch(...) {
       SaveErrorLog();
     }
-    process_compressinput(); //compress
+    
+    if (assistant->isenable() && !is_null(socket_compress_inputstream_))
+      process_compressinput(); //compress
     return result;
   __LEAVE_FUNCTION
     return false;
@@ -94,9 +111,10 @@ bool Base::processinput() {
 
 void Base::process_compressinput() {
   __ENTER_FUNCTION
+    //Write the compress input stream decode result to the normal.
     pf_util::compressor::Assistant *assistant = NULL;
     assistant = socket_inputstream_->getcompressor()->getassistant();    
-    if (!assistant->isenable()) return;
+    if (!assistant->isenable() || is_null(socket_compress_inputstream_)) return;
     uint16_t compressheader = 0;
     char packetheader[NET_PACKET_HEADERSIZE] = {0};
     uint16_t packetid = 0;
@@ -104,8 +122,14 @@ void Base::process_compressinput() {
     uint32_t packetsize = 0;
     uint32_t size = 0;
     uint32_t result = 0;
+    if (is_null(buffer_) || is_null(compressbuffer_)) {
+      Assert(false);
+      return;
+    }
+    memset(buffer_, 0, NET_CONNECTION_BUFFER_SIZE);
+    memset(compressbuffer_, 0, NET_CONNECTION_COMPRESS_BUFFER_SIZE);
     do {
-      if (!socket_inputstream_->peek(
+      if (!socket_compress_inputstream_->peek(
             reinterpret_cast<char *>(&compressheader), 
             sizeof(compressheader))) {
         break;
@@ -114,7 +138,7 @@ void Base::process_compressinput() {
         compressheader &= 0x7FFF;
         uint32_t totalsize = sizeof(compressheader) + compressheader;
         if (size < totalsize) break;
-        result = socket_inputstream_->read(buffer_, totalsize);
+        result = socket_compress_inputstream_->read(buffer_, totalsize);
         if (0 == result) return;
         uint32_t outsize = 0;
         bool _result = socket_inputstream_->getcompressor()->decompress(
@@ -142,13 +166,16 @@ void Base::process_compressinput() {
           return;
         }
       } else {
-        if (!socket_inputstream_->peek(&packetheader[0], sizeof(packetheader)))
+        if (!socket_compress_inputstream_
+            ->peek(&packetheader[0], sizeof(packetheader)))
           break;
         memcpy(&packetid, &packetheader[0], sizeof(packetid));
         memcpy(&packetcheck, 
                &packetheader[sizeof(packetid)], 
                sizeof(packetcheck));
-        if (!NET_PACKET_FACTORYMANAGER_POINTER->isvalid_packetid(packetid)) {
+        if (!NET_PACKET_FACTORYMANAGER_POINTER->isvalid_packetid(packetid) &&
+            !NET_PACKET_FACTORYMANAGER_POINTER
+            ->isvalid_dynamic_packetid(packetid)) {
           SLOW_ERRORLOG(
               NET_MODULENAME,
               "[net.connection] (Base::process_compressinput)"
@@ -157,22 +184,28 @@ void Base::process_compressinput() {
           return;
         }
         packetsize = NET_PACKET_GETLENGTH(packetcheck);
-        size = socket_inputstream_->reallength();
-        uint32_t sizemax = 
-          NET_PACKET_FACTORYMANAGER_POINTER->getpacket_maxsize(packetid);
-        if (packetsize > sizemax) {
-          SLOW_ERRORLOG(
-              NET_MODULENAME,
-              "[net.connection] (Base::process_compressinput)"
-              " packet size more than max size(%d, %d, %d)",
-              packetid,
-              packetsize,
-              sizemax);
-          return;
+        size = socket_compress_inputstream_->reallength();
+        if (!NET_PACKET_FACTORYMANAGER_POINTER
+            ->isvalid_dynamic_packetid(packetid)) {
+          uint32_t sizemax = 
+            NET_PACKET_FACTORYMANAGER_POINTER->getpacket_maxsize(packetid);
+          if (packetsize > sizemax) {
+            SLOW_ERRORLOG(
+                NET_MODULENAME,
+                "[net.connection] (Base::process_compressinput)"
+                " packet size more than max size(%d, %d, %d)",
+                packetid,
+                packetsize,
+                sizemax);
+            return;
+          }
         }
+        //Waiting for full.
         uint32_t totalsize = NET_PACKET_HEADERSIZE + packetsize;
         if (size < totalsize) break;
-        result = socket_inputstream_->read(buffer_, totalsize);
+
+        //Read it.
+        result = socket_compress_inputstream_->read(buffer_, totalsize);
         if (0 == result) return;
         result = socket_inputstream_->write(buffer_, totalsize);
         if (result != totalsize) {
@@ -248,7 +281,11 @@ bool Base::processcommand(bool option) {
                sizeof(packetcheck));
         packetsize = NET_PACKET_GETLENGTH(packetcheck);
         packetindex = NET_PACKET_GETINDEX(packetcheck);
-        if (!g_packetfactory_manager->isvalid_packetid(packetid)) {
+        if (!NET_PACKET_FACTORYMANAGER_POINTER->
+            isvalid_packetid(packetid) &&
+            !NET_PACKET_FACTORYMANAGER_POINTER->
+            isvalid_dynamic_packetid(packetid)) {
+          ERRORPRINTF("packet id error: %d", packetid);
           return false;
         }
         try {
@@ -259,25 +296,32 @@ bool Base::processcommand(bool option) {
             break;
           }
           //check packet size
-          if (packetsize > 
-              g_packetfactory_manager->getpacket_maxsize(packetid)) {
-            char temp[FILENAME_MAX] = {0};
-            snprintf(temp, 
-                     sizeof(temp) - 1, 
-                     "packet size error, packetid = %d", 
-                     packetid);
-            AssertEx(false, temp);
-            return false;
+          if (!NET_PACKET_FACTORYMANAGER_POINTER->
+              isvalid_dynamic_packetid(packetid)) {
+            if (packetsize > 
+              NET_PACKET_FACTORYMANAGER_POINTER->getpacket_maxsize(packetid)) {
+              char temp[FILENAME_MAX] = {0};
+              snprintf(temp, 
+                       sizeof(temp) - 1, 
+                       "packet size error, packetid = %d", 
+                       packetid);
+              AssertEx(false, temp);
+              return false;
+            }
           }
           //create packet
-          packet = g_packetfactory_manager->createpacket(packetid);
+          packet = NET_PACKET_FACTORYMANAGER_POINTER->createpacket(packetid);
           if (NULL == packet) return false;
+
+          //packet info
           packet->setindex(static_cast<int8_t>(packetindex));
+          packet->setid(packetid);
+          packet->setsize(packetsize);
           
           //read packet
           result = socket_inputstream_->readpacket(packet);
           if (false == result) {
-            g_packetfactory_manager->removepacket(packet);
+            NET_PACKET_FACTORYMANAGER_POINTER->removepacket(packet);
             return result;
           }
           bool needremove = true;
@@ -292,10 +336,12 @@ bool Base::processcommand(bool option) {
               executestatus = kPacketExecuteStatusError;
             }
             if (kPacketExecuteStatusError == executestatus) {
-              if (packet) g_packetfactory_manager->removepacket(packet);
+              if (packet) 
+                NET_PACKET_FACTORYMANAGER_POINTER->removepacket(packet);
               return false;
             } else if (kPacketExecuteStatusBreak == executestatus) {
-              if (packet) g_packetfactory_manager->removepacket(packet);
+              if (packet) 
+                NET_PACKET_FACTORYMANAGER_POINTER->removepacket(packet);
               break;
             } else if (kPacketExecuteStatusContinue == executestatus) {
               //continue read last packet
@@ -311,7 +357,7 @@ bool Base::processcommand(bool option) {
             exception = true;
           }
           if (packet && needremove) { 
-            g_packetfactory_manager->removepacket(packet);
+            NET_PACKET_FACTORYMANAGER_POINTER->removepacket(packet);
           }
           if (exception) return false;
         } catch(...) {
@@ -340,7 +386,7 @@ bool Base::sendpacket(packet::Base* packet) {
       uint32_t after_writesize = socket_outputstream_->reallength();
       if (packet->getsize() != 
           after_writesize - before_writesize - NET_PACKET_HEADERSIZE) {
-        FAST_ERRORLOG(kApplicationLogFile,
+        FAST_ERRORLOG(APPLICATION_NAME,
                       "[net.connection] (Base::sendpacket) size error"
                       "id = %d(write: %d, should: %d)",
                       packet->getid(),
@@ -403,7 +449,7 @@ void Base::set_execute_count_pretick(uint8_t count) {
 
 void Base::disconnect() {
   __ENTER_FUNCTION
-    socket_->close();
+    cleanup();
   __LEAVE_FUNCTION
 }
 
@@ -461,6 +507,10 @@ uint32_t Base::get_receive_bytes() {
     return 0;
 }
 
+void Base::ondisconnect() {
+  //do nothing
+}
+
 uint32_t Base::get_send_bytes() {
   __ENTER_FUNCTION
     uint32_t result = send_bytes_;
@@ -495,16 +545,27 @@ void Base::set_compressmode(uint8_t mode) {
     compressmode_ = mode;
     pf_util::compressor::Assistant *assistant = NULL;
     bool inputstream_compress_enable = 
-      1 == get_compressmode() || 3 == get_compressmode() ? true : false;
+      kConnectionCompressInput == get_compressmode() || 
+      kConnectionCompressAll == get_compressmode() ? true : false;
     bool outputstream_compress_enable = 
-      2 == get_compressmode() || 3 == get_compressmode() ? true : false;
+      kConnectionCompressOutput == get_compressmode() || 
+      kConnectionCompressAll == get_compressmode() ? true : false;
     assistant = socket_inputstream_->getcompressor()->getassistant();    
     assistant->enable(inputstream_compress_enable);
     if (assistant->isenable()) {
-      if (NULL == buffer_)
+      if (is_null(buffer_)) {
         buffer_ = new char[NET_CONNECTION_BUFFER_SIZE];
-      if (NULL == compressbuffer_)
+        memset(buffer_, 0, NET_CONNECTION_BUFFER_SIZE);
+      }
+      if (is_null(compressbuffer_)) {
         compressbuffer_ = new char[NET_CONNECTION_COMPRESS_BUFFER_SIZE];
+        memset(compressbuffer_, 0, NET_CONNECTION_COMPRESS_BUFFER_SIZE);
+      }
+      if (is_null(socket_compress_inputstream_)) {
+        socket_compress_inputstream_ = new socket::InputStream(socket_,
+            SOCKETINPUT_BUFFERSIZE_DEFAULT,
+            64 * 1024 * 1024);
+      }
     }
     assistant = socket_outputstream_->getcompressor()->getassistant();
     assistant->enable(outputstream_compress_enable);

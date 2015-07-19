@@ -16,16 +16,12 @@
 
 namespace pf_event {
 
-class PF_API System : public pf_base::Singleton<System> {
+class PF_API System {
 
  public:
    System();
    virtual ~System();
 
- public:
-   static System *getsingleton_pointer();
-   static System &getsingleton();
- 
  public:
    virtual void push(uint16_t id, 
                      std::vector<std::string> param);

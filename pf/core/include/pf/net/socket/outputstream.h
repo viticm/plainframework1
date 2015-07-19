@@ -39,7 +39,7 @@ class PF_API OutputStream : public Stream {
 
  public:
    uint32_t write(const char *buffer, uint32_t length);
-   bool writepacket(const packet::Base *packet);
+   bool writepacket(packet::Base *packet);
    int32_t flush();
 
  public: //write_*常用方法

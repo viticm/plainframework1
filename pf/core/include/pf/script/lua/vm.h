@@ -11,8 +11,11 @@
 #ifndef PF_SCRIPT_LUA_VM_H_
 #define PF_SCRIPT_LUA_VM_H_
 
+#ifndef PF_CORE_WITH_NOLUA
+
 #include "pf/script/lua/config.h"
 #include <lua.hpp>
+#include "pf/base/hashmap/template.h"
 #include "pf/script/lua/filebridge.h"
 
 namespace pf_script {
@@ -52,71 +55,31 @@ class PF_API VM {
    //注册全局变量
    bool register_globalvalue(const char *name, const char *value);
    bool register_globalvalue(const char *name, lua_Number value);
+   bool register_ref(const char *table, const char *field);
+   bool get_ref(const char *table, const char *field);
+   bool unregister_ref(const char *table, const char *field);
+   void unregister_refs();
+   void checkgc(int32_t freetime);
+
+ public:
+  void set_rootpath(const char *path);
+  void set_workpath(const char *path);
+  const char *get_rootpath();
+
+ protected:
    bool load(const char *filename);
    bool loadbuffer(unsigned char *buffer, uint64_t length);
-
- public:
    void callfunction_enter(int32_t *index);
-   bool callfunction(const char *);
-   bool callfunction(const char *, int32_t, const char *, ...);
-   bool callfunction(const char *, int32_t); //0
-   bool callfunction(const char *, int32_t, int64_t); //1
-   bool callfunction(const char *, int32_t, int64_t, int64_t); //2
-   bool callfunction(const char *, int32_t, int64_t, int64_t, int64_t); //3
-   //4
-   bool callfunction(const char *, int32_t, int64_t, int64_t, int64_t, int64_t);
-   bool callfunction(const char *,
-                     int32_t,
-                     int64_t,
-                     int64_t,
-                     int64_t,
-                     int64_t,
-                     int64_t); //5
-   bool callfunction(const char *,
-                     int32_t,
-                     int64_t,
-                     int64_t,
-                     int64_t,
-                     int64_t,
-                     int64_t,
-                     int64_t); //6
-  bool callfunction(const char *,
-                    int32_t,
-                    int64_t,
-                    int64_t,
-                    int64_t,
-                    int64_t,
-                    int64_t,
-                    int64_t,
-                    int64_t); //7
-  bool callfunction(const char *,
-                    int32_t,
-                    int64_t,
-                    int64_t,
-                    int64_t,
-                    int64_t,
-                    int64_t,
-                    int64_t,
-                    int64_t,
-                    int64_t); //8
-  bool callfunction(const char *,
-                    int32_t,
-                    int64_t,
-                    int64_t,
-                    float,
-                    float); //9
-  bool callfunction(const char *,
-                    int32_t,
-                    int64_t,
-                    int64_t,
-                    const char *,
-                    const char *); //10
-  void callfunction_leave(int32_t index);
+   bool callstring(const char *);
+   bool callfunction(const char *name,
+     pf_base::variable_array_t &params,
+     pf_base::variable_array_t &results);
+   void callfunction_leave(int32_t index);
 
- public:
-   void set_rootpath(const char *path);
-   void set_workpath(const char *path);
-   const char *get_rootpath();
+ private:
+   FileBridge filebridge_;
+   std::map<std::string, int32_t> refs_;
+   friend class Interface;
 
  private:
    bool executecode();
@@ -125,13 +88,12 @@ class PF_API VM {
    void on_scripterror(int32_t, int32_t);
    const char *get_lastresult();
 
- private:
-   FileBridge filebridge_;
-
 };
 
 }; //namespace lua
 
 }; //namespace pf_script
+
+#endif
 
 #endif //PF_SCRIPT_LUA_VM_H_

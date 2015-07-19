@@ -12,6 +12,7 @@
 #define PF_THREAD_H_
 
 #include "pf/base/config.h"
+#include "pf/base/singleton.h"
 
 namespace pf_sys {
 
@@ -38,6 +39,13 @@ class PF_API Thread {
 #endif
    status_t get_status();
    void set_status(status_t status);
+   int32_t get_tickcount() const;
+   int32_t getsteps() const;
+   virtual bool isinit() const;
+
+ protected:
+   int32_t tickcount_;
+   int32_t steps_;
 
  private:
 #if __LINUX__
@@ -72,6 +80,7 @@ class PF_API ThreadLock {
 };
 
 PF_API uint64_t get_current_thread_id();
+PF_API uint64_t get_origine_thread_id();
 
 //global variable
 extern uint16_t g_thread_quit_count;
@@ -94,9 +103,63 @@ class lock_guard {
 
 };
 
+class PF_API ThreadIndent : public pf_base::Singleton<ThreadIndent> {
+
+ public:
+   ThreadIndent();
+   ~ThreadIndent();
+
+ public:
+   static const uint16_t kCapsMax = 512;
+
+ public:
+   static ThreadIndent &getsingleton();
+   static ThreadIndent *getsingleton_pointer();
+
+ public:
+   void add(uint64_t id);
+   void setindent(uint64_t id, int32_t value);
+   int32_t getindent(uint64_t id) const;
+
+ private:
+   uint64_t ids_[kCapsMax];
+   int32_t indents_[kCapsMax];
+
+};
+
+class PF_API ThreadPool {
+
+ public:
+   ThreadPool();
+   ~ThreadPool();
+
+ public:
+   static const uint16_t kThreadMax = 1024;
+
+ public:
+   bool start(); //启动所有线程
+   bool stop(); //停止所有线程
+
+ public:
+   bool add(Thread *thread, int32_t index); //增加线程
+   bool remove(uint64_t id);
+   Thread *get_byid(uint64_t id);
+   Thread *get_byindex(int32_t index);
+   void saveinfo(); //保存线程信息
+   bool is_allstarted();
+
+ private:
+   Thread *threads_[kThreadMax];
+   int32_t tickcounts_[kThreadMax];
+   uint32_t count_;
+   uint32_t position_;
+};
+
 }; //namespace pf_sys
 
-//thread lock
 PF_API extern pf_sys::ThreadLock g_thread_lock;
+PF_API extern pf_sys::ThreadIndent *g_thread_indent;
+
+#define THREAD_INDENT_POINTER pf_sys::ThreadIndent::getsingleton_pointer()
 
 #endif //PF_THREAD_H_

@@ -37,6 +37,9 @@
    http://www.oberhumer.com/opensource/lzo/
  */
 
+#if _MSC_VER >= 1800
+#include "pf/util/compressor/lzoconf.h"
+#endif
 
 #ifndef __LZODEFS_H_INCLUDED
 #define __LZODEFS_H_INCLUDED 1

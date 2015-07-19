@@ -13,4 +13,6 @@
 
 #include "pf/engine/config.h"
 
+#define ENGINE_THREAD_FRAME 60 //默认引擎线程帧率，注意线程运行不应为纯粹死循环
+
 #endif //PF_ENGINE_THREAD_CONFIG_H_

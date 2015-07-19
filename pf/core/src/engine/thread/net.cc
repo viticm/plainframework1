@@ -1,3 +1,5 @@
+#include "pf/base/util.h"
+#include "pf/base/time_manager.h"
 #include "pf/engine/thread/net.h"
 
 using namespace pf_engine::thread;
@@ -7,7 +9,6 @@ Net::Net() {
 }
 
 Net::~Net() {
-  //do nothing
 }
 
 bool Net::init(uint16_t connectionmax, 
@@ -23,14 +24,20 @@ bool Net::init(uint16_t connectionmax,
 
 void Net::run() {
   __ENTER_FUNCTION
-    using namespace pf_net;
-    if (isactive()) Manager::loop();
+    while (isactive()) {
+      uint32_t runtime = TIME_MANAGER_POINTER->get_tickcount();
+      tick(); //Ñ­»·Âß¼­
+      int32_t waittime =
+        runtime +
+        static_cast<uint32_t>(1000 / NET_MANAGER_FRAME) -
+        TIME_MANAGER_POINTER->get_tickcount();
+      if (waittime > 0) pf_base::util::sleep(waittime);
+    }
   __LEAVE_FUNCTION
 }
 
 void Net::stop() {
   isactive_ = false;
-  Manager::setactive(false);
 }
 
 void Net::quit() {

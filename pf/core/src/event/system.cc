@@ -1,9 +1,6 @@
 #include "pf/base/time_manager.h"
 #include "pf/event/system.h"
 
-template <>
-pf_event::System *pf_base::Singleton<pf_event::System>::singleton_ = NULL;
-
 namespace pf_event {
 
 System::System() {
@@ -12,15 +9,6 @@ System::System() {
 
 System::~System() {
   //do nothing
-}
-
-System *System::getsingleton_pointer() {
-  return singleton_;
-}
-
-System &System::getsingleton() {
-  Assert(singleton_);
-  return *singleton_;
 }
 
 void System::init(eventdefine_t events[]) {

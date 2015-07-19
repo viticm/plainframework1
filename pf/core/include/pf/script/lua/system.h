@@ -28,13 +28,13 @@ class PF_API System : public pf_base::Singleton<System>, public Interface {
    ~System();
 
  public:
+   void tick(uint32_t time);
+
+ public:
    static System *getsingleton_pointer();
    static System &getsingleton();
    void registerfunctions();
    void set_function_registers(function_registers function);
-
- public:
-   static int32_t call_noclosure(lua_State *L);
 
  private:
    function_registers function_registers_;

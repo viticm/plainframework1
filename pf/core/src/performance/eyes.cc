@@ -99,8 +99,6 @@ void Eyes::activate() {
       if (cpu_usage != -1.0f) printinfo();
       last_printtime_ = currenttime;
     }
-    //tick_forFPS();
-    util::sleep(100);
   __LEAVE_FUNCTION
 }
 

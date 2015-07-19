@@ -24,14 +24,14 @@ class PF_API DynamicAllocator {
    ~DynamicAllocator();
 
  public:
-   void *malloc(int64_t length);
+   void *malloc(size_t size);
    void free();
    void *getpointer();
-   int64_t getlength();
+   size_t getsize() const;
  
  private:
    void *pointer_;
-   int64_t length_;
+   size_t size_;
 
 }; 
 

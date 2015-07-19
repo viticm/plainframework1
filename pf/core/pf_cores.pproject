@@ -1,0 +1,40 @@
+/**
+  Plain framework project file.
+  lib pf_cores 中不支持脚本，并且不支持ODBC，所有方法为空实现
+  Version:              The project current version.
+  Type:                 Project type [library|executable].
+  LinkDirectories:      Link directories as the Dependencies directories.
+  IncludeDirectories:   Include directories.
+  ExtraSources:         Extra source file or directories.
+  SourceFilters:        Source directory or filename filter(not active).
+  OutputPath:           The project output path.
+  Definitions:          Macros definitions.
+  Dependencies:         Dependencies library.
+**/
+{
+  "Version": "1.0.5",
+  "Type": "library",
+  "LinkDirectories": [
+    "./",
+    "./../../dependencies/dll"
+  ],
+  "IncludeDirectories": [
+    "../include",
+    "../../dependencies/iconv/include"
+  ],
+  "ExtraSources": [
+  ],
+  "SourceFilters": [
+    "CMakeFiles"
+  ],  
+  "DisableSpecificWarnings": "4819;",
+  "OutputPath": "./../dll/",
+  "Definitions": [
+    "PF_CORE",
+    "PF_CORE_WITH_NOLUA",
+    "PF_CORE_WITH_NOODBC"
+  ],
+  "Dependencies": [
+    "iconv"
+  ]
+}

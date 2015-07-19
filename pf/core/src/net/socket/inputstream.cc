@@ -1,4 +1,5 @@
 #include "pf/base/util.h"
+#include "pf/base/log.h"
 #include "pf/net/socket/inputstream.h"
 
 namespace pf_net {
@@ -313,7 +314,16 @@ uint64_t InputStream::read_uint64() {
 void InputStream::read_string(char *buffer, size_t size) {
   __ENTER_FUNCTION
     uint32_t length = read_uint32();
-    if (length <= 0 || size < length) return;
+    if (length <= 0 || size < length) {
+      if (size < length) {
+        SLOW_ERRORLOG(NET_MODULENAME,
+                      "[net.socket] InputStream::read_string size < length"
+                      " not read, size: %d, length: %d",
+                      size, 
+                      length);
+      }
+      return;
+    }
     read(buffer, length);
   __LEAVE_FUNCTION
 }

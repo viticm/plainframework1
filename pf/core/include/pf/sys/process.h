@@ -29,6 +29,7 @@ PF_API int32_t getid(const char *filename);
 PF_API bool writeid(const char *filename);
 PF_API bool waitexit(const char *filename);
 PF_API void getinfo(int32_t id, info_t &info);
+PF_API void get_filename(char *filename, size_t size);
 PF_API float get_cpu_usage(int32_t id);
 PF_API uint64_t get_virtualmemory_usage(int32_t id);
 PF_API uint64_t get_physicalmemory_usage(int32_t id);

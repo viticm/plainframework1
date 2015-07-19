@@ -6,6 +6,7 @@
 #include "pf/base/string.h"
 #include "pf/sys/process.h"
 #include "pf/sys/util.h"
+#include "pf/sys/thread.h"
 #include "pf/engine/kernel.h"
 
 namespace pf_engine {
@@ -36,6 +37,8 @@ Kernel::Kernel() {
     registerconfig(ENGINE_CONFIG_PERFORMANCE_RUN_ASTHREAD, true);
     registerconfig(ENGINE_CONFIG_SCRIPT_RUN_ASTHREAD, false);
     registerconfig(ENGINE_CONFIG_BASEMODULE_HAS_INIT, false);
+    registerconfig(ENGINE_CONFIG_NET_SERVERMODE, true);
+    registerconfig(ENGINE_CONFIG_MAINLOOP, true);
     db_manager_ = NULL;
     net_manager_ = NULL;
     db_thread_ = NULL;
@@ -44,6 +47,8 @@ Kernel::Kernel() {
     performance_thread_ = NULL;
     script_thread_ = NULL;
     isactive_ = false;
+    GLOBAL_VALUES["thread_count"] = 0;
+    GLOBAL_VALUES["app_status"] = kAppStatusSleep;
   __LEAVE_FUNCTION
 }
 
@@ -144,6 +149,8 @@ bool Kernel::init() {
 
 void Kernel::run() {
   __ENTER_FUNCTION
+    if (!isactive_ || GLOBAL_VALUES["app_status"] == kAppStatusStop) return;
+    GLOBAL_VALUES["app_status"] = kAppStatusRunning;
     //base
     SLOW_LOG(ENGINE_MODULENAME, "[engine] (Kernel::run) base module");
     run_base();
@@ -167,15 +174,18 @@ void Kernel::run() {
       SLOW_LOG(ENGINE_MODULENAME, "[engine] (Kernel::run) net module");
       run_net();
     }
-    while (isactive_) {
-      uint32_t runtime = TIME_MANAGER_POINTER->get_tickcount();
-      loop_handle();
-      uint32_t waittime = 
-        runtime + 
-        static_cast<uint32_t>(1000/ENGINE_KERNEL_FRAME) - 
-        TIME_MANAGER_POINTER->get_tickcount();
-      calculate_FPS();
-      if (waittime > 0) pf_base::util::sleep(waittime);
+    bool mainloop = getconfig_boolvalue(ENGINE_CONFIG_MAINLOOP);
+    if (mainloop) {
+      while (isactive_) {
+        uint32_t runtime = TIME_MANAGER_POINTER->get_tickcount();
+        loop_handle();
+        calculate_FPS();
+        int32_t waittime =
+          runtime +
+          static_cast<uint32_t>(1000 / ENGINE_KERNEL_FRAME) -
+          TIME_MANAGER_POINTER->get_tickcount();
+        if (waittime > 0) pf_base::util::sleep(waittime);
+      }
     }
   __LEAVE_FUNCTION
 }
@@ -183,26 +193,35 @@ void Kernel::run() {
 void Kernel::stop() {
   __ENTER_FUNCTION
     if (!isactive_) return;
+    GLOBAL_VALUES["app_status"] = kAppStatusStop;
     //performance
     if (getconfig_boolvalue(ENGINE_CONFIG_PERFORMANCE_ISACTIVE)) {
       SLOW_LOG(ENGINE_MODULENAME, "[engine] (Kernel::stop) performance module");
       stop_performance();
     }
+    
     //script
     if (getconfig_boolvalue(ENGINE_CONFIG_SCRIPT_ISACTIVE)) {
       SLOW_LOG(ENGINE_MODULENAME, "[engine] (Kernel::stop) script module");
       stop_script();
     }
+    
     //net
     if (getconfig_boolvalue(ENGINE_CONFIG_NET_ISACTIVE)) {
       SLOW_LOG(ENGINE_MODULENAME, "[engine] (Kernel::stop) net module");
       stop_net();
     }
+
     //db
     if (getconfig_boolvalue(ENGINE_CONFIG_DB_ISACTIVE)) {
       SLOW_LOG(ENGINE_MODULENAME, "[engine] (Kernel::stop) db module");
       stop_db();
     }
+    
+    //Check threads.
+    SLOW_LOG(ENGINE_MODULENAME, "[engine] (Kernel::stop) threads module");
+    check_quitthreads();
+
     //base
     SLOW_LOG(ENGINE_MODULENAME, "[engine] (Kernel::stop) base module");
     stop_base();
@@ -295,18 +314,6 @@ const char *Kernel::getconfig_stringvalue(int32_t key) {
     return NULL;
 }
 
-void Kernel::set_base_logprint(bool flag) {
-  __ENTER_FUNCTION
-    pf_base::g_command_logprint = flag;
-  __LEAVE_FUNCTION
-}
-
-void Kernel::set_base_logactive(bool flag) {
-  __ENTER_FUNCTION
-    pf_base::g_command_logactive = flag;
-  __LEAVE_FUNCTION
-}
-
 void Kernel::set_net_stream_usepacket(bool flag) {
   g_net_stream_usepacket = flag;
 }
@@ -332,7 +339,7 @@ bool Kernel::init_db() {
     bool isactive = getconfig_boolvalue(ENGINE_CONFIG_DB_ISACTIVE);
     bool is_usethread = getconfig_boolvalue(ENGINE_CONFIG_DB_RUN_ASTHREAD); 
     if (isactive) {
-      dbconnector_type_t connector_type = static_cast<dbconnector_type_t>(
+      int8_t connector_type = static_cast<int8_t>(
           getconfig_int32value(ENGINE_CONFIG_DB_CONNECTOR_TYPE));
       const char *connection_or_dbname = 
         getconfig_stringvalue(ENGINE_CONFIG_DB_CONNECTION_OR_DBNAME);
@@ -345,14 +352,16 @@ bool Kernel::init_db() {
       const char *username = getconfig_stringvalue(ENGINE_CONFIG_DB_USERNAME);
       const char *password = getconfig_stringvalue(ENGINE_CONFIG_DB_PASSWORD);
       if (is_usethread) {
-        db_thread_ = new thread::DB(connector_type);
+        db_thread_ = new thread::DB;
         if (NULL == db_thread_) return false;
+        db_thread_->set_connector_type(connector_type);
         bool result = 
           db_thread_->init(connection_or_dbname, username, password);
         return result;
       } else {
-        db_manager_ = new Manager(connector_type);
+        db_manager_ = new Manager;
         if (NULL == db_manager_) return false;
+        db_manager_->set_connector_type(connector_type);
         bool result = 
           db_manager_->init(connection_or_dbname, username, password);
         return result;
@@ -381,6 +390,7 @@ bool Kernel::init_net() {
         return false;
       }
       uint16_t connectionmax = static_cast<uint16_t>(_connectionmax);
+      bool servermode = getconfig_boolvalue(ENGINE_CONFIG_NET_SERVERMODE);
       bool result = true;
       if (is_usethread) {
         if (!net_thread_) net_thread_ = new thread::Net();
@@ -390,6 +400,7 @@ bool Kernel::init_net() {
                         " NULL == net_thread_");
           return false;
         }
+        net_thread_->set_servermode(servermode);
         result = net_thread_->init(connectionmax, listenport, listenip);
         if (!result) {
           SLOW_ERRORLOG(ENGINE_MODULENAME, 
@@ -400,17 +411,6 @@ bool Kernel::init_net() {
                         listenport);
           return false;
         }
-        //在linux环境下epoll初始化的优先级需要高于管理器的优先级 --epoll监听移到创建处
-        //以前此处有一个错误：那就是在保护进程模式下，
-        //epoll需要进程有socket处理后才能正确的创建
-        result = net_thread_->set_poll_maxcount(connectionmax);
-        if (!result) {
-          SLOW_ERRORLOG(ENGINE_MODULENAME, 
-                        "[engine] (Kernel::init_net)"
-                        " net_thread_->set_poll_maxcount(%d) failed",
-                        connectionmax);
-          return false;
-        }
       } else {
         if (!net_manager_) net_manager_ = new Manager();
         if (NULL == net_manager_) {
@@ -419,6 +419,7 @@ bool Kernel::init_net() {
                         " NULL == net_manager_");
           return false;
         }
+        net_manager_->set_servermode(servermode);
         result = net_manager_->init(connectionmax, listenport, listenip);
         if (!result) {
           SLOW_ERRORLOG(ENGINE_MODULENAME, 
@@ -427,14 +428,6 @@ bool Kernel::init_net() {
                         connectionmax,
                         listenport,
                         listenport);
-          return false;
-        }
-        result = net_manager_->set_poll_maxcount(connectionmax);
-        if (!result) {
-          SLOW_ERRORLOG(ENGINE_MODULENAME, 
-                        "[engine] (Kernel::init_net)"
-                        " net_manager_->set_poll_maxcount(%d) failed",
-                        connectionmax);
           return false;
         }
       }
@@ -469,17 +462,30 @@ bool Kernel::init_script() {
     using namespace pf_script;
     bool isactive = getconfig_boolvalue(ENGINE_CONFIG_SCRIPT_ISACTIVE);
     if (isactive) {
-      if (!SCRIPT_LUASYSTEM_POINTER)
-        g_script_luasystem = new lua::System();
-      if (NULL == g_script_luasystem) return false;
-      SCRIPT_LUASYSTEM_POINTER->set_globalfile(
-          getconfig_stringvalue(ENGINE_CONFIG_SCRIPT_GLOBALFILE));
-      SCRIPT_LUASYSTEM_POINTER->set_rootpath(
-          getconfig_stringvalue(ENGINE_CONFIG_SCRIPT_ROOTPATH));
-      SCRIPT_LUASYSTEM_POINTER->set_workpath(
-          getconfig_stringvalue(ENGINE_CONFIG_SCRIPT_WORKPATH));
-      if (!SCRIPT_LUASYSTEM_POINTER->init()) return false;
-      SCRIPT_LUASYSTEM_POINTER->registerfunctions();
+      bool is_usethread = 
+        getconfig_boolvalue(ENGINE_CONFIG_SCRIPT_RUN_ASTHREAD);
+      const char *globalfile = 
+        getconfig_stringvalue(ENGINE_CONFIG_SCRIPT_GLOBALFILE);
+      const char *rootpath = 
+        getconfig_stringvalue(ENGINE_CONFIG_SCRIPT_ROOTPATH);
+      const char *workpath =
+        getconfig_stringvalue(ENGINE_CONFIG_SCRIPT_WORKPATH);
+      if (is_usethread) {
+        script_thread_ = new thread::Script;
+        if (is_null(script_thread_)) return false;
+        if (!script_thread_->init(rootpath, workpath, globalfile))
+          return false;
+      } else {
+
+        if (!SCRIPT_LUASYSTEM_POINTER)
+          g_script_luasystem = new lua::System();
+        if (NULL == g_script_luasystem) return false;
+        SCRIPT_LUASYSTEM_POINTER->set_globalfile(globalfile);
+        SCRIPT_LUASYSTEM_POINTER->set_rootpath(rootpath);
+        SCRIPT_LUASYSTEM_POINTER->set_workpath(workpath);
+        if (!SCRIPT_LUASYSTEM_POINTER->init()) return false;
+        SCRIPT_LUASYSTEM_POINTER->registerfunctions();
+      }
     }
     return true;
   __LEAVE_FUNCTION
@@ -529,8 +535,7 @@ void Kernel::run_net() {
     bool is_usethread = getconfig_boolvalue(ENGINE_CONFIG_NET_RUN_ASTHREAD);
     if (is_usethread) {
       net_thread_->start();
-    } else {
-      net_manager_->loop();
+      net_thread_->threadid_ = net_thread_->get_id(); //如果自己设置了线程，则需要手动归置ID
     }
   __LEAVE_FUNCTION
 }
@@ -576,7 +581,6 @@ void Kernel::stop_db() {
 void Kernel::stop_net() {
   __ENTER_FUNCTION
     bool is_usethread = getconfig_boolvalue(ENGINE_CONFIG_NET_RUN_ASTHREAD);
-    if (net_manager_) net_manager_->setactive(false);
     if (is_usethread) {
       net_thread_->stop();
     }
@@ -633,6 +637,14 @@ bool Kernel::init_net_connectionpool() {
 
 bool Kernel::loop_handle() {
   __ENTER_FUNCTION
+    if (getconfig_boolvalue(ENGINE_CONFIG_NET_ISACTIVE) &&
+      !getconfig_boolvalue(ENGINE_CONFIG_NET_RUN_ASTHREAD)) {
+      net_manager_->tick();
+    }
+    if (getconfig_boolvalue(ENGINE_CONFIG_SCRIPT_ISACTIVE) &&
+      !getconfig_boolvalue(ENGINE_CONFIG_SCRIPT_RUN_ASTHREAD)) {
+      SCRIPT_LUASYSTEM_POINTER->tick(10); //For gc.
+    }
     bool db_is_usethread = getconfig_boolvalue(ENGINE_CONFIG_DB_RUN_ASTHREAD);
     bool db_isactive = getconfig_boolvalue(ENGINE_CONFIG_DB_ISACTIVE);
     if (db_isactive && !db_is_usethread)
@@ -644,6 +656,8 @@ bool Kernel::loop_handle() {
 
 void Kernel::calculate_FPS() {
   __ENTER_FUNCTION
+    if (!getconfig_boolvalue(ENGINE_CONFIG_PERFORMANCE_ISACTIVE))
+      return;
     static uint32_t last_ticktime = 0;
     static uint32_t looptime = 0; //时间累计数
     static uint32_t loopcount = 0;
@@ -660,6 +674,33 @@ void Kernel::calculate_FPS() {
         PERFORMANCE_EYES_POINTER->set_fps(FPS_);
     }
     ++loopcount;
+  __LEAVE_FUNCTION
+}
+
+void Kernel::check_quitthreads() {
+  __ENTER_FUNCTION
+    using namespace pf_sys;
+    uint32_t start_tickcount = TIME_MANAGER_POINTER->get_tickcount();
+    uint32_t checktime = 0;
+    enum { kCheckTimeMax = 3000 };
+    while (GLOBAL_VALUES["thread_count"] > 0) {
+      if (GLOBAL_VALUES["thread_count"] > 0 && checktime > kCheckTimeMax) {
+        SLOW_ERRORLOG(ENGINE_MODULENAME,
+                      "[engine] (Kernel::check_quitthreads) quit thread more"
+                      " than time max, still need quit thread: %d,"
+                      " check time max: %d",
+                      GLOBAL_VALUES["thread_count"].int32(),
+                      kCheckTimeMax);
+        break;
+      } else {
+        SLOW_DEBUGLOG(ENGINE_MODULENAME,
+                      "[engine] (Kernel::check_quitthreads) checking ..."
+                      " waiting quit thread: %d",
+                      GLOBAL_VALUES["thread_count"].int32());
+      }
+      pf_base::util::sleep(10);
+      checktime = TIME_MANAGER_POINTER->get_tickcount() - start_tickcount;
+    }
   __LEAVE_FUNCTION
 }
 

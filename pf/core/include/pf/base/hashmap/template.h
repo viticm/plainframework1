@@ -24,75 +24,24 @@ class Template {
    typedef typename hashmap_t::iterator iterator_t;
 
  public:
-   Template() {
-     maxcount_ = 0;
-   }
-   ~Template() {
-     maxcount_ = 0;
-   }
-   void init(uint32_t count) {
-     __ENTER_FUNCTION
-       clear();
-       maxcount_ = count;
-     __LEAVE_FUNCTION
-   }
-   bool add(T_key key, T_value value) {
-     __ENTER_FUNCTION
-       if (hashmap_.size() >= maxcount_) return false;
-       hashmap_.insert(typename hashmap_t::value_type(key, value));
-       return true;
-     __LEAVE_FUNCTION
-       return false;
-   }
-   bool set(T_key key, T_value value) {
-     __ENTER_FUNCTION
-       iterator_t iterator = hashmap_.find(key);
-       if (iterator != hashmap_.end()) {
-         iterator->second = value;
-         return true;
-       }
-       return false;
-     __LEAVE_FUNCTION
-       return false;
-   }
-   T_value get(T_key key) {
-     __ENTER_FUNCTION
-       iterator_t iterator = hashmap_.find(key);
-       if (iterator != hashmap_.end()) return iterator->second;
-       return 0;
-     __LEAVE_FUNCTION
-       return 0;
-   }
-   bool isfind(T_key key) {
-     __ENTER_FUNCTION
-       iterator_t iterator = hashmap_.find(key);
-       if (iterator != hashmap_.end()) return true;
-       return false;
-     __LEAVE_FUNCTION
-       return false;
-   }
-   bool remove(T_key key) {
-     __ENTER_FUNCTION
-       iterator_t iterator = hashmap_.find(key);
-       if (iterator != hashmap_.end()) {
-         hashmap_.erase(iterator);
-         return true;
-       }
-       return false;
-     __LEAVE_FUNCTION
-       return false;
-   }
-   void clear() {
-     __ENTER_FUNCTION
-       hashmap_.clear();
-     __LEAVE_FUNCTION
-   }
-   uint32_t getcount() const {
-     return static_cast<uint32_t>(hashmap_.size());
-   }
-   uint32_t get_maxcount() const {
-     return maxcount_;
-   }
+   Template();
+   ~Template();
+
+ public:
+   Template(const Template &object);
+   Template(const Template *object);
+   Template &operator = (const Template &object);
+   Template *operator = (const Template *object);
+   void init(uint32_t count);
+   bool add(T_key key, T_value value);
+   bool set(T_key key, T_value value);
+   T_value get(T_key key);
+   bool isfind(T_key key);
+   bool remove(T_key key);
+   void clear();
+   uint32_t getcount() const;
+   uint32_t get_maxcount() const;
+   void set_maxcount(uint32_t count);
    iterator_t begin() {
      return hashmap_.begin();
    }
@@ -110,5 +59,7 @@ class Template {
 }; //namespace hashmap
 
 }; //namespace pf_base
+
+#include "pf/base/hashmap/template.tpp"
 
 #endif //PF_BASE_HASHMAP_TEMPLATE_H_

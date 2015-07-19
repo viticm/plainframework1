@@ -32,6 +32,7 @@ void Performance::run() {
       if (PERFORMANCE_EYES_POINTER) {
         PERFORMANCE_EYES_POINTER->activate();
       }
+      pf_base::util::sleep(1);
     }
   __LEAVE_FUNCTION
 }

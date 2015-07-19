@@ -9,6 +9,13 @@
  * @uses your description
  */
 
+#ifndef PF_BASE_IO_H_
+#define PF_BASE_IO_H_
+
+#include "pf/base/config.h"
+
 PF_API void baseio_perror(const char *format, ...);
 PF_API void baseio_pwarn(const char *format, ...);
 PF_API void baseio_pdebug(const char *format, ...);
+
+#endif //PF_BASE_CONFIG_H_

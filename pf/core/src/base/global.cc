@@ -1,4 +1,5 @@
 #include "pf/base/string.h"
+#include "pf/base/util.h"
 #include "pf/base/global.h"
 
 namespace pf_base {
@@ -11,7 +12,13 @@ char performance_modulename[FILENAME_MAX] = {0};
 char db_modulename[FILENAME_MAX] =  {0};
 char engine_modulename[FILENAME_MAX] = {0};
 char applicationname[FILENAME_MAX] = {0};
+char _app_basepath[FILENAME_MAX] = {0};
 uint8_t applicationtype = 0;
+
+variable_set_t &get_variables() {
+  static variable_set_t variables;
+  return variables;
+}
 
 const char *get_net_modulename() {
   __ENTER_FUNCTION
@@ -83,6 +90,21 @@ const char *get_applicationname() {
 
 void set_applicationname(const char *name) {
   string::safecopy(applicationname, name, sizeof(applicationname));  
+}
+
+const char *app_basepath() {
+  __ENTER_FUNCTION
+    if (_app_basepath[0] != '\0') return _app_basepath;
+    char exe_filepath[FILENAME_MAX] = { 0 };
+    util::get_module_filename(exe_filepath, sizeof(exe_filepath));
+    util::path_tounix(exe_filepath, sizeof(exe_filepath));
+    util::dirname(exe_filepath, _app_basepath);
+    if ('\0' == _app_basepath[0]) {
+      snprintf(_app_basepath, sizeof(_app_basepath) - 1, "%s", "./");
+    }
+    util::complementpath(_app_basepath, sizeof(_app_basepath));
+  __LEAVE_FUNCTION
+    return "";
 }
 
 uint8_t get_applicationtype() {

@@ -12,6 +12,8 @@
 #ifndef PF_DB_ODBC_INTERFACE_H_
 #define PF_DB_ODBC_INTERFACE_H_
 
+#ifndef PF_CORE_WITH_NOODBC
+
 #include "pf/db/odbc/config.h"
 #include "pf/sys/memory/static_allocator.h"
 #include "pf/util/compressor/mini.h"
@@ -30,8 +32,7 @@ namespace odbc {
 
 class PF_API Interface {
  public:
-   enum
-   {
+   enum {
      COLUMN_MAX = 100,
      BLOB_BATCH = 10000,
      QUERY_OK = 0,
@@ -87,7 +88,6 @@ class PF_API Interface {
    const char *get_error_message();
    bool is_connected();
    int32_t get_affect_row_count();
-   SQLSMALLINT get_typemapping(SQLSMALLINT typecode);
    bool is_prepare();
    void clear();
    void clear_no_commit();
@@ -95,7 +95,7 @@ class PF_API Interface {
    void clear_column_data();
    int32_t get_columncount() const;
    bool fetch(int32_t orientation = SQL_FETCH_NEXT, int32_t offset = 0);
-   db_query_t& get_query();
+   db_query_t *get_query();
    bool execute();
    bool execute(const char *sql_str);
 
@@ -109,7 +109,7 @@ class PF_API Interface {
    uint16_t get_uint16(int32_t column_index, int32_t &error_code);
    int8_t get_int8(int32_t column_index, int32_t &error_code);
    uint8_t get_uint8(int32_t column_index, int32_t &error_code);
-   int32_t get_string(int32_t column, 
+   int32_t get_string(int32_t column_index, 
                       char *buffer, 
                       int32_t buffer_length, 
                       int32_t &error_code);
@@ -125,27 +125,36 @@ class PF_API Interface {
                                      char *buffer, 
                                      int32_t buffer_length, 
                                      int32_t &error_code);
-   const char *get_data(int32_t column, const char *_default = NULL);
+   const char *get_data(int32_t column_index, const char *_default = NULL);
    const char *get_data(const char *columnname, const char *_default = NULL);
-   int32_t get_datalength(int32_t column) const;
-   int32_t get_column(const char *columnname) const;
-   int16_t get_size(int32_t column) const;
-   int16_t get_precision(int32_t column) const;
-   int16_t get_nullable(int32_t column) const;
-   const char *get_name(int32_t column);
-   int16_t get_type(int32_t column) const;
-   const char *get_typename(int16_t column);
+   int32_t get_datalength(int32_t column_index) const;
+   int32_t get_index(const char *columnname) const;
+   int16_t get_size(int32_t column_index) const;
+   int16_t get_precision(int32_t column_index) const;
+   int16_t get_nullable(int32_t column_index) const;
+   const char *get_name(int32_t column_index);
+   int16_t get_type(int32_t column_index) const;
+   const char *get_typename(int16_t column_index);
    pf_util::compressor::Mini *getcompressor();
+
    //分析
    void diag_state();
    void save_error_log(const char *log);
    void save_warning_log(const char *log);
    void clear_env();
-   void dump(int32_t column);
+   void dump(int32_t column_index);
+
+ private:
+   SQLSMALLINT get_typemapping(SQLSMALLINT typecode);
+
 };
 
 }; //namespace odbc
 
 }; //namespace pf_db
+
+#else
+#include "pf/db/odbc/none.h"
+#endif
 
 #endif //PF_DB_ODBC_INTERFACE_H_

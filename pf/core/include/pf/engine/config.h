@@ -25,6 +25,8 @@
 #define ENGINE_CONFIG_SCRIPT_RUN_ASTHREAD 7
 #define ENGINE_CONFIG_PERFORMANCE_RUN_ASTHREAD 8
 #define ENGINE_CONFIG_BASEMODULE_HAS_INIT 9 //扩展基础模块，可以独立引擎初始化
+#define ENGINE_CONFIG_NET_SERVERMODE 10
+#define ENGINE_CONFIG_MAINLOOP 11 //是否执行循环阻塞方法
 #define ENGINE_CONFIG_BOOL_MAX 20 //引擎核心布尔值配置最大的索引值
 /* } bool config */
 

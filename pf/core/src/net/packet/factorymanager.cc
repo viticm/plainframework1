@@ -1,5 +1,6 @@
 #include "pf/base/log.h"
 #include "pf/net/packet/base.h"
+#include "pf/net/packet/dynamic.h"
 #include "pf/net/packet/factorymanager.h"
 
 pf_net::packet::FactoryManager* g_packetfactory_manager = NULL;
@@ -29,6 +30,10 @@ FactoryManager::FactoryManager() {
     size_ = 0;
     function_registerfactories_ = NULL;
     function_isvalid_packetid_ = NULL;
+    function_isencrypt_packetid_ = NULL;
+    function_isvalid_dynamic_packetid_ = NULL;
+    function_packetexecute_ = NULL;
+    allocpackets_.init(NET_PACKET_FACTORYMANAGER_ALLOCMAX);
   __LEAVE_FUNCTION
 }
 
@@ -36,6 +41,12 @@ FactoryManager::~FactoryManager() {
   __ENTER_FUNCTION
     Assert(factories_ != NULL);
     uint16_t i;
+    pf_base::hashmap::Template<int64_t, Base *>::iterator_t _iterator;
+    for (_iterator = allocpackets_.begin(); 
+         _iterator != allocpackets_.end(); 
+         ++_iterator) {
+      SAFE_DELETE(_iterator->second);
+    }
     for (i = 0; i < size_; ++i) {
       SAFE_DELETE(factories_[i]);
     }
@@ -100,23 +111,47 @@ void FactoryManager::set_function_isencrypt_packetid(
   function_isencrypt_packetid_ = function;
 }
 
+void FactoryManager::set_function_isvalid_dynamic_packetid(
+    function_isvalid_dynamic_packetid function) {
+  function_isvalid_dynamic_packetid_ = function;
+}
+
+void FactoryManager::set_function_packetexecute(
+    function_packetexecute function) {
+  function_packetexecute_ = function;
+}
+
 Base *FactoryManager::createpacket(uint16_t packetid) {
   __ENTER_FUNCTION
-    bool isfind = idindexs_.isfind(packetid);
-    uint16_t index = idindexs_.get(packetid);
-    if (!isfind || NULL == factories_[index]) {
-      Assert(false);
-      return NULL;
-    }
     Base *packet = NULL;
-    lock();
-    try {
-      packet = factories_[index]->createpacket();
-      ++(packet_alloccount_[index]);
-    } catch(...) {
-      packet = NULL;
+    if (isvalid_dynamic_packetid(packetid)) {
+      lock();
+      try {
+        packet = new Dynamic(packetid);
+      } catch (...) {
+        unlock();
+      }
+      unlock();
+    } else {
+      bool isfind = idindexs_.isfind(packetid);
+      uint16_t index = idindexs_.get(packetid);
+      if (!isfind || NULL == factories_[index]) {
+        Assert(false);
+        return NULL;
+      }
+      lock();
+      try {
+        packet = factories_[index]->createpacket();
+        ++(packet_alloccount_[index]);
+      } catch(...) {
+        packet = NULL;
+      }
+      unlock();
     }
-    unlock();
+    if (packet) { //Memory safe.
+      int64_t pointer = POINTER_TOINT64(packet);
+      allocpackets_.add(pointer, packet);
+    }
     return packet;
   __LEAVE_FUNCTION
     return NULL;
@@ -151,24 +186,38 @@ void FactoryManager::removepacket(Base *packet) {
       return;
     }
     uint16_t packetid = packet->getid();
-    bool isfind = idindexs_.isfind(packetid);
-    uint16_t index = idindexs_.get(packetid);
-    lock();
-    try {
-      SAFE_DELETE(packet);
-      if (!isfind) {
-        SLOW_ERRORLOG(
-            NET_MODULENAME, 
-            "[net.packet] (FactoryManager::removesocket) error,"
-            " can't find id index for packeid: %d",
-            packetid);
-      } else {
-        --(packet_alloccount_[index]);
+    if (isvalid_dynamic_packetid(packetid)) {
+      lock();
+      try {
+        int64_t pointer = POINTER_TOINT64(packet);
+        allocpackets_.remove(pointer);
+        SAFE_DELETE(packet);
+      } catch(...) {
+        unlock();
       }
-    } catch(...) {
+      unlock();
+    } else {
+      bool isfind = idindexs_.isfind(packetid);
+      uint16_t index = idindexs_.get(packetid);
+      lock();
+      try {
+        int64_t pointer = POINTER_TOINT64(packet);
+        allocpackets_.remove(pointer);
+        SAFE_DELETE(packet);
+        if (!isfind) {
+          SLOW_ERRORLOG(
+              NET_MODULENAME, 
+              "[net.packet] (FactoryManager::removesocket) error,"
+              " can't find id index for packeid: %d",
+              packetid);
+        } else {
+          --(packet_alloccount_[index]);
+        }
+      } catch(...) {
+        unlock();
+      }
       unlock();
     }
-    unlock();
   __LEAVE_FUNCTION
 }
 
@@ -182,6 +231,7 @@ void FactoryManager::unlock() {
 
 void FactoryManager::addfactory(Factory *factory) {
   __ENTER_FUNCTION
+    if (is_null(factory)) return;
     bool isfind = idindexs_.isfind(factory->get_packetid());
     uint16_t index = 
       isfind ? idindexs_.get(factory->get_packetid()) : factorycount_;
@@ -192,8 +242,13 @@ void FactoryManager::addfactory(Factory *factory) {
     if (!isfind) {
       ++factorycount_;
       idindexs_.add(factory->get_packetid(), index);
+      factories_[index] = factory;
+    } else {
+      SLOW_WARNINGLOG(NET_MODULENAME, 
+                      "[net.packet] (FactoryManager::addfactory) repeat add"
+                      " packet id: %d",
+                      factory->get_packetid());
     }
-    factories_[index] = factory;
   __LEAVE_FUNCTION
 }
 
@@ -217,6 +272,25 @@ bool FactoryManager::isencrypt_packetid(uint16_t id) {
     return result;
 }
 
+bool FactoryManager::isvalid_dynamic_packetid(uint16_t id) {
+  __ENTER_FUNCTION
+    bool result = false;
+    if (!function_isvalid_dynamic_packetid_) return false;
+    result = (*function_isvalid_dynamic_packetid_)(id);
+    return result;
+  __LEAVE_FUNCTION
+    return false;
+}
+
+uint32_t FactoryManager::packetexecute(
+    connection::Base *connection, Base *packet) {
+  __ENTER_FUNCTION
+    if (!function_packetexecute_) return kPacketExecuteStatusError;
+    uint32_t result = (*function_packetexecute_)(connection, packet);
+    return result;
+  __LEAVE_FUNCTION
+    return kPacketExecuteStatusError;
+}
 
 } //namespace packet
 

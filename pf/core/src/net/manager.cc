@@ -11,7 +11,6 @@ namespace pf_net {
 
 Manager::Manager() {
   __ENTER_FUNCTION
-    setactive(true);
     performance_active_ = false;
   __LEAVE_FUNCTION
 }
@@ -92,12 +91,21 @@ void Manager::tick() {
     } catch(...) {
       
     }
+
     try {
       result = processcommand();
       Assert(result);
     } catch(...) {
-      
+    
     }
+    
+    try {
+      result = process_cachecommand();
+      Assert(result);
+    } catch(...) {
+
+    }
+
     try {
       result = heartbeat();
       Assert(result);
@@ -105,35 +113,6 @@ void Manager::tick() {
 
     }
   __LEAVE_FUNCTION
-}
-
-void Manager::loop() {
-  __ENTER_FUNCTION
-    while (isactive()) {
-#if __LINUX__ && defined(_PF_NET_EPOLL) /* { */
-      //这里有个问题，就是当网络管理器以线程模式运行时会大肆的消耗CPU，
-      //如果是不是线程模式则不会出现，所以临时使用了帧率控制的方式解决此问题
-      //主要的原因是epoll不是以阻塞的方式来select的
-      uint32_t runtime = TIME_MANAGER_POINTER->get_tickcount();
-      uint32_t waittime = 
-        runtime + 
-        static_cast<uint32_t>(1000 / NET_MANAGER_FRAME) - 
-        TIME_MANAGER_POINTER->get_tickcount();
-#endif /* } */
-      tick(); //循环逻辑
-#if __LINUX__ && defined(_PF_NET_EPOLL) /* { */
-      if (waittime > 0) pf_base::util::sleep(waittime);
-#endif /* } */
-    }
-  __LEAVE_FUNCTION
-}
-
-bool Manager::isactive() {
-  return active_;
-}
-
-void Manager::setactive(bool active) {
-  active_ = active;
 }
 
 void Manager::set_performance_active(bool active) {

@@ -26,7 +26,7 @@ class PF_API TinyTimer {
    void set_termtime(uint32_t time);
    uint32_t get_termtime() const;
    uint32_t get_last_ticktime() const;
-   void clear();
+   void cleanup();
    void start(uint32_t term, uint32_t now);
    bool counting(uint32_t time);
 

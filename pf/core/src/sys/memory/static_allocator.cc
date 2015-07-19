@@ -50,7 +50,7 @@ void *StaticAllocator::calloc(size_t count, size_t size) {
   __ENTER_FUNCTION
     void *pointer = malloc(count * size);
     memset(pointer, 0, count * size);
-    return reinterpret_cast<void*>(pointer);
+    return reinterpret_cast<void *>(pointer);
   __LEAVE_FUNCTION
     return NULL;
 }
@@ -59,7 +59,7 @@ void *StaticAllocator::realloc(void *data, size_t newsize) {
   __ENTER_FUNCTION
     Assert(data >= buffer_ && data < buffer_ + size_);
     size_t size_ofdata = 
-      offset_ - static_cast<size_t>(reinterpret_cast<char*>(data) - buffer_);
+      offset_ - static_cast<size_t>(reinterpret_cast<char *>(data) - buffer_);
     size_t size = newsize - size_ofdata;
     if (offset_ + size > size_) {
       SLOW_ERRORLOG("error",
@@ -68,8 +68,7 @@ void *StaticAllocator::realloc(void *data, size_t newsize) {
                     size);
       Assert(false);
       return NULL;
-    }
-    else {
+    } else {
       offset_ += size;
       return data;
     }

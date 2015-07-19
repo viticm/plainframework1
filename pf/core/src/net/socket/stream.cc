@@ -9,6 +9,7 @@ Stream::Stream(Base *socket,
                uint32_t bufferlength_max) {
   __ENTER_FUNCTION
     socket_ = socket;
+    streamdata_.buffer = NULL;
     streamdata_.bufferlength = bufferlength;
     streamdata_.bufferlength_max = bufferlength_max;
     compressor_.sethead(NET_SOCKET_COMPRESSOR_HEADER_SIZE);

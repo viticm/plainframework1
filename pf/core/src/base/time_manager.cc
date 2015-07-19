@@ -72,6 +72,14 @@ uint32_t TimeManager::get_current_time() {
     return 0;
 }
 
+uint32_t TimeManager::get_start_time() const {
+  return start_time_;
+}
+
+uint32_t TimeManager::get_saved_time() const {
+  return current_time_;
+}
+
 void TimeManager::reset_time() {
   __ENTER_FUNCTION
     time_t newtime;

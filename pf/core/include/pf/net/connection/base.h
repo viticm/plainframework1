@@ -62,7 +62,7 @@ class PF_API Base {
    virtual bool processoutput();
    virtual bool processcommand(bool option = true);
    virtual bool heartbeat(uint32_t time = 0, uint32_t flag = 0);
-   virtual bool sendpacket(packet::Base* packet);
+   virtual bool sendpacket(packet::Base *packet);
 
  public:
    //以下两个方法用来区分连接是服务器还是玩家连接的
@@ -85,6 +85,8 @@ class PF_API Base {
    socket::Base *getsocket();
    //断开网络连接
    virtual void disconnect();
+   //网络连接断开事件
+   virtual void ondisconnect();
    //当前连接是否有效
    virtual bool isvalid();
    virtual void cleanup();
@@ -117,6 +119,7 @@ class PF_API Base {
    int16_t managerid_;
    socket::Base *socket_;
    socket::InputStream *socket_inputstream_;
+   socket::InputStream *socket_compress_inputstream_;
    socket::OutputStream *socket_outputstream_;
    int8_t packetindex_;
    uint8_t execute_count_pretick_;

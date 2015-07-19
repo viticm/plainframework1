@@ -1,3 +1,5 @@
+#ifndef PF_CORE_WITH_NOLUA
+
 #include "pf/base/string.h"
 #include "pf/script/lua/lunar.h"
 
@@ -103,3 +105,5 @@ int32_t dofile(lua_State *L) {
 } //namespace lua
 
 } //namespace pf_script
+
+#endif

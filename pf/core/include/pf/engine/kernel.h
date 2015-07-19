@@ -45,8 +45,6 @@ class PF_API Kernel {
    const char *getconfig_stringvalue(int32_t key);
 
  public: //kernel for set_* functions
-   void set_base_logprint(bool flag);
-   void set_base_logactive(bool flag);
    void set_net_stream_usepacket(bool flag);
 
  protected:
@@ -88,6 +86,7 @@ class PF_API Kernel {
 
  private:
    void calculate_FPS(); //计算帧率
+   void check_quitthreads();
 
 };
 

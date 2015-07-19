@@ -1,0 +1,686 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This file generate by plain framework admin tool, date: 2015-05-11 19:16:40 -->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+   <ItemGroup>
+    <Filter Include="include">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\pf">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\pf\base">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\pf\cache">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\pf\db">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\pf\engine">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\pf\event">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\pf\file">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\pf\net">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\pf\performance">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\pf\script">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\pf\sys">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\pf\util">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\pf\base\hashmap">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\pf\db\odbc">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\pf\engine\thread">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\pf\net\connection">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\pf\net\packet">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\pf\net\socket">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\pf\net\connection\manager">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\pf\script\cache">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\pf\script\lua">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\pf\sys\memory">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\pf\util\compressor">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+  </ItemGroup>  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\base">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\cache">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\db">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\engine">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\event">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\file">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\net">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\performance">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\script">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\sys">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\util">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\base\hashmap">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\db\odbc">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\engine\thread">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\net\connection">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\net\packet">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\net\socket">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\net\connection\manager">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\script\cache">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\script\lua">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\sys\memory">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\util\compressor">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+   <ItemGroup>
+    <ClInclude Include="..\include\pf\base\atomic.h">
+      <Filter>include\pf\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\base\config.h">
+      <Filter>include\pf\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\base\define.h">
+      <Filter>include\pf\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\base\global.h">
+      <Filter>include\pf\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\base\io.h">
+      <Filter>include\pf\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\base\log.h">
+      <Filter>include\pf\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\base\log.tpp">
+      <Filter>include\pf\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\base\md5.h">
+      <Filter>include\pf\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\base\singleton.h">
+      <Filter>include\pf\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\base\string.h">
+      <Filter>include\pf\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\base\time_manager.h">
+      <Filter>include\pf\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\base\tinytimer.h">
+      <Filter>include\pf\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\base\util.h">
+      <Filter>include\pf\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\cache\config.h">
+      <Filter>include\pf\cache</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\cache\dbstore.h">
+      <Filter>include\pf\cache</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\cache\define.h">
+      <Filter>include\pf\cache</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\cache\manager.h">
+      <Filter>include\pf\cache</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\cache\repository.h">
+      <Filter>include\pf\cache</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\cache\storeinterface.h">
+      <Filter>include\pf\cache</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\db\config.h">
+      <Filter>include\pf\db</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\db\define.h">
+      <Filter>include\pf\db</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\db\manager.h">
+      <Filter>include\pf\db</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\db\query.h">
+      <Filter>include\pf\db</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\engine\config.h">
+      <Filter>include\pf\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\engine\kernel.h">
+      <Filter>include\pf\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\event\config.h">
+      <Filter>include\pf\event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\event\system.h">
+      <Filter>include\pf\event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\file\api.h">
+      <Filter>include\pf\file</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\file\config.h">
+      <Filter>include\pf\file</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\file\database.h">
+      <Filter>include\pf\file</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\file\ini.h">
+      <Filter>include\pf\file</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\net\config.h">
+      <Filter>include\pf\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\net\manager.h">
+      <Filter>include\pf\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\performance\config.h">
+      <Filter>include\pf\performance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\performance\eyes.h">
+      <Filter>include\pf\performance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\script\config.h">
+      <Filter>include\pf\script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\sys\assert.h">
+      <Filter>include\pf\sys</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\sys\config.h">
+      <Filter>include\pf\sys</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\sys\info.h">
+      <Filter>include\pf\sys</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\sys\minidump.h">
+      <Filter>include\pf\sys</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\sys\process.h">
+      <Filter>include\pf\sys</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\sys\thread.h">
+      <Filter>include\pf\sys</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\sys\util.h">
+      <Filter>include\pf\sys</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\util\bitflag.h">
+      <Filter>include\pf\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\util\config.h">
+      <Filter>include\pf\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\util\random.h">
+      <Filter>include\pf\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\base\hashmap\config.h">
+      <Filter>include\pf\base\hashmap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\base\hashmap\integer.h">
+      <Filter>include\pf\base\hashmap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\base\hashmap\template.h">
+      <Filter>include\pf\base\hashmap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\base\hashmap\template.tpp">
+      <Filter>include\pf\base\hashmap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\db\odbc\config.h">
+      <Filter>include\pf\db\odbc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\db\odbc\interface.h">
+      <Filter>include\pf\db\odbc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\db\odbc\none.h">
+      <Filter>include\pf\db\odbc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\db\odbc\system.h">
+      <Filter>include\pf\db\odbc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\engine\thread\config.h">
+      <Filter>include\pf\engine\thread</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\engine\thread\db.h">
+      <Filter>include\pf\engine\thread</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\engine\thread\net.h">
+      <Filter>include\pf\engine\thread</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\engine\thread\performance.h">
+      <Filter>include\pf\engine\thread</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\engine\thread\script.h">
+      <Filter>include\pf\engine\thread</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\net\connection\base.h">
+      <Filter>include\pf\net\connection</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\net\connection\config.h">
+      <Filter>include\pf\net\connection</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\net\connection\pool.h">
+      <Filter>include\pf\net\connection</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\net\packet\base.h">
+      <Filter>include\pf\net\packet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\net\packet\config.h">
+      <Filter>include\pf\net\packet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\net\packet\dynamic.h">
+      <Filter>include\pf\net\packet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\net\packet\factory.h">
+      <Filter>include\pf\net\packet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\net\packet\factorymanager.h">
+      <Filter>include\pf\net\packet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\net\socket\api.h">
+      <Filter>include\pf\net\socket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\net\socket\base.h">
+      <Filter>include\pf\net\socket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\net\socket\compressor.h">
+      <Filter>include\pf\net\socket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\net\socket\config.h">
+      <Filter>include\pf\net\socket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\net\socket\encryptor.h">
+      <Filter>include\pf\net\socket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\net\socket\extend.inl">
+      <Filter>include\pf\net\socket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\net\socket\inputstream.h">
+      <Filter>include\pf\net\socket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\net\socket\outputstream.h">
+      <Filter>include\pf\net\socket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\net\socket\server.h">
+      <Filter>include\pf\net\socket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\net\socket\stream.h">
+      <Filter>include\pf\net\socket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\net\connection\manager\base.h">
+      <Filter>include\pf\net\connection\manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\net\connection\manager\config.h">
+      <Filter>include\pf\net\connection\manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\net\connection\manager\epoll.h">
+      <Filter>include\pf\net\connection\manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\net\connection\manager\iocp.h">
+      <Filter>include\pf\net\connection\manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\net\connection\manager\select.h">
+      <Filter>include\pf\net\connection\manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\script\cache\base.h">
+      <Filter>include\pf\script\cache</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\script\cache\config.h">
+      <Filter>include\pf\script\cache</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\script\cache\manager.h">
+      <Filter>include\pf\script\cache</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\script\lua\config.h">
+      <Filter>include\pf\script\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\script\lua\filebridge.h">
+      <Filter>include\pf\script\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\script\lua\interface.h">
+      <Filter>include\pf\script\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\script\lua\lunar.h">
+      <Filter>include\pf\script\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\script\lua\none.h">
+      <Filter>include\pf\script\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\script\lua\stack.h">
+      <Filter>include\pf\script\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\script\lua\system.h">
+      <Filter>include\pf\script\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\script\lua\vm.h">
+      <Filter>include\pf\script\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\sys\memory\config.h">
+      <Filter>include\pf\sys\memory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\sys\memory\dynamic_allocator.h">
+      <Filter>include\pf\sys\memory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\sys\memory\share.h">
+      <Filter>include\pf\sys\memory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\sys\memory\share.tpp">
+      <Filter>include\pf\sys\memory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\sys\memory\sharemap.h">
+      <Filter>include\pf\sys\memory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\sys\memory\static_allocator.h">
+      <Filter>include\pf\sys\memory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\util\compressor\assistant.h">
+      <Filter>include\pf\util\compressor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\util\compressor\config.h">
+      <Filter>include\pf\util\compressor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\util\compressor\lzoconf.h">
+      <Filter>include\pf\util\compressor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\util\compressor\lzodefs.h">
+      <Filter>include\pf\util\compressor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\util\compressor\mini.h">
+      <Filter>include\pf\util\compressor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\util\compressor\minilzo.h">
+      <Filter>include\pf\util\compressor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pf\util\compressor\minimanager.h">
+      <Filter>include\pf\util\compressor</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h" />
+  </ItemGroup>  <ItemGroup>
+    <ClCompile Include="..\src\base\define.cc">
+      <Filter>src\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\base\global.cc">
+      <Filter>src\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\base\io.cc">
+      <Filter>src\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\base\log.cc">
+      <Filter>src\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\base\md5.cc">
+      <Filter>src\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\base\string.cc">
+      <Filter>src\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\base\time_manager.cc">
+      <Filter>src\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\base\tinytimer.cc">
+      <Filter>src\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\base\util.cc">
+      <Filter>src\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cache\dbstore.cc">
+      <Filter>src\cache</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cache\define.cc">
+      <Filter>src\cache</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cache\manager.cc">
+      <Filter>src\cache</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cache\repository.cc">
+      <Filter>src\cache</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\db\define.cc">
+      <Filter>src\db</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\db\manager.cc">
+      <Filter>src\db</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\db\query.cc">
+      <Filter>src\db</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\engine\kernel.cc">
+      <Filter>src\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\event\system.cc">
+      <Filter>src\event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\file\api.cc">
+      <Filter>src\file</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\file\database.cc">
+      <Filter>src\file</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\file\ini.cc">
+      <Filter>src\file</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\net\manager.cc">
+      <Filter>src\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\performance\eyes.cc">
+      <Filter>src\performance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\sys\assert.cc">
+      <Filter>src\sys</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\sys\info.cc">
+      <Filter>src\sys</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\sys\minidump.cc">
+      <Filter>src\sys</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\sys\process.cc">
+      <Filter>src\sys</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\sys\thread.cc">
+      <Filter>src\sys</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\sys\util.cc">
+      <Filter>src\sys</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\util\bitflag.cc">
+      <Filter>src\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\util\random.cc">
+      <Filter>src\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\base\hashmap\integer.cc">
+      <Filter>src\base\hashmap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\db\odbc\interface.cc">
+      <Filter>src\db\odbc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\db\odbc\system.cc">
+      <Filter>src\db\odbc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\engine\thread\db.cc">
+      <Filter>src\engine\thread</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\engine\thread\net.cc">
+      <Filter>src\engine\thread</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\engine\thread\performance.cc">
+      <Filter>src\engine\thread</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\engine\thread\script.cc">
+      <Filter>src\engine\thread</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\net\connection\base.cc">
+      <Filter>src\net\connection</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\net\connection\pool.cc">
+      <Filter>src\net\connection</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\net\packet\base.cc">
+      <Filter>src\net\packet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\net\packet\dynamic.cc">
+      <Filter>src\net\packet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\net\packet\factorymanager.cc">
+      <Filter>src\net\packet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\net\socket\api.cc">
+      <Filter>src\net\socket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\net\socket\base.cc">
+      <Filter>src\net\socket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\net\socket\compressor.cc">
+      <Filter>src\net\socket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\net\socket\encryptor.cc">
+      <Filter>src\net\socket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\net\socket\inputstream.cc">
+      <Filter>src\net\socket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\net\socket\outputstream.cc">
+      <Filter>src\net\socket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\net\socket\server.cc">
+      <Filter>src\net\socket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\net\socket\stream.cc">
+      <Filter>src\net\socket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\net\connection\manager\base.cc">
+      <Filter>src\net\connection\manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\net\connection\manager\epoll.cc">
+      <Filter>src\net\connection\manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\net\connection\manager\iocp.cc">
+      <Filter>src\net\connection\manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\net\connection\manager\select.cc">
+      <Filter>src\net\connection\manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\script\cache\base.cc">
+      <Filter>src\script\cache</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\script\cache\manager.cc">
+      <Filter>src\script\cache</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\script\lua\filebridge.cc">
+      <Filter>src\script\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\script\lua\interface.cc">
+      <Filter>src\script\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\script\lua\lunar.cc">
+      <Filter>src\script\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\script\lua\stack.cc">
+      <Filter>src\script\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\script\lua\system.cc">
+      <Filter>src\script\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\script\lua\vm.cc">
+      <Filter>src\script\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\sys\memory\dynamic_allocator.cc">
+      <Filter>src\sys\memory</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\sys\memory\share.cc">
+      <Filter>src\sys\memory</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\sys\memory\sharemap.cc">
+      <Filter>src\sys\memory</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\sys\memory\static_allocator.cc">
+      <Filter>src\sys\memory</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\util\compressor\assistant.cc">
+      <Filter>src\util\compressor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\util\compressor\mini.cc">
+      <Filter>src\util\compressor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\util\compressor\minilzo.c">
+      <Filter>src\util\compressor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\util\compressor\minimanager.cc">
+      <Filter>src\util\compressor</Filter>
+    </ClCompile>
+  </ItemGroup>
+   <ItemGroup>
+    <ResourceCompile Include="pf_cores.rc" />
+  </ItemGroup>
+</Project>

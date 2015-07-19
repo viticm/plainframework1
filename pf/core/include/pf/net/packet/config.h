@@ -13,4 +13,7 @@
 
 #include "pf/net/config.h"
 
+#define NET_PACKET_DYNAMIC_ONCESIZE (1024) //动态网络包每次重新增加的内存大小
+#define NET_PACKET_DYNAMIC_SIZEMAX (1024 * 100) //动态网络包的最大内存大小
+
 #endif //PF_NET_PACKET_CONFIG_H_

@@ -10,26 +10,86 @@
 #endif
 #include "pf/sys/memory/share.h"
 
-int32_t g_cmd_model = 0;
-
 namespace pf_sys {
 
 namespace memory { 
 
 namespace share {
 
-//-- struct start
+header_struct::header_struct() {                                           
+  clear();
+}                                                                                  
+
+void header_struct::clear() {
+  __ENTER_FUNCTION                                                                 
+    key = 0;                                                                       
+    size = 0;                                                                      
+    initword(flag, kFlagFree);
+    version = 0;                                                                   
+    poolposition = 0;
+  __LEAVE_FUNCTION                                                                 
+}
+
+void header_struct::lock(int8_t type) {
+  share::lock(&flag, type);
+}
+  
+void header_struct::unlock(int8_t type) {
+  share::unlock(&flag, type);
+}
+                                                                                  
+header_struct::~header_struct() {                                          
+  //do nothing
+}
+
 dataheader_struct::dataheader_struct() {
-  __ENTER_FUNCTION
-    key = 0;
-    size = 0;
-    version = 0;
-  __LEAVE_FUNCTION
+  clear();
 }
 
 dataheader_struct::~dataheader_struct() {
   //do nothing
 }
+
+void dataheader_struct::clear() {
+  __ENTER_FUNCTION
+    key = 0;
+    version = 0;
+    usestatus = kUseFree;
+    poolid = ID_INVALID;
+    initword(flag, kFlagFree);
+    savetime = 0;
+  __LEAVE_FUNCTION
+}
+
+  
+dataheader_t &dataheader_struct::operator = (const dataheader_t &object) {
+  __ENTER_FUNCTION
+    key = object.key;
+    version = object.version;
+    int64_t _flag = atomic_read(&object.flag);
+    initword(flag, _flag);
+    poolid = object.poolid;
+    savetime = object.savetime;
+    return *this;
+  __LEAVE_FUNCTION
+    return *this;
+}
+  
+dataheader_t *dataheader_struct::operator = (const dataheader_t *object) {
+  __ENTER_FUNCTION
+    if (object) {
+      key = object->key;
+      version = object->version;
+      int64_t _flag = atomic_read(&object->flag);
+      initword(flag, _flag);
+      poolid = object->poolid;
+      savetime = object->savetime;
+    }
+    return this;
+  __LEAVE_FUNCTION
+    return this;
+}
+ 
 //struct end --
 
 namespace api {
@@ -44,13 +104,15 @@ HANDLE create(uint32_t key, uint32_t size) {
   __ENTER_FUNCTION
 #if __LINUX__
     handle = shmget(key, size, IPC_CREAT | IPC_EXCL | 0666);
-    SLOW_ERRORLOG(
-        APPLICATION_NAME,
-        "[sys.memory.share] (api::create) handle = %d," 
-        " key = %d, error: %d",
-        handle, 
-        key, 
-        errno);
+    if (HANDLE_INVALID == handle) {
+      SLOW_ERRORLOG(
+          APPLICATION_NAME,
+          "[sys.memory.share] (api::create) handle = %d," 
+          " key = %d, error: %d",
+          handle, 
+          key, 
+          errno);
+    }
 #elif __WINDOWS__
     char buffer[65];
     memset(buffer, '\0', sizeof(buffer));
@@ -77,17 +139,19 @@ HANDLE open(uint32_t key, uint32_t size) {
     USE_PARAM(size);
 #if __LINUX__
     handle = shmget(key, size, 0);
-    SLOW_ERRORLOG(
-        APPLICATION_NAME, 
-        "[sys.memory.share] (api::open) handle = %d,"
-        " key = %d, error: %d", 
-        handle, 
-        key, 
-        errno);
+    if (HANDLE_INVALID == handle) {
+      SLOW_ERRORLOG(
+          APPLICATION_NAME, 
+          "[sys.memory.share] (api::open) handle = %d,"
+          " key = %d, error: %d", 
+          handle, 
+          key, 
+          errno);
+    }
 #elif __WINDOWS__
     char buffer[65];
     memset(buffer, '\0', sizeof(buffer));
-    snprintf(buffer, sizeof(buffer) - 1, "%"PRIu64, key);
+    snprintf(buffer, sizeof(buffer) - 1, "%d", key);
     handle = OpenFileMapping(FILE_MAP_ALL_ACCESS, true, buffer);
 #endif
     return handle;
@@ -144,9 +208,9 @@ void close(HANDLE handle) {
 Base::Base() {
   __ENTER_FUNCTION
     data_pointer_ = NULL;
-    handle_ = 0;
+    handle_ = HANDLE_INVALID;
     size_ = 0;
-    header_ = 0;
+    header_ = NULL;
   __LEAVE_FUNCTION
 }
 
@@ -169,9 +233,10 @@ bool Base::create(uint32_t key, uint32_t size) {
     }
     header_ = api::map(handle_);
     if (header_) {
-      data_pointer_ = header_ + sizeof(dataheader_t);
-      (reinterpret_cast<dataheader_struct *>(header_))->key = key;
-      (reinterpret_cast<dataheader_struct *>(header_))->size = size;
+      data_pointer_ = header_ + sizeof(header_t);
+      getheader()->clear();
+      getheader()->key = key;
+      getheader()->size = size;
       size_ = size;
       SLOW_LOG(
           APPLICATION_NAME, 
@@ -231,10 +296,10 @@ bool Base::attach(uint32_t key, uint32_t size) {
     }
     header_ = api::map(handle_);
     if (header_) {
-      data_pointer_ = header_ + sizeof(dataheader_t);
-      Assert((reinterpret_cast<dataheader_struct *>(header_))->key == key);
-      Assert((reinterpret_cast<dataheader_struct *>(header_))->size == size);
-      size_ = size;
+      data_pointer_ = header_ + sizeof(header_t);
+      Assert(getheader()->key == key);
+      Assert(getheader()->size == size);
+        size_ = size;
       SLOW_LOG(
           APPLICATION_NAME, 
           "[sys.memory.share] (Base::attach) success, key = %d", 
@@ -247,15 +312,17 @@ bool Base::attach(uint32_t key, uint32_t size) {
           key); 
       return false;
     }
+    return true;
   __LEAVE_FUNCTION
     return false;
 }
 
+header_t *Base::getheader() {
+  return reinterpret_cast<header_t *>(header_);
+}
+
 char *Base::get_data_pointer() {
-  __ENTER_FUNCTION
-    return data_pointer_;
-  __LEAVE_FUNCTION
-    return NULL;
+  return data_pointer_;
 }
 
 char *Base::get_data(uint32_t size, uint32_t index) {
@@ -263,7 +330,8 @@ char *Base::get_data(uint32_t size, uint32_t index) {
     Assert(size > 0);
     Assert(size * index < size_);
     char *result;
-    result = (size <= 0 || index > size_) ? NULL : data_pointer_ + size * index;
+    result = 
+      (size <= 0 || size * index > size_) ? NULL : data_pointer_ + size * index;
     return result;
   __LEAVE_FUNCTION
     return NULL;
@@ -303,21 +371,6 @@ bool Base::merge_from_file(const char *filename) {
     return false;
 }
 
-void Base::set_head_version(uint32_t version) {
-  __ENTER_FUNCTION
-    (reinterpret_cast<dataheader_struct *>(header_))->version = version;
-  __LEAVE_FUNCTION
-}
-
-uint32_t Base::get_head_version() const {
-  __ENTER_FUNCTION
-    uint32_t version = 
-      (reinterpret_cast<dataheader_struct *>(header_))->version;
-    return version;
-  __LEAVE_FUNCTION
-    return 0;
-}
-
 //class end --
 
 //-- functions start
@@ -325,10 +378,12 @@ uint32_t Base::get_head_version() const {
 void lock(atword_t *flag, int8_t type) {
   __ENTER_FUNCTION
     USE_PARAM(type);
-    if (kCmdModelRecover == g_cmd_model) return;
+    if (GLOBAL_VALUES["app_cmdmodel"] == kCmdModelRecover ||
+        GLOBAL_VALUES["app_status"] == kAppStatusStop) return;
     int32_t count = 0;
 #if __LINUX__
     while (!atomic_inc_and_test(flag)) {
+      if (GLOBAL_VALUES["app_status"] == kAppStatusStop) break;
       int32_t count1 = 0;
       ++count;
       ++count1;
@@ -344,10 +399,11 @@ void lock(atword_t *flag, int8_t type) {
     }
 #elif __WINDOWS__
     while (InterlockedCompareExchange(
-            const_cast<LPLONG>(flag), 0, kUseFree) != kUseFree) {
+            const_cast<LPLONG>(flag), 0, kFlagFree) != kFlagFree) {
+      if (GLOBAL_VALUES["app_status"] == kAppStatusStop) break;
       ++count;
       pf_base::util::sleep(0);
-      if (count > 10) {
+      if (count > 100) {
         char time_str[256] = {0};
         pf_base::Log::get_log_timestr(time_str, sizeof(time_str) - 1);
         ERRORPRINTF("%s[sys.memory] (share::lock) failed", time_str);
@@ -361,20 +417,23 @@ void lock(atword_t *flag, int8_t type) {
 void unlock(atword_t *flag, int8_t type) {
   __ENTER_FUNCTION
     USE_PARAM(type);
-    if (kCmdModelRecover == g_cmd_model) return;
+    if (GLOBAL_VALUES["app_cmdmodel"] == kCmdModelRecover ||
+        GLOBAL_VALUES["app_status"] == kAppStatusStop) return;
+    //(int32_t)(int64_t)((int32_t*)flag);
 #if __LINUX__
-    if ((int32_t)(int64_t)((int32_t*)flag) != kUseFree) atomic_dec(flag);
+    if (atomic_read(flag) > kFlagFree) atomic_dec(flag);
 #elif __WINDOWS__
     uint32_t count = 0;
     while (InterlockedCompareExchange(
-            const_cast<LPLONG>(flag), kUseFree, 0) != 0) {
+            const_cast<LPLONG>(flag), kFlagFree, 0) != 0) {
+      if (GLOBAL_VALUES["app_status"] == kAppStatusStop) break;
       char time_str[256] = {0};
       pf_base::Log::get_log_timestr(time_str, sizeof(time_str) - 1);
       ERRORPRINTF("%s[sys.memory] (share::unlock) failed", time_str);
       pf_base::util::sleep(0);
       ++count;
       if (count > 100) {
-        InterlockedExchange(const_cast<LPLONG>(flag), kUseFree);
+        InterlockedExchange(const_cast<LPLONG>(flag), kFlagFree);
         throw;
       }
     }

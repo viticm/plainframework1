@@ -5,6 +5,10 @@
 #elif __WINDOWS__
 #include <winsock.h>
 #include <io.h>
+#if _MSC_VER >= 1800
+//something
+#pragma warning(disable: 4996)
+#endif
 #endif
 #include "pf/sys/info.h"
 

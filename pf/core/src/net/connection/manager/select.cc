@@ -55,7 +55,6 @@ bool Select::select() {
     readfds_[kSelectUse] = readfds_[kSelectFull];
     writefds_[kSelectUse] = writefds_[kSelectFull];
     exceptfds_[kSelectUse] = exceptfds_[kSelectFull];
-    pf_base::util::sleep(100);
     int32_t result = SOCKET_ERROR;
     try {
       result = socket::Base::select(
@@ -66,7 +65,7 @@ bool Select::select() {
           &timeout_[kSelectUse]);
       Assert(result != SOCKET_ERROR);
     } catch(...) {
-      FAST_ERRORLOG(kNetLogFile, 
+      FAST_ERRORLOG(NET_MODULENAME, 
                     "[net.connection.manager] (Select::select)"
                     " have error, result: %d", 
                     result);
@@ -87,7 +86,7 @@ bool Select::processinput() {
         if (!accept()) break;
       }
     }
-    uint16_t connectioncount = Base::getcount();
+    uint16_t connectioncount = getcount();
     for (i = 0; i < connectioncount; ++i) {
       if (ID_INVALID == connection_idset_[i]) continue;
       connection::Base *connection = NULL;
@@ -97,16 +96,16 @@ bool Select::processinput() {
       if (socketid_ == socketid) continue;
       if (FD_ISSET(socketid, &readfds_[kSelectUse])) { //read information
         if (connection->getsocket()->iserror()) {
-          Base::remove(connection);
+          remove(connection);
         } else {
           try {
             if (!connection->processinput()) { 
-              Base::remove(connection);
+              remove(connection);
             } else {
               receive_bytes_ += connection->get_receive_bytes();
             }
           } catch(...) {
-            Base::remove(connection);
+            remove(connection);
           }
         }//connection->getsocket()->iserror()
       }
@@ -121,7 +120,7 @@ bool Select::processoutput() {
     if (SOCKET_INVALID == maxfd_&& SOCKET_INVALID == minfd_)
       return true;
     uint16_t i;
-    uint16_t connectioncount = Base::getcount();
+    uint16_t connectioncount = getcount();
     for (i = 0; i < connectioncount; ++i) {
       if (ID_INVALID == connection_idset_[i]) continue;
       connection::Base* connection = NULL;
@@ -131,16 +130,16 @@ bool Select::processoutput() {
       if (socketid_ == socketid) continue;
       if (FD_ISSET(socketid, &writefds_[kSelectUse])) {
         if (connection->getsocket()->iserror()) {
-          Base::remove(connection);
+          remove(connection);
         } else {
           try {
             if (!connection->processoutput()) { 
-              Base::remove(connection);
+              remove(connection);
             } else {
               send_bytes_ += connection->get_send_bytes();
             }
           } catch(...) {
-            Base::remove(connection);
+            remove(connection);
           }
         } //connection->getsocket()->iserror()
       }
@@ -154,7 +153,7 @@ bool Select::processexception() {
   __ENTER_FUNCTION
     if (SOCKET_INVALID == minfd_ && SOCKET_INVALID == maxfd_)
       return true;
-    uint16_t connectioncount = Base::getcount();
+    uint16_t connectioncount = getcount();
     connection::Base* connection = NULL;
     uint16_t i;
     for (i = 0; i < connectioncount; ++i) {
@@ -167,7 +166,7 @@ bool Select::processexception() {
         continue;
       }
       if (FD_ISSET(socketid, &exceptfds_[kSelectUse])) {
-        Base::remove(connection);
+        remove(connection);
       }
     }
     return true;
@@ -180,7 +179,7 @@ bool Select::processcommand() {
     if (SOCKET_INVALID == maxfd_&& SOCKET_INVALID == minfd_)
       return true;
     uint16_t i;
-    uint16_t connectioncount = Base::getcount();
+    uint16_t connectioncount = getcount();
     for (i = 0; i < connectioncount; ++i) {
       if (ID_INVALID == connection_idset_[i]) continue;
       connection::Base* connection = NULL;
@@ -189,13 +188,13 @@ bool Select::processcommand() {
       int32_t socketid = connection->getsocket()->getid();
       if (socketid_ == socketid) continue;
       if (connection->getsocket()->iserror()) {
-        Base::remove(connection);
+        remove(connection);
       } else { //connection is ok
         try {
           if (!connection->processcommand(false)) 
-            Base::remove(connection);
+            remove(connection);
         } catch(...) {
-          Base::remove(connection);
+          remove(connection);
         }
       } //connection->getsocket()->iserror()
     }
@@ -212,8 +211,8 @@ bool Select::addsocket(int32_t socketid, int16_t connectionid) {
       return false;
     }
     Assert(SOCKET_INVALID != socketid);
-    minfd_ = min(socketid, minfd_);
-    maxfd_ = max(socketid, maxfd_);
+    minfd_ = SOCKET_INVALID == minfd_ ? socketid : min(socketid, minfd_);
+    maxfd_ = SOCKET_INVALID == maxfd_ ? socketid : max(socketid, maxfd_);
     FD_SET(socketid, &readfds_[kSelectFull]);
     FD_SET(socketid, &writefds_[kSelectFull]);
     FD_SET(socketid, &exceptfds_[kSelectFull]);
@@ -227,10 +226,11 @@ bool Select::removesocket(int32_t socketid) {
   __ENTER_FUNCTION
     connection::Base *connection = NULL;
     uint16_t i;
-    Assert(minfd_ != SOCKET_INVALID || maxfd_ != SOCKET_INVALID);   
+    Assert(minfd_ != SOCKET_INVALID || maxfd_ != SOCKET_INVALID);
+    Assert(fdsize_ > 0);
     if (socketid == minfd_) { //the first connection
       int32_t socketid_max = maxfd_;
-      uint16_t connectioncount = Base::getcount();
+      uint16_t connectioncount = getcount();
       for (i = 0; i < connectioncount; ++i) {
         if (ID_INVALID == connection_idset_[i]) continue;
         connection = pool_->get(connection_idset_[i]);
@@ -239,15 +239,15 @@ bool Select::removesocket(int32_t socketid) {
         int32_t _socketid = connection->getsocket()->getid();
         if (socketid == _socketid || SOCKET_INVALID == _socketid) continue;
         if (socketid_max < _socketid) socketid_max = _socketid;
-        if (minfd_ == maxfd_) {
-          minfd_ = maxfd_ = SOCKET_INVALID;
-        } else {
-          minfd_ = socketid_max > socketid_ ? minfd_ : socketid_max;
-        }
+      }
+      if (minfd_ == maxfd_) {
+        minfd_ = maxfd_ = SOCKET_INVALID;
+      } else {
+        minfd_ = socketid_max > socketid_ ? minfd_ : socketid_max;
       }
     } else if (socketid == maxfd_) { //
       int32_t socketid_min = minfd_;
-      uint16_t connectioncount = Base::getcount();
+      uint16_t connectioncount = getcount();
       for (i = 0; i < connectioncount; ++i) {
         if (ID_INVALID == connection_idset_[i]) continue;
         connection = pool_->get(connection_idset_[i]);
@@ -256,11 +256,11 @@ bool Select::removesocket(int32_t socketid) {
         int32_t _socketid = connection->getsocket()->getid();
         if (socketid == _socketid || SOCKET_INVALID == _socketid) continue;
         if (socketid_min > _socketid) socketid_min = _socketid;
-        if (minfd_ == maxfd_) {
-          minfd_ = maxfd_ = SOCKET_INVALID;
-        } else {
-          maxfd_ = socketid_min < socketid_ ? maxfd_ : socketid_min;
-        }
+      }
+      if (minfd_ == maxfd_) {
+        minfd_ = maxfd_ = SOCKET_INVALID;
+      } else {
+        maxfd_ = socketid_min < socketid_ ? socketid_ : socketid_min;
       }
     }
     FD_CLR(static_cast<uint32_t>(socketid), &readfds_[kSelectFull]);
@@ -274,11 +274,6 @@ bool Select::removesocket(int32_t socketid) {
     return true;
   __LEAVE_FUNCTION
     return false;
-}
-
-bool Select::set_poll_maxcount(uint16_t maxcount) {
-  USE_PARAM(maxcount);
-  return true;
 }
 
 bool Select::heartbeat(uint32_t time) {

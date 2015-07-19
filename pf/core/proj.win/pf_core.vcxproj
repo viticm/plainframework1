@@ -1,0 +1,559 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This file generate by plain framework admin tool, date: 2015-05-11 19:16:40 -->
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug_Lib|Win32">
+      <Configuration>Debug_Lib</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug_Lib|x64">
+      <Configuration>Debug_Lib</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_Lib|Win32">
+      <Configuration>Release_Lib</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_Lib|x64">
+      <Configuration>Release_Lib</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ClInclude Include="..\include\pf\base\atomic.h" />
+    <ClInclude Include="..\include\pf\base\config.h" />
+    <ClInclude Include="..\include\pf\base\define.h" />
+    <ClInclude Include="..\include\pf\base\global.h" />
+    <ClInclude Include="..\include\pf\base\io.h" />
+    <ClInclude Include="..\include\pf\base\log.h" />
+    <ClInclude Include="..\include\pf\base\log.tpp" />
+    <ClInclude Include="..\include\pf\base\md5.h" />
+    <ClInclude Include="..\include\pf\base\singleton.h" />
+    <ClInclude Include="..\include\pf\base\string.h" />
+    <ClInclude Include="..\include\pf\base\time_manager.h" />
+    <ClInclude Include="..\include\pf\base\tinytimer.h" />
+    <ClInclude Include="..\include\pf\base\util.h" />
+    <ClInclude Include="..\include\pf\cache\config.h" />
+    <ClInclude Include="..\include\pf\cache\dbstore.h" />
+    <ClInclude Include="..\include\pf\cache\define.h" />
+    <ClInclude Include="..\include\pf\cache\manager.h" />
+    <ClInclude Include="..\include\pf\cache\repository.h" />
+    <ClInclude Include="..\include\pf\cache\storeinterface.h" />
+    <ClInclude Include="..\include\pf\db\config.h" />
+    <ClInclude Include="..\include\pf\db\define.h" />
+    <ClInclude Include="..\include\pf\db\manager.h" />
+    <ClInclude Include="..\include\pf\db\query.h" />
+    <ClInclude Include="..\include\pf\engine\config.h" />
+    <ClInclude Include="..\include\pf\engine\kernel.h" />
+    <ClInclude Include="..\include\pf\event\config.h" />
+    <ClInclude Include="..\include\pf\event\system.h" />
+    <ClInclude Include="..\include\pf\file\api.h" />
+    <ClInclude Include="..\include\pf\file\config.h" />
+    <ClInclude Include="..\include\pf\file\database.h" />
+    <ClInclude Include="..\include\pf\file\ini.h" />
+    <ClInclude Include="..\include\pf\net\config.h" />
+    <ClInclude Include="..\include\pf\net\manager.h" />
+    <ClInclude Include="..\include\pf\performance\config.h" />
+    <ClInclude Include="..\include\pf\performance\eyes.h" />
+    <ClInclude Include="..\include\pf\script\config.h" />
+    <ClInclude Include="..\include\pf\sys\assert.h" />
+    <ClInclude Include="..\include\pf\sys\config.h" />
+    <ClInclude Include="..\include\pf\sys\info.h" />
+    <ClInclude Include="..\include\pf\sys\minidump.h" />
+    <ClInclude Include="..\include\pf\sys\process.h" />
+    <ClInclude Include="..\include\pf\sys\thread.h" />
+    <ClInclude Include="..\include\pf\sys\util.h" />
+    <ClInclude Include="..\include\pf\util\bitflag.h" />
+    <ClInclude Include="..\include\pf\util\config.h" />
+    <ClInclude Include="..\include\pf\util\random.h" />
+    <ClInclude Include="..\include\pf\base\hashmap\config.h" />
+    <ClInclude Include="..\include\pf\base\hashmap\integer.h" />
+    <ClInclude Include="..\include\pf\base\hashmap\template.h" />
+    <ClInclude Include="..\include\pf\base\hashmap\template.tpp" />
+    <ClInclude Include="..\include\pf\db\odbc\config.h" />
+    <ClInclude Include="..\include\pf\db\odbc\interface.h" />
+    <ClInclude Include="..\include\pf\db\odbc\none.h" />
+    <ClInclude Include="..\include\pf\db\odbc\system.h" />
+    <ClInclude Include="..\include\pf\engine\thread\config.h" />
+    <ClInclude Include="..\include\pf\engine\thread\db.h" />
+    <ClInclude Include="..\include\pf\engine\thread\net.h" />
+    <ClInclude Include="..\include\pf\engine\thread\performance.h" />
+    <ClInclude Include="..\include\pf\engine\thread\script.h" />
+    <ClInclude Include="..\include\pf\net\connection\base.h" />
+    <ClInclude Include="..\include\pf\net\connection\config.h" />
+    <ClInclude Include="..\include\pf\net\connection\pool.h" />
+    <ClInclude Include="..\include\pf\net\packet\base.h" />
+    <ClInclude Include="..\include\pf\net\packet\config.h" />
+    <ClInclude Include="..\include\pf\net\packet\dynamic.h" />
+    <ClInclude Include="..\include\pf\net\packet\factory.h" />
+    <ClInclude Include="..\include\pf\net\packet\factorymanager.h" />
+    <ClInclude Include="..\include\pf\net\socket\api.h" />
+    <ClInclude Include="..\include\pf\net\socket\base.h" />
+    <ClInclude Include="..\include\pf\net\socket\compressor.h" />
+    <ClInclude Include="..\include\pf\net\socket\config.h" />
+    <ClInclude Include="..\include\pf\net\socket\encryptor.h" />
+    <ClInclude Include="..\include\pf\net\socket\extend.inl" />
+    <ClInclude Include="..\include\pf\net\socket\inputstream.h" />
+    <ClInclude Include="..\include\pf\net\socket\outputstream.h" />
+    <ClInclude Include="..\include\pf\net\socket\server.h" />
+    <ClInclude Include="..\include\pf\net\socket\stream.h" />
+    <ClInclude Include="..\include\pf\net\connection\manager\base.h" />
+    <ClInclude Include="..\include\pf\net\connection\manager\config.h" />
+    <ClInclude Include="..\include\pf\net\connection\manager\epoll.h" />
+    <ClInclude Include="..\include\pf\net\connection\manager\iocp.h" />
+    <ClInclude Include="..\include\pf\net\connection\manager\select.h" />
+    <ClInclude Include="..\include\pf\script\cache\base.h" />
+    <ClInclude Include="..\include\pf\script\cache\config.h" />
+    <ClInclude Include="..\include\pf\script\cache\manager.h" />
+    <ClInclude Include="..\include\pf\script\lua\config.h" />
+    <ClInclude Include="..\include\pf\script\lua\filebridge.h" />
+    <ClInclude Include="..\include\pf\script\lua\interface.h" />
+    <ClInclude Include="..\include\pf\script\lua\lunar.h" />
+    <ClInclude Include="..\include\pf\script\lua\none.h" />
+    <ClInclude Include="..\include\pf\script\lua\stack.h" />
+    <ClInclude Include="..\include\pf\script\lua\system.h" />
+    <ClInclude Include="..\include\pf\script\lua\vm.h" />
+    <ClInclude Include="..\include\pf\sys\memory\config.h" />
+    <ClInclude Include="..\include\pf\sys\memory\dynamic_allocator.h" />
+    <ClInclude Include="..\include\pf\sys\memory\share.h" />
+    <ClInclude Include="..\include\pf\sys\memory\share.tpp" />
+    <ClInclude Include="..\include\pf\sys\memory\sharemap.h" />
+    <ClInclude Include="..\include\pf\sys\memory\static_allocator.h" />
+    <ClInclude Include="..\include\pf\util\compressor\assistant.h" />
+    <ClInclude Include="..\include\pf\util\compressor\config.h" />
+    <ClInclude Include="..\include\pf\util\compressor\lzoconf.h" />
+    <ClInclude Include="..\include\pf\util\compressor\lzodefs.h" />
+    <ClInclude Include="..\include\pf\util\compressor\mini.h" />
+    <ClInclude Include="..\include\pf\util\compressor\minilzo.h" />
+    <ClInclude Include="..\include\pf\util\compressor\minimanager.h" />
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\base\define.cc" />
+    <ClCompile Include="..\src\base\global.cc" />
+    <ClCompile Include="..\src\base\io.cc" />
+    <ClCompile Include="..\src\base\log.cc" />
+    <ClCompile Include="..\src\base\md5.cc" />
+    <ClCompile Include="..\src\base\string.cc" />
+    <ClCompile Include="..\src\base\time_manager.cc" />
+    <ClCompile Include="..\src\base\tinytimer.cc" />
+    <ClCompile Include="..\src\base\util.cc" />
+    <ClCompile Include="..\src\cache\dbstore.cc" />
+    <ClCompile Include="..\src\cache\define.cc" />
+    <ClCompile Include="..\src\cache\manager.cc" />
+    <ClCompile Include="..\src\cache\repository.cc" />
+    <ClCompile Include="..\src\db\define.cc" />
+    <ClCompile Include="..\src\db\manager.cc" />
+    <ClCompile Include="..\src\db\query.cc" />
+    <ClCompile Include="..\src\engine\kernel.cc" />
+    <ClCompile Include="..\src\event\system.cc" />
+    <ClCompile Include="..\src\file\api.cc" />
+    <ClCompile Include="..\src\file\database.cc" />
+    <ClCompile Include="..\src\file\ini.cc" />
+    <ClCompile Include="..\src\net\manager.cc" />
+    <ClCompile Include="..\src\performance\eyes.cc" />
+    <ClCompile Include="..\src\sys\assert.cc" />
+    <ClCompile Include="..\src\sys\info.cc" />
+    <ClCompile Include="..\src\sys\minidump.cc" />
+    <ClCompile Include="..\src\sys\process.cc" />
+    <ClCompile Include="..\src\sys\thread.cc" />
+    <ClCompile Include="..\src\sys\util.cc" />
+    <ClCompile Include="..\src\util\bitflag.cc" />
+    <ClCompile Include="..\src\util\random.cc" />
+    <ClCompile Include="..\src\base\hashmap\integer.cc" />
+    <ClCompile Include="..\src\db\odbc\interface.cc" />
+    <ClCompile Include="..\src\db\odbc\system.cc" />
+    <ClCompile Include="..\src\engine\thread\db.cc" />
+    <ClCompile Include="..\src\engine\thread\net.cc" />
+    <ClCompile Include="..\src\engine\thread\performance.cc" />
+    <ClCompile Include="..\src\engine\thread\script.cc" />
+    <ClCompile Include="..\src\net\connection\base.cc" />
+    <ClCompile Include="..\src\net\connection\pool.cc" />
+    <ClCompile Include="..\src\net\packet\base.cc" />
+    <ClCompile Include="..\src\net\packet\dynamic.cc" />
+    <ClCompile Include="..\src\net\packet\factorymanager.cc" />
+    <ClCompile Include="..\src\net\socket\api.cc" />
+    <ClCompile Include="..\src\net\socket\base.cc" />
+    <ClCompile Include="..\src\net\socket\compressor.cc" />
+    <ClCompile Include="..\src\net\socket\encryptor.cc" />
+    <ClCompile Include="..\src\net\socket\inputstream.cc" />
+    <ClCompile Include="..\src\net\socket\outputstream.cc" />
+    <ClCompile Include="..\src\net\socket\server.cc" />
+    <ClCompile Include="..\src\net\socket\stream.cc" />
+    <ClCompile Include="..\src\net\connection\manager\base.cc" />
+    <ClCompile Include="..\src\net\connection\manager\epoll.cc" />
+    <ClCompile Include="..\src\net\connection\manager\iocp.cc" />
+    <ClCompile Include="..\src\net\connection\manager\select.cc" />
+    <ClCompile Include="..\src\script\cache\base.cc" />
+    <ClCompile Include="..\src\script\cache\manager.cc" />
+    <ClCompile Include="..\src\script\lua\filebridge.cc" />
+    <ClCompile Include="..\src\script\lua\interface.cc" />
+    <ClCompile Include="..\src\script\lua\lunar.cc" />
+    <ClCompile Include="..\src\script\lua\stack.cc" />
+    <ClCompile Include="..\src\script\lua\system.cc" />
+    <ClCompile Include="..\src\script\lua\vm.cc" />
+    <ClCompile Include="..\src\sys\memory\dynamic_allocator.cc" />
+    <ClCompile Include="..\src\sys\memory\share.cc" />
+    <ClCompile Include="..\src\sys\memory\sharemap.cc" />
+    <ClCompile Include="..\src\sys\memory\static_allocator.cc" />
+    <ClCompile Include="..\src\util\compressor\assistant.cc" />
+    <ClCompile Include="..\src\util\compressor\mini.cc" />
+    <ClCompile Include="..\src\util\compressor\minilzo.c" />
+    <ClCompile Include="..\src\util\compressor\minimanager.cc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="pf_core.rc" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{E5455DBE-253D-4428-A329-72CB26275003}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>${project_name}</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Lib|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Lib|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Lib|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Lib|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Lib|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Lib|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_Lib|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_Lib|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>./../dll/$(PlatformName)/$(Configuration)/</OutDir>
+    <IntDir>$(ProjectName).dir/$(PlatformName)/$(Configuration)/</IntDir>
+    <TargetName>$(ProjectName)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <TargetName>$(ProjectName)</TargetName>
+    <LinkIncremental>true</LinkIncremental>
+    <IntDir>$(ProjectName).dir/$(PlatformName)/$(Configuration)/</IntDir>
+    <OutDir>./../dll/$(PlatformName)/$(Configuration)/</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Lib|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>./../lib/$(PlatformName)/$(Configuration)/</OutDir>
+    <IntDir>$(ProjectName).dir/$(PlatformName)/$(Configuration)/</IntDir>
+    <TargetName>$(ProjectName)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Lib|x64'">
+    <TargetName>$(ProjectName)</TargetName>
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>./../lib/$(PlatformName)/$(Configuration)/</OutDir>
+    <IntDir>$(ProjectName).dir/$(PlatformName)/$(Configuration)/</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>./../dll/$(PlatformName)/$(Configuration)/</OutDir>
+    <IntDir>$(ProjectName).dir/$(PlatformName)/$(Configuration)/</IntDir>
+    <TargetName>$(ProjectName)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <TargetName>$(ProjectName)</TargetName>
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>./../dll/$(PlatformName)/$(Configuration)/</OutDir>
+    <IntDir>$(ProjectName).dir/$(PlatformName)/$(Configuration)/</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Lib|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>./../lib/$(PlatformName)/$(Configuration)/</OutDir>
+    <IntDir>$(ProjectName).dir/$(PlatformName)/$(Configuration)/</IntDir>
+    <TargetName>$(ProjectName)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Lib|x64'">
+    <TargetName>$(ProjectName)</TargetName>
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>./../lib/$(PlatformName)/$(Configuration)/</OutDir>
+    <IntDir>$(ProjectName).dir/$(PlatformName)/$(Configuration)/</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;PF_CORE;PF_BUILD_AS_DLL;ICONV_BUILD_AS_DLL;CHARSET_BUILD_AS_DLL;LUA_BUILD_AS_DLL;ZLIB_DLL;PF_PLUGIN_BUILD_AS_DLL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>../include/;../../dependencies/lua/5.3.0/include/;../../dependencies/iconv/include/;/usr/local/unixODBC/include/;</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4819;</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <Version>1.00</Version>
+      <AdditionalLibraryDirectories>./$(PlatformName)/$(Configuration)/;./../../dependencies/dll/$(PlatformName)/$(Configuration)/;</AdditionalLibraryDirectories>
+      <AdditionalDependencies>ws2_32.lib;lua.lib;;iconv.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent>
+      <Command>
+        
+      </Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;PF_CORE;PF_BUILD_AS_DLL;ICONV_BUILD_AS_DLL;CHARSET_BUILD_AS_DLL;LUA_BUILD_AS_DLL;ZLIB_DLL;PF_PLUGIN_BUILD_AS_DLL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>../include/;../../dependencies/lua/5.3.0/include/;../../dependencies/iconv/include/;/usr/local/unixODBC/include/;</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4819;</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <Version>1.00</Version>
+      <AdditionalLibraryDirectories>./$(PlatformName)/$(Configuration)/;./../../dependencies/dll/$(PlatformName)/$(Configuration)/;</AdditionalLibraryDirectories>
+      <AdditionalDependencies>ws2_32.lib;lua.lib;;iconv.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent>
+      <Command>
+        
+      </Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Lib|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;PF_CORE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>../include/;../../dependencies/lua/5.3.0/include/;../../dependencies/iconv/include/;/usr/local/unixODBC/include/;</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4819;</DisableSpecificWarnings>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <Version>1.00</Version>
+      <AdditionalLibraryDirectories>./$(PlatformName)/$(Configuration)/;./../../dependencies/dll/$(PlatformName)/$(Configuration)/;</AdditionalLibraryDirectories>
+    </Link>
+    <PostBuildEvent>
+      <Command>
+        
+      </Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Lib|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;PF_CORE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>../include/;../../dependencies/lua/5.3.0/include/;../../dependencies/iconv/include/;/usr/local/unixODBC/include/;</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4819;</DisableSpecificWarnings>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <Version>1.00</Version>
+      <AdditionalLibraryDirectories>./$(PlatformName)/$(Configuration)/;./../../dependencies/dll/$(PlatformName)/$(Configuration)/;</AdditionalLibraryDirectories>
+    </Link>
+    <PostBuildEvent>
+      <Command>
+        
+      </Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;PF_CORE;PF_BUILD_AS_DLL;ICONV_BUILD_AS_DLL;CHARSET_BUILD_AS_DLL;LUA_BUILD_AS_DLL;ZLIB_DLL;PF_PLUGIN_BUILD_AS_DLL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>../include/;../../dependencies/lua/5.3.0/include/;../../dependencies/iconv/include/;/usr/local/unixODBC/include/;</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4819;</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <Version>1.00</Version>
+      <AdditionalLibraryDirectories>./$(PlatformName)/$(Configuration)/;./../../dependencies/dll/$(PlatformName)/$(Configuration)/;</AdditionalLibraryDirectories>
+      <AdditionalDependencies>ws2_32.lib;lua.lib;;iconv.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent>
+      <Command>
+      
+      </Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;PF_CORE;PF_BUILD_AS_DLL;ICONV_BUILD_AS_DLL;CHARSET_BUILD_AS_DLL;LUA_BUILD_AS_DLL;ZLIB_DLL;PF_PLUGIN_BUILD_AS_DLL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>../include/;../../dependencies/lua/5.3.0/include/;../../dependencies/iconv/include/;/usr/local/unixODBC/include/;</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4819;</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <Version>1.00</Version>
+      <AdditionalLibraryDirectories>./$(PlatformName)/$(Configuration)/;./../../dependencies/dll/$(PlatformName)/$(Configuration)/;</AdditionalLibraryDirectories>
+      <AdditionalDependencies>ws2_32.lib;lua.lib;;iconv.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent>
+      <Command>
+      
+      </Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_Lib|Win32'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;PF_CORE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>../include/;../../dependencies/lua/5.3.0/include/;../../dependencies/iconv/include/;/usr/local/unixODBC/include/;</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4819;</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <Version>1.00</Version>
+      <AdditionalLibraryDirectories>./$(PlatformName)/$(Configuration)/;./../../dependencies/dll/$(PlatformName)/$(Configuration)/;</AdditionalLibraryDirectories>
+    </Link>
+    <PostBuildEvent>
+      <Command>
+        
+      </Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_Lib|x64'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;PF_CORE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>../include/;../../dependencies/lua/5.3.0/include/;../../dependencies/iconv/include/;/usr/local/unixODBC/include/;</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4819;</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <Version>1.00</Version>
+      <AdditionalLibraryDirectories>./$(PlatformName)/$(Configuration)/;./../../dependencies/dll/$(PlatformName)/$(Configuration)/;</AdditionalLibraryDirectories>
+    </Link>
+    <PostBuildEvent>
+      <Command>
+        
+      </Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

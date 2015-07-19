@@ -37,6 +37,7 @@ class PF_API Pool {
 
  private:
    Base **connections_; //注意，这是一个指向Base对象的数组指针
+   bool isinit_;
    uint32_t position_;
    pf_sys::ThreadLock lock_;
    uint32_t count_;

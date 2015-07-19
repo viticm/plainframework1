@@ -19,20 +19,24 @@ namespace pf_db {
 class PF_API Manager {
 
  public:
-   Manager(dbconnector_type_t connector_type = kDBConnectorTypeODBC);
+   Manager();
    ~Manager();
 
  public:
    bool init(const char *connection_or_dbname,
              const char *username,
              const char *password);
-   dbconnector_type_t get_connector_type() const;
+   int8_t get_connector_type() const;
+   void set_connector_type(int8_t type);
    db_query_t *get_internal_query();
    bool query();
    bool fetch(int32_t orientation = 1, int32_t offset = 0);
    int32_t get_affectcount() const;
    bool check_db_connect();
    bool isready() const;
+   bool getresult() const;
+   int32_t get_columncount() const;
+   const char *get_columnname(int32_t column_index) const;
 
  public:
    float get_float(int32_t column_index, int32_t &error_code);
@@ -60,9 +64,11 @@ class PF_API Manager {
                                      char *buffer, 
                                      int32_t buffer_length, 
                                      int32_t &error_code);
+   const char *get_data(int32_t column_index, const char *_default) const;
+   int8_t gettype(int32_t column_index);
 
  protected:
-   dbconnector_type_t connector_type_;
+   int8_t connector_type_;
    odbc::System *odbc_system_;
    bool isready_;
 

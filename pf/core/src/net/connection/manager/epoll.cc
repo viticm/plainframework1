@@ -50,7 +50,7 @@ bool Epoll::select() {
         AssertEx(false, message);
       }
     } catch(...) {
-      FAST_ERRORLOG(kNetLogFile, 
+      FAST_ERRORLOG(NET_MODULENAME, 
                     "[net.connection.manager] (Epoll::select)"
                     " have error, result: %d", 
                     result);
@@ -64,8 +64,14 @@ bool Epoll::set_poll_maxcount(uint16_t maxcount) {
   __ENTER_FUNCTION
     if (polldata_.fd > 0) return true;
     bool result = poll_create(polldata_, maxcount) > 0 ? true : false;
-    if (!result || SOCKET_INVALID == socketid_) return false;
+    if (!result) return false;
+#ifdef _DEBUG
+    DEBUGPRINTF("set_poll_maxcount, server mode: %d, listen port: %d", 
+                is_servermode_ ? 1 : 0,
+                listenport_);
+#endif
     if (is_servermode_) {
+      if (ID_INVALID == socketid_) return false;
       poll_add(polldata_, socketid_, EPOLLIN, ID_INVALID);
     }
     return true;
@@ -143,7 +149,7 @@ bool Epoll::processinput() {
                           " ID_INVALID == connectionid");
           continue;
         }
-        connection = Base::get(connectionid);
+        connection = get(connectionid);
         if (NULL == connection) {
           SLOW_WARNINGLOG(NET_MODULENAME, 
                           "[net.connection.manager] (Epoll::processinput)"
@@ -160,16 +166,16 @@ bool Epoll::processinput() {
           return false;
         }
         if (connection->getsocket()->iserror()) {
-          Base::remove(connection);
+          remove(connection);
         } else {
           try {
             if (!connection->processinput()) { 
-              Base::remove(connection);
+              remove(connection);
             } else {
               receive_bytes_ += connection->get_receive_bytes();
             }
           } catch(...) {
-            Base::remove(connection);
+            remove(connection);
           }
         }
       } //handle the epoll input event
@@ -182,7 +188,7 @@ bool Epoll::processinput() {
 bool Epoll::processoutput() {
   __ENTER_FUNCTION
     uint16_t i;
-    uint16_t connectioncount = Base::getcount();
+    uint16_t connectioncount = getcount();
     for (i = 0; i < connectioncount; ++i) {
       if (ID_INVALID == connection_idset_[i]) continue;
       connection::Base* connection = NULL;
@@ -191,16 +197,16 @@ bool Epoll::processoutput() {
       int32_t socketid = connection->getsocket()->getid();
       if (socketid_ == socketid) continue;
       if (connection->getsocket()->iserror()) {
-        Base::remove(connection);
+        remove(connection);
       } else {
         try {
           if (!connection->processoutput()) { 
-            Base::remove(connection);
+            remove(connection);
           } else {
             send_bytes_ += connection->get_send_bytes();
           }
         } catch(...) {
-          Base::remove(connection);
+          remove(connection);
         }
       } //connection->getsocket()->iserror()
     }
@@ -219,7 +225,7 @@ bool Epoll::processexception() {
 bool Epoll::processcommand() {
   __ENTER_FUNCTION
     uint16_t i;
-    uint16_t connectioncount = Base::getcount();
+    uint16_t connectioncount = getcount();
     for (i = 0; i < connectioncount; ++i) {
       if (ID_INVALID == connection_idset_[i]) continue;
       connection::Base* connection = NULL;
@@ -229,14 +235,14 @@ bool Epoll::processcommand() {
       int32_t socketid = connection->getsocket()->getid();
       if (socketid_ == socketid) continue;
       if (connection->getsocket()->iserror()) {
-        Base::remove(connection);
+        remove(connection);
       } else { //connection is ok
         try {
           if (!connection->processcommand(false)) {
-            Base::remove(connection);
+            remove(connection);
           }
         } catch(...) {
-          Base::remove(connection);
+          remove(connection);
         }
       } //connection->getsocket()->iserror()
     }

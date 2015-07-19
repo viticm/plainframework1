@@ -16,7 +16,11 @@
 #define SCRIPT_LUA_STACK_STEP_MAX 48
 #define SCRIPT_LUA_STACK_FUNCTION_LENGTH_MAX 256
 #define SCRIPT_LUA_SCENE_MAX 4096
+#define SCRIPT_LUA_REF_MAX 1024
 #define SCRIPT_LUA_GLOBAL_VAR_FILE_DEFAULT "/global.lua"
+
+#ifndef PF_CORE_WITH_NOLUA
+
 //使用该宏需包含lua头文件，以及包含base/log.h，用来检测lua堆栈中的参数
 #define SCRIPT_LUA_CHECKARGC(L, argc) { \
   Assert(L); \
@@ -32,5 +36,28 @@
   } \
 }
 #define LUA_COMPAT_MODULE //兼容新老版本
+
+#endif
+
+namespace pf_script {
+
+namespace lua {
+
+class FileBridge;
+class Interface;
+class Stack;
+class System;
+class VM;
+
+}; //namespace lua
+
+namespace cache {
+
+class Base;
+class Manager;
+
+}; //namespace cache
+
+}; //namespace pf_script
 
 #endif //PF_SCRIPT_LUA_CONFIG_H_

@@ -58,7 +58,7 @@ uint32_t OutputStream::write(const char *buffer, uint32_t length) {
     return 0;
 }
 
-bool OutputStream::writepacket(const packet::Base* packet) {
+bool OutputStream::writepacket(packet::Base *packet) {
   __ENTER_FUNCTION
     bool result = false;
     uint16_t packetid = packet->getid();
@@ -100,12 +100,7 @@ int32_t OutputStream::flush() {
     int32_t sendcount = 0;
     uint32_t leftcount = 0;
     uint32_t flag = 0;
-    uint32_t bufferlength = streamdata_.bufferlength;
-    uint32_t bufferlength_max = streamdata_.bufferlength_max;
-    uint32_t head = streamdata_.head;
-    uint32_t tail = streamdata_.tail;
-    char *stream_buffer = streamdata_.buffer;
-    if (bufferlength > bufferlength_max) {
+    if (streamdata_.bufferlength > streamdata_.bufferlength_max) {
       init();
       return SOCKET_ERROR - 1;
     }
@@ -114,11 +109,12 @@ int32_t OutputStream::flush() {
 #elif __WINDOWS__
     flag = MSG_DONTROUTE;
 #endif
-    leftcount = head < tail ? 
-                tail - head : 
-                bufferlength - head;
+    leftcount = streamdata_.head < streamdata_.tail ? 
+                streamdata_.tail - streamdata_.head : 
+                streamdata_.bufferlength - streamdata_.head;
     while (leftcount > 0) {
-      sendcount = socket_->send(&stream_buffer[head], leftcount, flag);
+      sendcount = 
+        socket_->send(&streamdata_.buffer[streamdata_.head], leftcount, flag);
       if (SOCKET_ERROR_WOULD_BLOCK == sendcount) {
         return 0;
       }
@@ -132,11 +128,12 @@ int32_t OutputStream::flush() {
       leftcount -= sendcount;
       streamdata_.head += sendcount;
     }
-    if (head > tail) {
+    if (streamdata_.head > streamdata_.tail) {
       streamdata_.head = 0;
-      leftcount = tail;
+      leftcount = streamdata_.tail;
       while (leftcount > 0) {
-        sendcount = socket_->send(&stream_buffer[head], leftcount, flag);
+        sendcount = socket_->send(
+            &(streamdata_.buffer[streamdata_.head]), leftcount, flag);
         if (SOCKET_ERROR_WOULD_BLOCK == sendcount) {
           return 0;
         }

@@ -9,20 +9,24 @@ Pool::Pool() {
   position_ = 0;
   count_ = 0;
   maxcount_ = NET_CONNECTION_POOL_SIZE_DEFAULT;
+  isinit_ = false;
 }
 
 Pool::~Pool() {
   __ENTER_FUNCTION
     uint16_t i = 0;
-    for (i = 0; i < maxcount_; ++i) {
-      SAFE_DELETE(connections_[i]);
+    if (isinit_) {
+      for (i = 0; i < maxcount_; ++i) {
+        SAFE_DELETE(connections_[i]);
+      }
+      SAFE_DELETE_ARRAY(connections_);
     }
-    SAFE_DELETE_ARRAY(connections_);
   __LEAVE_FUNCTION
 }
 
 bool Pool::init(uint32_t maxcount) {
   __ENTER_FUNCTION
+    if (isinit_) return true;
     maxcount_ = maxcount;
     connections_ = new Base * [maxcount_];
     Assert(connections_);
@@ -32,6 +36,7 @@ bool Pool::init(uint32_t maxcount) {
     }
     position_ = 0;
     count_ = maxcount_;
+    isinit_ = true;
     return true;
   __LEAVE_FUNCTION
     return false;

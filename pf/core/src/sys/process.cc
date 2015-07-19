@@ -26,9 +26,20 @@ int32_t getid() {
     return ID_INVALID;
 }
 
+void get_filename(char *filename, size_t size) {
+  __ENTER_FUNCTION
+    using namespace pf_base::util;
+    get_module_filename(filename, size);
+    int32_t havelength = static_cast<int32_t>(strlen(filename));
+    int32_t _size = static_cast<int32_t>(size) - havelength;
+    if (_size > 0) snprintf(filename + havelength, _size, "%s", ".pid");
+  __LEAVE_FUNCTION
+}
+
 int32_t getid(const char *filename) {
   __ENTER_FUNCTION
-    FILE *fp = fopen(filename, "r");
+    FILE *fp = NULL;
+    fp = fopen(filename, "r");
     if (NULL == fp) return ID_INVALID;
     int32_t id;
     fscanf(fp, "%d", &id);

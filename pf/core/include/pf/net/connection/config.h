@@ -21,4 +21,11 @@
 #define NET_CONNECTION_INCOME_KICKTIME 60000
 #define NET_CONNECTION_POOL_SIZE_DEFAULT 1280 //连接池默认大小
 
+enum {
+  kConnectionCompressNone = 0, //不压缩
+  kConnectionCompressInput, //只压缩输入流
+  kConnectionCompressOutput, //只压缩输出流
+  kConnectionCompressAll, //输入流和输出流都压缩
+}; //连接压缩模式
+
 #endif //PF_NET_CONNECTION_CONFIG_H_

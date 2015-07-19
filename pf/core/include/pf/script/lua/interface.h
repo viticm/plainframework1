@@ -8,12 +8,17 @@
  * @date 2014/06/26 16:48
  * @uses script lua module system class(script interface)
  *       lua脚本系统基础接口，如需扩展，继承该类
+ *       这部分代码将重构，调用lua方法时使用少许接口
+ *       VM虚拟机的方法不支持多线程同时调用，该部分代码需要对多线程进行支持改进
  */
 #ifndef PF_SCRIPT_LUA_INTERFACE_H_
 #define PF_SCRIPT_LUA_INTERFACE_H_
 
+#ifndef PF_CORE_WITH_NOLUA
+
 #include "pf/script/lua/config.h"
 #include "pf/base/hashmap/template.h"
+#include "pf/sys/thread.h"
 #include "pf/script/cache/base.h" 
 #include "pf/script/lua/vm.h"
 #include "pf/script/lua/stack.h"
@@ -28,7 +33,6 @@ class PF_API Interface {
    Interface();
    ~Interface();
 
-
  public:
    static bool lua_reloadscript_always_;
    static bool lua_recordscript_step_;
@@ -38,12 +42,16 @@ class PF_API Interface {
  public:
    bool init();
    void release();
-   bool find_function(lua_State *L, const char *name);
-   bool verify_function(lua_State *L, const char **names);
+   bool find_function(const char *name);
+   bool verify_function(const char **names);
+   static bool find_function(lua_State *L, const char *name);
+   static bool verify_function(lua_State *L, const char **names);
    void enter_runstep(int32_t scriptid, 
                       const char *functionname);
    void leave_runstep(int32_t scriptid, 
                       const char *functionname);
+   void enter_runstep(const char *functionname);
+   void leave_runstep(const char *functionname);
    bool reloadscript(int32_t scriptid);
    void *getscript_byid(int32_t scriptid);
    bool addscript(int32_t scriptid, void *data);
@@ -51,9 +59,12 @@ class PF_API Interface {
 
  public:
    bool loadscript(const char *filename);
+   //重载脚本，支持多线程同时调用
+   bool reload(const char *filename);
    void set_globalfile(const char *filename);
    void set_rootpath(const char *path);
    void set_workpath(const char *path);
+   const char *get_rootpath();
    VM *get_vm();
 
  public:
@@ -69,160 +80,18 @@ class PF_API Interface {
    static void check_scriptvalid(void *file, 
                                  int32_t scriptid, 
                                  const char *function_name);
-   //static void dumpstack();
 
  public:
-   int64_t run_scriptfunction(int32_t scriptid, 
-                              const char *function_name);
-   int64_t run_scriptfunction(int32_t scriptid, 
-                              const char *function_name,
-                              int64_t param0);
-   int64_t run_scriptfunction(int32_t scriptid, 
-                              const char *function_name,
-                              int64_t param0,
-                              int64_t param1);
-   int64_t run_scriptfunction(int32_t scriptid, 
-                              const char *function_name,
-                              int64_t param0,
-                              int64_t param1,
-                              int64_t param2);
-   int64_t run_scriptfunction(int32_t scriptid, 
-                              const char *function_name,
-                              int64_t param0,
-                              int64_t param1,
-                              int64_t param2,
-                              int64_t param3);
-   int64_t run_scriptfunction(int32_t scriptid, 
-                              const char *function_name,
-                              int64_t param0,
-                              int64_t param1,
-                              int64_t param2,
-                              int64_t param3,
-                              int64_t param4);
-   int64_t run_scriptfunction(int32_t scriptid, 
-                              const char *function_name,
-                              int64_t param0,
-                              int64_t param1,
-                              int64_t param2,
-                              int64_t param3,
-                              int64_t param4,
-                              int64_t param5);
-   int64_t run_scriptfunction(int32_t scriptid, 
-                              const char *function_name,
-                              int64_t param0,
-                              int64_t param1,
-                              int64_t param2,
-                              int64_t param3,
-                              int64_t param4,
-                              int64_t param5,
-                              int64_t param6);
-   int64_t run_scriptfunction(int32_t scriptid, 
-                              const char *function_name,
-                              int64_t param0,
-                              int64_t param1,
-                              int64_t param2,
-                              int64_t param3,
-                              int64_t param4,
-                              int64_t param5,
-                              int64_t param6,
-                              int64_t param7);
-   int64_t run_scriptfunction(int32_t scriptid, 
-                              const char *function_name,
-                              int64_t param0,
-                              int64_t param1,
-                              float param2,
-                              float param3);
-   int64_t run_scriptfunction(int32_t scriptid, 
-                              const char *function_name,
-                              int64_t param0,
-                              int64_t param1,
-                              const char *param2,
-                              const char *param3);
-
- public:
-   const char *get_rootpath();
-
- protected:
-   int64_t run_filefunction(const char *filename, 
-                            const char *function_name,
-                            bool load = true);
-   int64_t run_filefunction(const char *filename, 
-                            const char *function_name,
-                            int64_t param0,
-                            bool load = true);
-   int64_t run_filefunction(const char *filename, 
-                            const char *function_name,
-                            int64_t param0,
-                            int64_t param1,
-                            bool load = true);
-   int64_t run_filefunction(const char *filename, 
-                            const char *function_name,
-                            int64_t param0,
-                            int64_t param1,
-                            int64_t param2,
-                            bool load = true);
-   int64_t run_filefunction(const char *filename, 
-                            const char *function_name,
-                            int64_t param0,
-                            int64_t param1,
-                            int64_t param2,
-                            int64_t param3,
-                            bool load = true);
-   int64_t run_filefunction(const char *filename, 
-                            const char *function_name,
-                            int64_t param0,
-                            int64_t param1,
-                            int64_t param2,
-                            int64_t param3,
-                            int64_t param4,
-                            bool load = true);
-   int64_t run_filefunction(const char *filename, 
-                            const char *function_name,
-                            int64_t param0,
-                            int64_t param1,
-                            int64_t param2,
-                            int64_t param3,
-                            int64_t param4,
-                            int64_t param5,
-                            bool load = true);
-   int64_t run_filefunction(const char *filename, 
-                            const char *function_name,
-                            int64_t param0,
-                            int64_t param1,
-                            int64_t param2,
-                            int64_t param3,
-                            int64_t param4,
-                            int64_t param5,
-                            int64_t param6,
-                            bool load = true);
-   int64_t run_filefunction(const char *filename, 
-                            const char *function_name,
-                            int64_t param0,
-                            int64_t param1,
-                            int64_t param2,
-                            int64_t param3,
-                            int64_t param4,
-                            int64_t param5,
-                            int64_t param6,
-                            int64_t param7,
-                            bool load = true);
-   int64_t run_filefunction(const char *filename, 
-                            const char *function_name,
-                            int64_t param0,
-                            int64_t param1,
-                            float param2,
-                            float param3,
-                            bool load = true);
-   int64_t run_filefunction(const char *filename, 
-                            const char *function_name,
-                            int64_t param0,
-                            int64_t param1,
-                            const char *param2,
-                            const char *param3,
-                            bool load = true);
+   //执行字符串的方法，支持多线程同时调用
+   int64_t runstring(const char *string);
+   //执行带参数和结果的方法，支持多线程同时调用
+   bool runfunction(const char *name,
+                    pf_base::variable_array_t &params,
+                    pf_base::variable_array_t &results);
 
  private:
    VM VM_;
+   pf_sys::ThreadLock lock_;
    pf_base::hashmap::Template<int32_t, void *> script_loaded_;
    char global_filename_[FILENAME_MAX];
 
@@ -232,5 +101,10 @@ class PF_API Interface {
 
 }; //namespace pf_script
 
+#else
+
+#include "pf/script/lua/none.h"
+
+#endif
 
 #endif //PF_SCRIPT_LUA_INTERFACE_H_

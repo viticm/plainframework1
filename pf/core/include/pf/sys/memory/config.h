@@ -18,6 +18,9 @@ typedef enum {
   kCmdModelLoadDump = 2,
   kCmdModelRecover = 3,
 } cmd_model_t; //命令行模式
-PF_API extern int32_t g_cmd_model;
+
+#define SYS_MEMORY_SHARENODE_DETECT_IDLE 5000
+#define SYS_MEMORY_SHARENODE_SAVEINTERVAL 300000
+#define SYS_MEMORY_SHARENODE_SAVECOUNT_PERTICK 5
 
 #endif //PF_SYS_MEMORY_CONFIG_H_

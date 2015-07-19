@@ -12,18 +12,27 @@
 #define PF_BASE_CONFIG_H_
 
 #define DATE_LENGTH_MAX 30
+#define LOGTYPE_MAX 100 //快速日志的最大类型数量
 
-/* base log { */
 enum {
-  kDebugLogFile = 0,
-  kErrorLogFile = 1,
-  kNetLogFile = 2,
-  kScriptLogFile = 3,
-  kEngineLogFile = 4,
-  kApplicationLogFile, //应用的日志记录ID
-  kLogFileCount,
-};
-/* } base log */
+  kAppStatusSleep = 0, 
+  kAppStatusRunning,
+  kAppStatusStop,
+}; //应用的状态
+
+//platform define
+#ifndef __WINDOWS__ /* { */ //windows上的宏处理与gnu有区别，所以这样定义
+#if defined(_MSC_VER) || defined(__ICL) || defined(WIN32) || defined(WIN64)
+#define __WINDOWS__ 1
+#else
+#define __WINDOWS__ 0
+#endif
+#endif /* } */
+
+#ifndef __LINUX__
+#define __LINUX__ !(__WINDOWS__)
+#endif
+
 
 /* plain framework exports { */
 /*
@@ -36,7 +45,7 @@ enum {
 ** PF_BUILD_AS_DLL to get it).
 */
 
-#if defined(PF_BUILD_AS_DLL) /* { */ 
+#if __WINDOWS__ && defined(PF_BUILD_AS_DLL) && !defined(PF_USE_LIB) /* { */ 
 
 #if defined(PF_CORE) || defined(PF_LIB) /* { */
 #define PF_API __declspec(dllexport)
@@ -47,6 +56,23 @@ enum {
 #else  /* }{ */ 
 
 #define PF_API
+
+#endif /* } */
+
+//for plugin
+#if __WINDOWS__ && \
+  defined(PF_PLUGIN_BUILD_AS_DLL) && \
+  !defined(PF_PLUGIN_USE_LIB) /* { */ 
+
+#if defined(PF_PLUGIN_CORE) || defined(PF_PLUGIN_LIB) /* { */
+#define PF_PLUGIN_API __declspec(dllexport)
+#else /* }{ */
+#define PF_PLUGIN_API __declspec(dllimport)
+#endif
+
+#else  /* }{ */ 
+
+#define PF_PLUGIN_API
 
 #endif /* } */
 
@@ -81,18 +107,6 @@ enum {
 #endif				/* } */
 /* } plain framework exports */
 
-//platform define
-#ifndef __WINDOWS__ /* { */ //windows上的宏处理与gnu有区别，所以这样定义
-#if defined(_MSC_VER) || defined(__ICL) || defined(WIN32) || defined(WIN64)
-#define __WINDOWS__ 1
-#else
-#define __WINDOWS__ 0
-#endif
-#endif /* } */
-
-#ifndef __LINUX__
-#define __LINUX__ !(__WINDOWS__)
-#endif
 
 //network size define
 #ifndef FD_SETSIZE 
@@ -101,6 +115,10 @@ enum {
 
 #ifndef __STDC_FORMAT_MACROS
 #define __STDC_FORMAT_MACROS
+#endif //use c99
+
+#ifndef __STDC_LIMIT_MACROS
+#define __STDC_LIMIT_MACROS
 #endif //use c99
 
 //system include
@@ -117,6 +135,7 @@ enum {
 #include <vector>
 #include <list>
 #include <map>
+#include <limits.h>
 #if __WINDOWS__ //diffrent system include
 #include <windows.h>
 #include <crtdbg.h>
@@ -136,17 +155,6 @@ enum {
 #include <sys/resource.h>
 #include <unistd.h>
 #endif
-#include "pf/sys/assert.h"
-#include "pf/base/io.h"
-//warning the namespace can't use like this, remember it
-//using namespace std;
-
-//基本数据类型定义
-//typedef unsigned char ubyte; //0~255 --use uint8_t
-//typedef char byte; //-128~127 --use int8_t
-
-#include "pf/base/atomic.h"
-#include "pf/base/global.h" //全局定义
 
 #define IP_SIZE 24 //max ip size
 #if __LINUX__
@@ -155,6 +163,7 @@ enum {
 #define HANDLE_INVALID ((VOID*)0)
 #endif
 #define ID_INVALID (-1)
+#define ID_INVALID_EX (-2)
 #define INDEX_INVALID (-1)
 #define TAB_PARAM_ID_INVALID (-9999) //invalid id in excel param
 
@@ -177,6 +186,10 @@ enum {
 #ifndef LF
 #define LF "\r\n"
 #endif
+#endif
+
+#ifndef is_null
+#define is_null(pointer) (NULL == (pointer))
 #endif
 
 #ifndef max
@@ -213,6 +226,11 @@ enum {
 #define strtouint64(pointer,endpointer,base) strtoull(pointer,endpointer,base) 
 #endif
 
+#define POINTER_TOINT64(pointer) \
+  (int64_t)(reinterpret_cast<int64_t *>(pointer))
+#define INT64_TOPOINTER(type,number) \
+  reinterpret_cast<type *>((int64_t *)(number))
+
 #if __WINDOWS__
 #define access _access
 #define mkdir(dir,mode) _mkdir(dir)
@@ -222,7 +240,7 @@ enum {
 #ifndef SAFE_DELETE
 #if __WINDOWS__
 #define SAFE_DELETE(x)	if ((x) != NULL) { \
-  Assert(_CrtIsValidHeapPointer(x)); \
+  Assert(_CrtIsValidHeapPointer((x))); \
   delete (x); (x) = NULL; \
 }
 
@@ -235,7 +253,6 @@ enum {
 #ifndef SAFE_DELETE_ARRAY
 #if __WINDOWS__
 #define SAFE_DELETE_ARRAY(x) if ((x) != NULL) { \
-  Assert(_CrtIsValidHeapPointer(x)); \
   delete[] (x); (x) = NULL; \
 }
 #elif __LINUX__
@@ -333,5 +350,12 @@ enum {
 #endif //NOT_RENAME_SOURCE
 
 #endif
+
+//pf self need.
+#include "pf/base/define.h"
+#include "pf/base/io.h"
+#include "pf/base/atomic.h"
+#include "pf/base/global.h" //全局定义
+#include "pf/sys/assert.h"
 
 #endif //PF_BASE_CONFIG_H_

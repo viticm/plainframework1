@@ -1,3 +1,5 @@
+#ifndef PF_CORE_WITH_NOODBC
+
 #include "pf/base/log.h"
 #include "pf/base/util.h"
 #include "pf/base/string.h"
@@ -367,7 +369,7 @@ bool Interface::fetch(int32_t orientation, int32_t offset) {
             column_value_allocator_.malloc(data_length + 1));
         memcpy(column_values_[column], work_data, data_length);
         column_values_[column][data_length] = '\0';
-        column_valuelengths_[column] = data_length;
+        column_valuelengths_[column] = static_cast<SQLINTEGER>(data_length);
         for (;;) {
           SQLINTEGER chunklength;
           resultcode = SQLGetData(sql_hstmt_, 
@@ -389,7 +391,7 @@ bool Interface::fetch(int32_t orientation, int32_t offset) {
                 --chunklength;
             }
           } else {
-            chunklength = data_length;
+            chunklength = static_cast<SQLINTEGER>(data_length);
           }
           work_data[chunklength] = '\0';
           column_values_[column] = reinterpret_cast<char *>(
@@ -402,7 +404,7 @@ bool Interface::fetch(int32_t orientation, int32_t offset) {
           column_values_[column][data_length] = '\0';
         } //for
       } else {
-        column_valuelengths_[column] = data_length;
+        column_valuelengths_[column] = static_cast<SQLINTEGER>(data_length);
         column_values_[column] = reinterpret_cast<char *>(
             column_value_allocator_.malloc(data_length + 1));
         memcpy(column_values_[column], work_data, data_length);
@@ -426,13 +428,13 @@ float Interface::get_float(int32_t column_index, int32_t &error_code) {
       Assert(false);
       return QUERY_NO_COLUMN;
     }
-    if (NULL == column_values_[column_index - 1]) {
+    if (NULL == column_values_[column_index]) {
       error_code = QUERY_NULL;
       Assert(false);
       return 0.0f;
     } else {
       error_code = QUERY_OK;
-      return static_cast<float>(atof(get_data(column_index - 1)));
+      return static_cast<float>(atof(get_data(column_index)));
     }
   __LEAVE_FUNCTION
     return 0.0f;
@@ -441,7 +443,7 @@ float Interface::get_float(int32_t column_index, int32_t &error_code) {
 int64_t Interface::get_int64(int32_t column_index, int32_t &error_code) {
   __ENTER_FUNCTION
     using namespace pf_base;
-    char temp[32] = {0};
+    char temp[128] = {0};
     get_string(column_index, temp, sizeof(temp), error_code);
     int64_t result = string::toint64(temp);
     return result;
@@ -452,7 +454,7 @@ int64_t Interface::get_int64(int32_t column_index, int32_t &error_code) {
 uint64_t Interface::get_uint64(int32_t column_index, int32_t &error_code) {
   __ENTER_FUNCTION
     using namespace pf_base;
-    char temp[32] = {0};
+    char temp[128] = {0};
     get_string(column_index, temp, sizeof(temp), error_code);
     int64_t result = string::touint64(temp);
     return result;
@@ -467,13 +469,13 @@ int32_t Interface::get_int32(int32_t column_index, int32_t &error_code) {
       Assert(false);
       return QUERY_NO_COLUMN;
     }
-    if (NULL == column_values_[column_index - 1]) {
+    if (NULL == column_values_[column_index]) {
       error_code = QUERY_NULL;
       Assert(false);
       return QUERY_NULL;
     } else {
       error_code = QUERY_OK;
-      int32_t result = atoi(get_data(column_index - 1));
+      int32_t result = atoi(get_data(column_index));
       return result;
     }
   __LEAVE_FUNCTION
@@ -487,13 +489,13 @@ uint32_t Interface::get_uint32(int32_t column_index, int32_t &error_code) {
       Assert(false);
       return 0;
     }
-    if (NULL == column_values_[column_index - 1]) {
+    if (NULL == column_values_[column_index]) {
       error_code = QUERY_NULL;
       Assert(false);
       return 0;
     } else {
       error_code = QUERY_OK;
-      const char *data = get_data(column_index - 1);
+      const char *data = get_data(column_index);
       char *endpointer = NULL;
       double double_value = strtod(data, &endpointer);
       uint32_t result = static_cast<uint32_t>(double_value);
@@ -541,20 +543,20 @@ int32_t Interface::get_string(int32_t column_index,
                               int32_t buffer_length, 
                               int32_t &error_code) {
   __ENTER_FUNCTION
-    if (column_index > column_count_) {
+    if (column_index >= column_count_) {
       error_code = QUERY_NO_COLUMN;
       buffer[0] = '\0';
-      Assert(false);
+      //Assert(false);
       return QUERY_NO_COLUMN;
     }
-    if (NULL == column_values_[column_index - 1]) {
+    if (NULL == column_values_[column_index]) {
       error_code = QUERY_NULL;
       buffer[0] = '\0';
-      Assert(false);
+      //Assert(false);
     } else {
-      int32_t data_length = get_datalength(column_index - 1);
+      int32_t data_length = get_datalength(column_index);
       if (data_length <=buffer_length) {
-        strncpy(buffer, get_data(column_index - 1), buffer_length);
+        strncpy(buffer, get_data(column_index), buffer_length);
       } else {
         char message[8092] = {0};
         snprintf(message, 
@@ -562,7 +564,7 @@ int32_t Interface::get_string(int32_t column_index,
                  "buffer_length: %d, data_length: %d, data: %s", 
                  buffer_length,
                  data_length,
-                 get_data(column_index - 1));
+                 get_data(column_index));
         AssertEx(false, message);
       }
       error_code = QUERY_OK;
@@ -578,20 +580,20 @@ int32_t Interface::get_binary(int32_t column_index,
                               int32_t buffer_length, 
                               int32_t &error_code) {
   __ENTER_FUNCTION
-    if (column_index > column_count_) {
+    if (column_index >= column_count_) {
       error_code = QUERY_NO_COLUMN;
       buffer[0] = '\0';
       Assert(false);
       return QUERY_NO_COLUMN;
     }
-    if (NULL == column_values_[column_index - 1]) {
+    if (NULL == column_values_[column_index]) {
       error_code = QUERY_NULL;
       buffer[0] = '\0';
-      Assert(false);
+      //Assert(false);
     } else {
-      int32_t data_length = get_datalength(column_index - 1);
+      int32_t data_length = get_datalength(column_index);
       if (data_length <= buffer_length) {
-        memcpy(buffer, get_data(column_index - 1), buffer_length);
+        memcpy(buffer, get_data(column_index), buffer_length);
       } else {
         char message[8092] = {0};
         snprintf(message, 
@@ -599,7 +601,7 @@ int32_t Interface::get_binary(int32_t column_index,
                  "buffer_length: %d, data_length: %d, data: %s", 
                  buffer_length,
                  data_length,
-                 get_data(column_index - 1));
+                 get_data(column_index));
         AssertEx(false, message);
       }
       error_code = QUERY_OK;
@@ -615,23 +617,23 @@ int32_t Interface::get_binary_withdecompress(int32_t column_index,
                                              int32_t buffer_length, 
                                              int32_t &error_code) {
   __ENTER_FUNCTION
-    if (column_index > column_count_) {
+    if (column_index >= column_count_) {
       error_code = QUERY_NO_COLUMN;
       buffer[0] = '\0';
       Assert(false);
       return QUERY_NO_COLUMN;
     }
-    if (NULL == column_values_[column_index - 1]) {
+    if (NULL == column_values_[column_index]) {
       error_code = QUERY_NULL;
       buffer[0] = '\0';
-      Assert(false);
+      //Assert(false);
     } else {
       error_code = QUERY_OK;
-      int32_t data_length = get_datalength(column_index - 1);
+      int32_t data_length = get_datalength(column_index);
       if (0 == data_length) return 0;
       if (false == getcompressor()->decompress(
             reinterpret_cast<const unsigned char *>(
-              get_data(column_index - 1)), data_length)) {
+              get_data(column_index)), data_length)) {
         Assert(false);
         return 0;
       }
@@ -662,23 +664,23 @@ int32_t Interface::get_field(int32_t column_index,
                              int32_t buffer_length, 
                              int32_t &error_code) {
   __ENTER_FUNCTION
-    if (column_index > column_count_) {
+    if (column_index >= column_count_) {
       error_code = QUERY_NO_COLUMN;
       buffer[0] = '\0';
       Assert(false);
       return 0;
     }
-    if (NULL == column_values_[column_index - 1]) {
+    if (NULL == column_values_[column_index]) {
       error_code = QUERY_NULL;
       buffer[0] = '\0';
-      Assert(false);
+      //Assert(false);
     } else {
       uint32_t out_length = 0;
-      pf_base::util::string_tobinary(get_data(column_index - 1), 
-                                            get_datalength(column_index - 1), 
-                                            buffer, 
-                                            buffer_length, 
-                                            out_length);
+      pf_base::util::string_tobinary(get_data(column_index), 
+                                     get_datalength(column_index), 
+                                     buffer, 
+                                     buffer_length, 
+                                     out_length);
       if (static_cast<int32_t>(out_length) <= buffer_length) {
         error_code = QUERY_OK;
       } else {
@@ -687,8 +689,8 @@ int32_t Interface::get_field(int32_t column_index,
                  sizeof(message) - 1,
                  "buffer_length: %d, data_length: %d, data: %s",
                  buffer_length,
-                 get_datalength(column_index - 1),
-                 get_data(column_index - 1));
+                 get_datalength(column_index),
+                 get_data(column_index));
         AssertEx(false, message);
       }
       return out_length;
@@ -753,40 +755,14 @@ void Interface::diag_state() {
 void Interface::save_error_log(const char *log) {
   __ENTER_FUNCTION
     if (0 == strlen(log)) return;
-    char filename[FILENAME_MAX] = {0};
-    snprintf(filename, 
-             sizeof(filename) - 1,
-             "./log/dberror_%.4d-%.2d-%.2d.log",
-             TIME_MANAGER_POINTER->get_year(),
-             TIME_MANAGER_POINTER->get_month(),
-             TIME_MANAGER_POINTER->get_day());
-    FILE *fp = fopen(filename, "a");
-    if (fp) {
-      fwrite(log, 1, strlen(log), fp);
-      fwrite(LF, 1, strlen(LF), fp);
-      fclose(fp);
-    }
-    ERRORPRINTF(log);
+    SLOW_ERRORLOG(DB_MODULENAME, log);
   __LEAVE_FUNCTION
 }
 
 void Interface::save_warning_log(const char *log) {
   __ENTER_FUNCTION
     if (0 == strlen(log)) return;
-    char filename[FILENAME_MAX] = {0};
-    snprintf(filename, 
-             sizeof(filename) - 1,
-             "./log/dbwarning_%.4d-%.2d-%.2d.log",
-             TIME_MANAGER_POINTER->get_year(),
-             TIME_MANAGER_POINTER->get_month(),
-             TIME_MANAGER_POINTER->get_day());
-    FILE *fp = fopen(filename, "a");
-    if (fp) {
-      fwrite(log, 1, strlen(log), fp);
-      fwrite(LF, 1, strlen(LF), fp);
-      fclose(fp);
-    }
-    WARNINGPRINTF(log);
+    SLOW_WARNINGLOG(DB_MODULENAME, log);
   __LEAVE_FUNCTION
 }
 
@@ -824,9 +800,9 @@ void Interface::dump(int32_t column_index) {
     FILE *fp = fopen(filename, "a");
     if (fp) {
       fwrite("begin", 1, 5, fp);
-      fwrite(get_data(column_index - 1), 
+      fwrite(get_data(column_index), 
              1, 
-             get_datalength(column_index - 1), 
+             get_datalength(column_index), 
              fp);
       fclose(fp);
     }
@@ -857,7 +833,7 @@ bool Interface::is_connected() {
 
 int32_t Interface::get_affect_row_count() {
   __ENTER_FUNCTION
-    return affect_count_;
+    return static_cast<int32_t>(affect_count_);
   __LEAVE_FUNCTION
     return 0;
 }
@@ -869,8 +845,8 @@ bool Interface::is_prepare() {
     return false;
 }
 
-db_query_t& Interface::get_query() {
-   return query_;
+db_query_t *Interface::get_query() {
+   return &query_;
 }
 
 SQLSMALLINT Interface::get_typemapping(SQLSMALLINT typecode) {
@@ -977,14 +953,14 @@ const char *Interface::get_data(int32_t column, const char *_default) {
 
 const char *Interface::get_data(const char *columnname, const char *_default) {
   __ENTER_FUNCTION
-    int32_t column = get_column(columnname);
+    int32_t column = get_index(columnname);
     const char *data = get_data(column, _default);
     return data;
   __LEAVE_FUNCTION
     return _default;
 }
 
-int32_t Interface::get_column(const char *columnname) const {
+int32_t Interface::get_index(const char *columnname) const {
   __ENTER_FUNCTION
     int32_t result = -1;
     for (int32_t i = 0; i < column_count_; ++i) {
@@ -998,60 +974,59 @@ int32_t Interface::get_column(const char *columnname) const {
     return -1;
 }
 
-int32_t Interface::get_datalength(int32_t column) const {
+int32_t Interface::get_datalength(int32_t column_index) const {
   __ENTER_FUNCTION
-    if (column < 0 || column > column_count_) return 0;
-    if (column_values_[column] != NULL) return column_valuelengths_[column];
-    return 0;
+    if (column_index < 0 || column_index > column_count_) return 0;
+    return column_valuelengths_[column_index];
   __LEAVE_FUNCTION
     return 0;
 }
 
-int16_t Interface::get_size(int32_t column) const {
+int16_t Interface::get_size(int32_t column_index) const {
   __ENTER_FUNCTION
-    if (column < 0 || column > column_count_) return -1;
-    int16_t result = static_cast<int16_t>(column_size_[column]);
+    if (column_index < 0 || column_index > column_count_) return -1;
+    int16_t result = static_cast<int16_t>(column_size_[column_index]);
     return result;
   __LEAVE_FUNCTION
     return -1;
 }
 
-int16_t Interface::get_precision(int32_t column) const {
+int16_t Interface::get_precision(int32_t column_index) const {
   __ENTER_FUNCTION
-    if (column < 0 || column > column_count_) return -1;
-    return column_precision_[column];
+    if (column_index < 0 || column_index > column_count_) return -1;
+    return column_precision_[column_index];
   __LEAVE_FUNCTION
     return -1;
 }
 
-int16_t Interface::get_nullable(int32_t column) const {
+int16_t Interface::get_nullable(int32_t column_index) const {
   __ENTER_FUNCTION
-    if (column < 0 || column > column_count_) return -1;
-    return column_nullable_[column];
+    if (column_index < 0 || column_index > column_count_) return -1;
+    return column_nullable_[column_index];
   __LEAVE_FUNCTION
     return -1;
 }
    
-const char *Interface::get_name(int32_t column) {
+const char *Interface::get_name(int32_t column_index) {
   __ENTER_FUNCTION
-    if (column < 0 || column > column_count_) return NULL;
-    return column_names_[column];
+    if (column_index < 0 || column_index > column_count_) return NULL;
+    return column_names_[column_index];
   __LEAVE_FUNCTION
     return NULL;
 }
   
-int16_t Interface::get_type(int32_t column) const {
+int16_t Interface::get_type(int32_t column_index) const {
   __ENTER_FUNCTION
-    if (column < 0 || column > column_count_) return -1;
-    return column_type_[column];
+    if (column_index < 0 || column_index > column_count_) return -1;
+    return column_type_[column_index];
   __LEAVE_FUNCTION
     return -1;
 }
    
-const char *Interface::get_typename(int16_t column) {
+const char *Interface::get_typename(int16_t column_index) {
   __ENTER_FUNCTION
-    if (column < 0 || column > column_count_) return NULL;
-    return column_typenames_[column];
+    if (column_index < 0 || column_index > column_count_) return NULL;
+    return column_typenames_[column_index];
   __LEAVE_FUNCTION
     return NULL;
 }
@@ -1066,3 +1041,5 @@ pf_util::compressor::Mini *Interface::getcompressor() {
 } //namespace odbc
 
 } //namespace pf_db
+
+#endif

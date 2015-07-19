@@ -33,9 +33,10 @@ bool Database::open_from_txt(const char *filename) {
     char *memory = new char[filesize + 1];
     memset(memory, 0, filesize + 1); //use memset to memory pointer
     fread(memory, 1, filesize, fp);
-    //memory[filesize + 1] = '\0'; //remember this error, can't change memory like this
+    fclose(fp);
+    memory[filesize] = '\0';
     bool result = open_from_memory(memory, memory + filesize + 1, filename);
-    SAFE_DELETE_ARRAY(memory); memory = 0;
+    SAFE_DELETE_ARRAY(memory);
     return result;
   __LEAVE_FUNCTION
     return false;
@@ -47,7 +48,7 @@ bool Database::open_from_memory(const char *memory,
   __ENTER_FUNCTION
     bool result = true;
     if (end - memory >= static_cast<int32_t>(sizeof(file_head_t)) && 
-        *((uint32_t*)memory) == 0XDDBBCC0) {
+        *((uint32_t*)memory) == FILE_DATABASE_INDENTIFY) {
       result = open_from_memory_binary(memory, end, filename);
     } else {
       result = open_from_memory_text(memory, end, filename);
@@ -104,7 +105,7 @@ const Database::field_data *Database::search_position(int32_t line,
                                                       int32_t column) const {
   __ENTER_FUNCTION
     int32_t position = line * get_field_number() + column;
-    if (position < 0 || column > static_cast<int32_t>(data_buffer_.size())) {
+    if (line < 0 || position > static_cast<int32_t>(data_buffer_.size())) {
       char temp[256];
       memset(temp, '\0', sizeof(temp));
       snprintf(temp, 
@@ -140,9 +141,9 @@ const Database::field_data* Database::search_first_column_equal(
       if (kTypeInt == type) {
         result = field_equal(kTypeInt, _field_data, value);
       } else if (kTypeFloat == type) {
-        result = field_equal(kTypeInt, _field_data, value);
+        result = field_equal(kTypeFloat, _field_data, value);
       } else {
-        result = field_equal(kTypeInt, _field_data, value);
+        result = field_equal(kTypeString, _field_data, value);
       }
       if (result) {
         return &(data_buffer_[field_number_ * i]);
@@ -399,7 +400,7 @@ bool Database::open_from_memory_binary(const char *memory,
     register const char *_memory = memory;
     file_head_t file_head;
     memcpy(&file_head, _memory, sizeof(file_head_t));
-    if (file_head.identify != 0XDDBBCC00) return false;
+    if (file_head.identify != FILE_DATABASE_INDENTIFY) return false;
     //check memory size
     if (sizeof(file_head) +
         sizeof(uint32_t) * file_head.field_number +
@@ -463,6 +464,141 @@ bool Database::open_from_memory_binary(const char *memory,
       }
     }
     create_index(0, filename);
+  __LEAVE_FUNCTION
+    return false;
+}
+
+bool Database::save_tobinary(const char *filename) {
+  __ENTER_FUNCTION
+    file_head_t filehead;
+    filehead.field_number = field_number_;
+    filehead.record_number = record_number_;
+    filehead.string_block_size = string_buffer_size_;
+    FILE *fp = fopen(filename, "wb");
+    if (NULL == fp) return false;
+    fwrite(&filehead, sizeof(filehead), 1, fp);
+    fwrite(&(type_[0]), sizeof(field_type_enum) *filehead.field_number, 1, fp);
+    fwrite(&(data_buffer_[0]), 
+           filehead.field_number * filehead.record_number, 
+           1, 
+           fp);
+    fwrite(string_buffer_, filehead.string_block_size, 1, fp);
+    fclose(fp);
+    return true;
+  __LEAVE_FUNCTION
+    return false;
+}
+
+bool Database::save_totext(const char *filename) {
+  __ENTER_FUNCTION
+    FILE *fp = fopen(filename, "wb");
+    if (NULL == fp) return false;
+
+    for(int i=0; i< static_cast<int>(type_.size()); ++i){
+      if(type_[i] == kTypeInt){
+        char temp[64] = {0};
+        snprintf(temp, sizeof(temp) - 1, "INT");
+        fwrite(temp, strlen(temp), 1, fp); 
+      } else if(type_[i] == kTypeFloat){
+        char temp[64] = {0};
+        snprintf(temp, sizeof(temp) - 1, "FLOAT");
+        fwrite(temp, strlen(temp), 1, fp); 
+      } else if(type_[i] == kTypeString){
+        char temp[64] = {0};
+        snprintf(temp, sizeof(temp) - 1, "STRING");
+        fwrite(temp, strlen(temp), 1, fp); 
+      }
+      if(i == static_cast<int>(type_.size()-1)){
+        fwrite("\n", 1, 1, fp);
+      } else{
+        fwrite("\t", 1, 1, fp);
+      }
+    }
+
+    for(int i=0; i<static_cast<int>(fieldnames_.size()); ++i){
+      char temp[64] = {0};
+      snprintf(temp, sizeof(temp) - 1, fieldnames_[i].c_str());
+      fwrite(temp, strlen(temp), 1, fp); 
+      if(i == static_cast<int>(fieldnames_.size()-1)){
+        fwrite("\n", 1, 1, fp);
+      } else{
+        fwrite("\t", 1, 1, fp);
+      } 
+    }
+
+    for (int32_t line = 0; line < record_number_; ++line) {
+      for (int32_t column = 0; column < field_number_; ++column) {
+        const field_data *_field_data = search_position(line, column);
+        switch (type_[column]) {
+          case kTypeInt: {
+            char temp[64] = {0};
+            snprintf(temp, sizeof(temp) - 1, "%d", _field_data->int_value);
+            fwrite(temp, strlen(temp), 1, fp);
+            break;
+          }
+          case kTypeFloat: {
+            char temp[64] = {0};
+            snprintf(temp, sizeof(temp) - 1, "%.3f", _field_data->float_value);
+            fwrite(temp, strlen(temp), 1, fp);
+            break;
+          }
+          case kTypeString: {
+            fwrite(_field_data->string_value, 
+                   strlen(_field_data->string_value), 
+                   1, 
+                   fp);
+            break;
+          }
+          default:
+            break;
+        }
+
+        fwrite("\t", 1, 1, fp);
+      } //for
+      fwrite(LF, strlen(LF), 1, fp);
+    } //for
+    fclose(fp);
+    return true;
+  __LEAVE_FUNCTION
+    return false;
+}
+
+const Database::field_data *Database::get_fielddata(int32_t line, 
+                                                    const char *name) {
+  __ENTER_FUNCTION
+    const field_data *_field_data = NULL;
+    int32_t column = get_fieldindex(name);
+    _field_data = search_position(line, column);
+    return _field_data;
+  __LEAVE_FUNCTION
+    return NULL;
+}
+
+bool Database::save_totext_line(std::vector<std::string> _data){
+  __ENTER_FUNCTION
+    if(static_cast<int32_t>(_data.size()) != field_number_)
+      return false;
+
+    for(int32_t column = 0; column < field_number_; ++column){
+      switch (type_[column]) {
+        case kTypeInt: {
+        
+          break;
+        }
+        case kTypeFloat: {
+        
+          break;
+        }
+        case kTypeString: {
+        
+          break;
+        }
+        default:
+          break;
+
+      }
+    } 
+    return true;
   __LEAVE_FUNCTION
     return false;
 }

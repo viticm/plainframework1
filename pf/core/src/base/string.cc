@@ -255,9 +255,13 @@ int32_t charset_convert(const char *from,
     while (0 < insize) {
       size_t res = iconv(cd, (const char**)&inptr, &insize, &outptr, &outsize);
       if (outptr != outbuf) {
+        char *_outbuf = new char[outsize + 1];
+        memset(_outbuf, 0, outsize + 1);
+        strncpy(_outbuf, outbuf, outsize);
         int32_t saved_errno = errno;
         int32_t outsize = static_cast<int32_t>(outptr - outbuf);
-        strncpy(save + savesize, outbuf, outsize);
+        strncpy(save + savesize, _outbuf, outsize);
+        SAFE_DELETE_ARRAY(_outbuf);
         errno = saved_errno;
       }
       if ((size_t)(-1) == res) {
@@ -390,6 +394,31 @@ int32_t explode(const char *source,
     return 0;
 }
 
+bool checkstr(const char *in, uint32_t size) {
+  __ENTER_FUNCTION
+    if (0 == size) return false;
+    for (uint32_t i = 0; i < size; ++i) {
+      switch (in[i]) {
+        case '\0':
+          return true;
+        case '\'':
+          return false;
+        case '\"':
+          return false;
+        case '(':
+          return false;
+        case ')':
+          return false;
+        case '=':
+          return false;
+        default:
+          break;
+      }
+    }
+    return true;
+  __LEAVE_FUNCTION
+    return false;
+}
 
 } //namespace string
 

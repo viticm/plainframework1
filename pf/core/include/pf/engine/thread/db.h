@@ -22,7 +22,7 @@ namespace thread {
 class PF_API DB : public pf_db::Manager, public pf_sys::Thread  {
 
  public:
-   DB(dbconnector_type_t connector_type = kDBConnectorTypeODBC);
+   DB();
    ~DB();
  
  public:

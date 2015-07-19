@@ -3,7 +3,7 @@
 namespace pf_base {
 
 TinyTimer::TinyTimer() {
-  clear();
+  cleanup();
 }
 
 TinyTimer::~TinyTimer() {
@@ -26,7 +26,7 @@ uint32_t TinyTimer::get_last_ticktime() const {
   return last_ticktime_;
 }
 
-void TinyTimer::clear() {
+void TinyTimer::cleanup() {
   tick_termtime_ = 0;
   isstart_ = false;
   last_ticktime_ = 0;

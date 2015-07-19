@@ -14,15 +14,11 @@
 #include "pf/base/config.h"
 #include "pf/sys/thread.h"
 #include "pf/base/singleton.h"
+#include "pf/base/hashmap/template.h"
 #include "pf/base/time_manager.h"
 
 namespace pf_base {
 
-extern const char *kBaseLogSaveDir; //如果不要外部使用，就别使用宏
-PF_API extern bool g_command_logprint; //global if print log to io
-PF_API extern bool g_command_logactive; //global if write log to file
-PF_API extern bool g_log_in_one_file;
-PF_API extern const char *g_log_filename[];
 PF_API extern pf_sys::ThreadLock g_log_lock;
 
 const uint32_t kLogBufferTemp = 4096;
@@ -38,11 +34,15 @@ class PF_API Log : public Singleton<Log> {
    static Log &getsingleton();
 
  public:
-   static void disk_log(const char *file_name_prefix, const char *format, ...);
+   typedef pf_base::hashmap::Template<std::string, int32_t> logids_t;
+   typedef pf_base::hashmap::Template<int32_t, int32_t> log_position_t;
+   typedef pf_base::hashmap::Template<int32_t, char *> logcache_t;
+   typedef pf_base::hashmap::Template<int32_t, pf_sys::ThreadLock*> loglock_t;
+
+ public:
    bool init(int32_t cache_size = kDefaultLogCacheSize);
-   void flush_log(uint8_t logid);
+   void flush_log(const char *logname);
    int32_t get_logsize(uint8_t logid);
-   void get_log_filename(uint8_t logid, char *filename);
    static void get_log_filename(const char *filename_prefix, 
                                 char *filename, 
                                 uint8_t type = 0);
@@ -50,132 +50,25 @@ class PF_API Log : public Singleton<Log> {
    static void get_serial(char *serial, int16_t worldid, int16_t serverid);
    static void remove_log(const char *filename);
    static void get_log_timestr(char *time_str, int32_t length);
+   static void check_log_directory();
+
+ public:
+   bool register_fastlog(const char *logname);
 
  public:
    //模板函数 type 0 普通日志 1 警告日志 2 错误日志 3 调试日志 9 只写日志
    template <uint8_t type>
-   void fast_savelog(uint8_t logid, const char *format, ...) {
-     __ENTER_FUNCTION
-       if (logid < 0 || logid >= kLogFileCount) return;
-       char buffer[4096] = {0};
-       char temp[4096] = {0};
-       va_list argptr;
-       try {
-         va_start(argptr, format);
-         vsnprintf(temp, sizeof(temp) - 1, format, argptr);
-         va_end(argptr);
-         if (1 == APPLICATION_TYPE) { //如果客户端使用了快速日志，则转为慢速
-           char log_filename[FILENAME_MAX] = {0};
-           get_log_filename(logid, log_filename);
-           slow_savelog<type>(log_filename, temp);
-           return;
-         }
-         char time_str[256] = {0};
-         memset(time_str, '\0', sizeof(time_str));
-         get_log_timestr(time_str, sizeof(time_str) - 1);
-         snprintf(buffer, sizeof(buffer) - 1,"%s %s", time_str, temp);
-       } catch(...) {
-         Assert(false);
-         return;
-       }
-       if (g_command_logprint) {
-         switch (type) {
-          case 1:
-            WARNINGPRINTF(buffer);
-            break;
-          case 2:
-            ERRORPRINTF(buffer);
-            break;
-          case 3:
-            DEBUGPRINTF(buffer);
-            break;
-          case 9:
-            break;
-          default:
-            printf("%s"LF"", buffer);
-            break;
-         }
-       }
-       strncat(buffer, LF, sizeof(LF)); //add wrap
-       if (!g_command_logactive) return; //save log condition
-       int32_t length = static_cast<int32_t>(strlen(buffer));
-       if (length <= 0) return;
-       if (g_log_in_one_file) {
-         //do nothing(one log file is not active in pap)
-       }
-       log_lock_[logid].lock();
-       try {
-         memcpy(log_cache_[logid] + log_position_[logid], buffer, length);
-       } catch(...) {
-         //do nogthing
-       }
-       log_position_[logid] += length;
-       log_lock_[logid].unlock();
-       if (log_position_[logid] > 
-         static_cast<int32_t>((kDefaultLogCacheSize * 2) / 3)) {
-           flush_log(logid);
-       }
-     __LEAVE_FUNCTION
-   }
+   void fast_savelog(const char *logname, const char *format, ...);
 
    //模板函数 type 0 普通日志 1 警告日志 2 错误日志 3 调试日志 9 只写日志
    template <uint8_t type>
-   static void slow_savelog(const char *filename_prefix, 
-                            const char *format, ...) {
-     __ENTER_FUNCTION
-       g_log_lock.lock();
-       char buffer[4096] = {0};
-       char temp[4096] = {0};
-       va_list argptr;
-       try {
-         va_start(argptr, format);
-         vsnprintf(temp, sizeof(temp) - 1, format, argptr);
-         va_end(argptr);
-         char time_str[256];
-         memset(time_str, '\0', sizeof(time_str));
-         get_log_timestr(time_str, sizeof(time_str) - 1);
-         snprintf(buffer, sizeof(buffer) - 1,"%s %s", time_str, temp);
-
-         if (g_command_logprint) {
-           switch (type) {
-            case 1:
-              WARNINGPRINTF(buffer);
-              break;
-            case 2:
-              ERRORPRINTF(buffer);
-              break;
-            case 3:
-              DEBUGPRINTF(buffer);
-              break;
-            case 9:
-              break;
-            default:
-              printf("%s"LF"", buffer);
-           }
-         }
-         strncat(buffer, LF, sizeof(LF)); //add wrap
-         if (!g_command_logactive) return;
-         char log_file_name[FILENAME_MAX];
-         memset(log_file_name, '\0', sizeof(log_file_name));
-         get_log_filename(filename_prefix, log_file_name, type);
-         FILE* fp;
-         fp = fopen(log_file_name, "ab");
-         if (fp) {
-           fwrite(buffer, 1, strlen(buffer), fp);
-           fclose(fp);
-         }
-       } catch(...) {
-         ERRORPRINTF(
-             "pf_base::Log::save_log have some log error here"LF"");
-       }
-       g_log_lock.unlock();
-     __LEAVE_FUNCTION
-   }
+   static void slow_savelog(const char *logname, const char *format, ...);
 
  private:
-   char *log_cache_[kLogFileCount];
-   int32_t log_position_[kLogFileCount];
-   pf_sys::ThreadLock log_lock_[kLogFileCount];
+   logids_t logids_;
+   log_position_t log_position_;
+   logcache_t logcache_;
+   loglock_t loglock_;
    int32_t cache_size_;
 
 };
@@ -213,5 +106,7 @@ class PF_API Log : public Singleton<Log> {
 #endif
 
 extern pf_base::Log* g_log;
+
+#include "pf/base/log.tpp"
 
 #endif //PF_BASE_LOG_H_
