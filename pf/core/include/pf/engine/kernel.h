@@ -58,7 +58,7 @@ class PF_API Kernel {
    thread::Performance *performance_thread_;
    thread::Script *script_thread_;
    bool isactive_;
-   float FPS_; //帧率
+   float FPF_; //帧率
 
  protected:
    //子类重载此方法以实现初始化不同类型的网络连接池，

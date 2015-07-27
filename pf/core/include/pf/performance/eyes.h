@@ -54,7 +54,7 @@ class PF_API Eyes : public pf_base::Singleton<Eyes> {
    uint32_t printinfo_interval_;
    uint32_t onlinecount_;
    uint32_t connectioncount_;
-   float FPS_;
+   float FPF_;
 
 };
 

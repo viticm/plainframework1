@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This file generate by plain framework admin tool, date: 2015-05-11 19:17:12 -->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+   <ItemGroup>
+    <Filter Include="include">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+  </ItemGroup>  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+   <ItemGroup>
+    <ClInclude Include="..\include\iconv.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h" />
+  </ItemGroup>  <ItemGroup>
+    <ClCompile Include="..\src\iconv.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\localcharset.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\relocatable.c">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+   <ItemGroup>
+    <ResourceCompile Include="iconv.rc" />
+  </ItemGroup>
+</Project>

@@ -826,10 +826,16 @@ int32_t addfile_toarchive(archive_t *archive,
         file::readex(fp, file->buffer, archive->blocksize, &inlength, NULL);
         if (0 == inlength) break;
         //update crc32 and md5 for the file 
-        if (file->crc32 != NULL)
-          CRC32_Update(&crc32_ctx, (unsigned char *)file->buffer, static_cast<int32_t>(inlength));
-        if (file->md5 != NULL)
-          MD5_Update(&md5_ctx, (unsigned char *)file->buffer, static_cast<int32_t>(inlength));
+        if (file->crc32 != NULL) {
+          CRC32_Update(&crc32_ctx, 
+                       (unsigned char *)file->buffer, 
+                       static_cast<int32_t>(inlength));
+        }
+        if (file->md5 != NULL) {
+          MD5_Update(&md5_ctx, 
+                     (unsigned char *)file->buffer, 
+                     static_cast<int32_t>(inlength));
+        }
         //compress the block, if necessary
         outlength = inlength;
         if (file->block->flag & PAK_FILE_COMPRESSED) {
@@ -868,7 +874,9 @@ int32_t addfile_toarchive(archive_t *archive,
         }
         //encrypt the block, if necessary
         if (file->block->flag & PAK_FILE_ENCRYPTED) {
-          encryptblock((uint64_t *)towrite, outlength, static_cast<uint32_t>(file->seed + blockcount));
+          encryptblock((uint64_t *)towrite, 
+                       outlength, 
+                       static_cast<uint32_t>(file->seed + blockcount));
         }
         //write the block
         file::writeex(archive->fp, towrite, outlength, &transferred, NULL);
@@ -1165,10 +1173,16 @@ int32_t addfile_toarchive(archive_t *archive,
         file_content += inlength;
         filesize_left -= inlength;
         //update crc32 and md5 for the file 
-        if (file->crc32 != NULL)
-          CRC32_Update(&crc32_ctx, (unsigned char *)file->buffer, static_cast<int32_t>(inlength));
-        if (file->md5 != NULL)
-          MD5_Update(&md5_ctx, (unsigned char *)file->buffer, static_cast<int32_t>(inlength));
+        if (file->crc32 != NULL) {
+          CRC32_Update(&crc32_ctx, 
+                       (unsigned char *)file->buffer, 
+                       static_cast<int32_t>(inlength));
+        }
+        if (file->md5 != NULL) {
+          MD5_Update(&md5_ctx, 
+                     (unsigned char *)file->buffer, 
+                     static_cast<int32_t>(inlength));
+        }
         //compress the block, if necessary
         outlength = inlength;
         if (file->block->flag & PAK_FILE_COMPRESSED) {
@@ -1207,7 +1221,9 @@ int32_t addfile_toarchive(archive_t *archive,
         }
         //encrypt the block, if necessary
         if (file->block->flag & PAK_FILE_ENCRYPTED) {
-          encryptblock((uint64_t *)towrite, outlength, static_cast<uint32_t>(file->seed + blockcount));
+          encryptblock((uint64_t *)towrite, 
+                       outlength, 
+                       static_cast<uint32_t>(file->seed + blockcount));
         }
         //write the block
         file::writeex(archive->fp, towrite, outlength, &transferred, NULL);
@@ -1369,10 +1385,16 @@ int32_t internal_updatefile(archive_t *archive,
         file::readex(fp, file->buffer, archive->blocksize, &inlength, NULL);
         if (0 == inlength) break;
         //Update CRC32 and MD5 for the file
-        if (file->crc32 != NULL) 
-          CRC32_Update(&crc32_ctx, (unsigned char *)file->buffer, static_cast<int32_t>(inlength));
-        if (file->md5 != NULL)
-          MD5_Update(&md5_ctx, (unsigned char *)file->buffer, static_cast<int32_t>(inlength));
+        if (file->crc32 != NULL) {
+          CRC32_Update(&crc32_ctx, 
+                       (unsigned char *)file->buffer, 
+                       static_cast<int32_t>(inlength));
+        }
+        if (file->md5 != NULL) {
+          MD5_Update(&md5_ctx, 
+                     (unsigned char *)file->buffer, 
+                     static_cast<int32_t>(inlength));
+        }
         //Compress the block, if necessary 
         outlength = inlength;
         if (written + outlength > file->block->compressedsize) Assert(false);
@@ -1576,7 +1598,9 @@ static uint64_t internal_readblocks(file_t *file,
         //If we don't know the file seed, sorry but we cannot extract the file.
         if (0 == file->seed) return 0;
         //Decrypt block positions
-        decryptblock((uint64_t *)file->blockoffset, bytesread, static_cast<uint32_t>(file->seed - 1));
+        decryptblock((uint64_t *)file->blockoffset, 
+                     bytesread, 
+                     static_cast<uint32_t>(file->seed - 1));
         //Check if the block positions are correctly decrypted
         //I don't know why, 
         //but sometimes it will result invalid block positions on some files
@@ -1587,7 +1611,9 @@ static uint64_t internal_readblocks(file_t *file,
                            NULL);
           file::readex(archive->fp, file->blockoffset, toread, &bytesread, NULL);
           file->seed = detect_fileseed1((uint64_t *)file->blockoffset, bytesread);
-          decryptblock((uint64_t *)file->blockoffset, bytesread, static_cast<uint32_t>(file->seed - 1));
+          decryptblock((uint64_t *)file->blockoffset, 
+                       bytesread, 
+                       static_cast<uint32_t>(file->seed - 1));
           //Check if the block positions are correctly decrypted
           if (file->blockoffset[0].quad != static_cast<int32_t>(bytesread)) 
             return 0;
@@ -1659,7 +1685,9 @@ static uint64_t internal_readblocks(file_t *file,
                                         0x00000003);
         }
         if (0 == file->seed) return 0;
-        decryptblock((uint64_t *)inputbuffer, blocksize, static_cast<uint32_t>(file->seed + index));
+        decryptblock((uint64_t *)inputbuffer, 
+                     blocksize, 
+                     static_cast<uint32_t>(file->seed + index));
       }
       //If the block is really compressed, decompress it.
       //WARNING : Some block may not be compressed, it can be determined only 
@@ -1667,13 +1695,19 @@ static uint64_t internal_readblocks(file_t *file,
       if (blocksize < static_cast<uint64_t>(outlength)) {
         //Is the file compressed with PKWARE Data Compression Library 
         if (file->block->flag & PAK_FILE_IMPLODE) {
-          compress::de_pklib(buffer, &outlength, inputbuffer, static_cast<int32_t>(blocksize));
+          compress::de_pklib(buffer, 
+                             &outlength, 
+                             inputbuffer, 
+                             static_cast<int32_t>(blocksize));
         }
         //Is it a file compressed by Blizzard's multiple compression
         //Note that Storm.dll v 1.0.9 distributed with Warcraft III
         //passes the full path name of the opened archive as the new last parameter
         if (file->block->flag & PAK_FILE_COMPRESS) {
-          compress::de_smart(buffer, &outlength, inputbuffer, static_cast<int32_t>(blocksize));
+          compress::de_smart(buffer, 
+                             &outlength, 
+                             inputbuffer, 
+                             static_cast<int32_t>(blocksize));
         }
         bytesread += outlength;
         buffer += outlength;

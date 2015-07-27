@@ -1,0 +1,39 @@
+/**
+  Plain framework project file.
+  Version:             The project current version.
+  Type:                Project type [library|executable].
+  LinkDirectories:     Link directories as the Dependencies directories.
+  IncludeDirectories:  Include directories.
+  ExtraSources:        Extra source file or directories.
+  SourceFilters:       Source directory or filename filter(not active).  
+  OutputPath:          The project output path.
+  Definitions:         Macros definitions.
+  Dependencies:        Dependencies library.
+**/
+{
+  "Version": 1.20,
+  "Type": "library",
+  "LinkDirectories": [
+    "./"
+  ],
+  "IncludeDirectories": [
+    "../include"
+  ],
+  "ExtraSources": [
+  ],
+  "SourceFilters": [
+    "CMakeFiles",
+    "trees.h",
+    "crc32.h",
+    "zconf_linux.h",
+    "inffixed.h",
+    "inflate.h",
+    "inffast.h"
+  ],
+  "DisableSpecificWarnings": "4819;",
+  "OutputPath": "./../../../dll/",
+  "Definitions": [
+  ],
+  "Dependencies": [
+  ]
+}

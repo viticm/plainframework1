@@ -164,7 +164,7 @@ cache::Base *Interface::getscript_filedata(int32_t scriptid) {
     return NULL;
 }
 
-int64_t Interface::runstring(const char* string) {
+int64_t Interface::runstring(const char *string) {
   __ENTER_FUNCTION
     if (!verify_function(&string)) return 0;
     bool result = true;

@@ -1,56 +1,58 @@
-SET(TF_CURRENT_BINARY_PATH_LIB "../../dll")
-SET(LIBRARY_OUTPUT_PATH ${TF_CURRENT_BINARY_PATH_LIB})
+# This file generate by plain framework admin tool, date: 2015-05-09 13:21:55
+SET(LIBRARY_OUTPUT_PATH ./../../dll/)
 
-INCLUDE_DIRECTORIES(../include)
+ADD_DEFINITIONS(-DICONV_CORE)
+ADD_DEFINITIONS(-DCHARSET_CORE)
+SET(USE_32BITS 0)
 
-##update_begin
+IF(CMAKE_SYSTEM MATCHES Linux)
+  ADD_DEFINITIONS(-D_REENTRANT)
+  ADD_DEFINITIONS(-DDONT_TD_VOID)
+  ADD_DEFINITIONS(-D_PF_NET_EPOLL)
+ELSE(CMAKE_SYSTEM MATCHES Linux)
+ENDIF(CMAKE_SYSTEM MATCHES Linux)
 
+LINK_DIRECTORIES(
+  "./"
+)
 
-INCLUDE_DIRECTORIES(../../../../include)
+INCLUDE_DIRECTORIES(
+  "../include/"
+)
 
 
 SET (INCLUDE_LIST
-	../include/iconv.h
+  ../include/iconv.h
 )
 
 SET (SRC_LIST
-	../src/iconv.c
-	../src/localcharset.c
-	../src/relocatable.c
+  ../src/iconv.c
+  ../src/localcharset.c
+  ../src/relocatable.c
 )
-
-SET (RESOURCE_LIST
-	../src/libiconv.rc
-)
-
-
-
-if (WIN32)
-	source_group(include FILES ${INCLUDE_LIST})
-	source_group(src FILES ${SRC_LIST})
-	source_group(resource FILES ${RESOURCE_LIST})
-endif()
 
 
 ADD_LIBRARY(iconv SHARED
-	${INCLUDE_LIST}
-	${SRC_LIST}
-	${RESOURCE_LIST}
+  ${SRC_LIST}
 )
 
+if(USE_32BITS)
+  SET(CMAKE_C_FLAGS "-Wall -ggdb -pipe -march=i386 -mtune=i686")
+  SET(CMAKE_CXX_FLAGS "-Wall -ggdb -pipe -march=i386 -mtune=i686")
+else()
+  SET(CMAKE_C_FLAGS "-Wall -ggdb -pipe -march=x86-64 -mtune=i686")
+  SET(CMAKE_CXX_FLAGS "-Wall -ggdb -pipe -march=x86-64 -mtune=i686")
+endif(USE_32BITS)
 
-##update_end
-
-IF(CMAKE_SYSTEM MATCHES Windows)
-  TARGET_LINK_LIBRARIES(vnet ws2_32)
-ELSE()
+if (WIN32)
+TARGET_LINK_LIBRARIES(iconv ws2_32.lib odbc32.lib odbccp32.lib )
+else()
+TARGET_LINK_LIBRARIES(iconv odbc )
   if(USE_32BITS)
-    message(STATUS "using 32bits")
-    SET(CMAKE_C_FLAGS "-Wall -ggdb -pipe -march=i386 -mtune=i686 -fPIC")
-    SET(CMAKE_CXX_FLAGS "-Wall -ggdb -pipe -march=i386 -mtune=i686 -fPIC")
+    SET(CMAKE_C_FLAGS "-Wall -ggdb -pipe -march=i386 -mtune=i686")
+    SET(CMAKE_CXX_FLAGS "-Wall -ggdb -pipe -march=i386 -mtune=i686")
   else()
-    message(STATUS "using 64bits")
-    SET(CMAKE_C_FLAGS "-Wall -ggdb -pipe -march=x86-64 -mtune=i686 -fPIC")
-    SET(CMAKE_CXX_FLAGS "-Wall -ggdb -pipe -march=x86-64 -mtune=i686 -fPIC")
+    SET(CMAKE_C_FLAGS "-Wall -ggdb -pipe -march=x86-64 -mtune=i686")
+    SET(CMAKE_CXX_FLAGS "-Wall -ggdb -pipe -march=x86-64 -mtune=i686")
   endif(USE_32BITS)
-ENDIF(CMAKE_SYSTEM MATCHES Windows)
+endif(WIN32)

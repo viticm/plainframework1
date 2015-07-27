@@ -668,10 +668,10 @@ void Kernel::calculate_FPS() {
     if (difftime != currenttime) looptime += difftime;
     last_ticktime = currenttime;
     if (looptime > kCalculateFPS) {
-      FPS_ = static_cast<float>((loopcount * 1000) / looptime);
+      FPF_ = static_cast<float>((loopcount * 1000) / looptime);
       looptime = loopcount = 0;
       if (getconfig_boolvalue(ENGINE_CONFIG_PERFORMANCE_ISACTIVE))
-        PERFORMANCE_EYES_POINTER->set_fps(FPS_);
+        PERFORMANCE_EYES_POINTER->set_fps(FPF_);
     }
     ++loopcount;
   __LEAVE_FUNCTION

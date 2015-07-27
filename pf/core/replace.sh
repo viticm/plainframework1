@@ -19,4 +19,5 @@ do
   sed -i 's;char\* ;char \*;g' $filename
   sed -i 's;void\* ;void \*;g' $filename
   sed -i 's;int32_t\& ;int32_t \&;g' $filename
+  sed -i 's;PAP Engine;PLAIN FRAMEWORK;g' $filename
 done

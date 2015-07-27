@@ -74,7 +74,7 @@ void Eyes::printinfo() {
                   loadaverage.fifteenminutes,
                   processinfo.id,
                   processinfo.cpu_percent,
-                  FPS_, 
+                  FPF_, 
                   vsz_str,
                   rss_str,
                   get_onlinecount(),
@@ -115,7 +115,7 @@ void Eyes::tick_forFPS() {
     if (difftime != currenttime) looptime += difftime;
     last_ticktime = currenttime;
     if (looptime > kCalculateFPS) {
-      FPS_ = static_cast<float>((loopcount * 1000) / looptime);
+      FPF_ = static_cast<float>((loopcount * 1000) / looptime);
       looptime = loopcount = 0;
     }
     ++loopcount;
@@ -169,5 +169,5 @@ void Eyes::set_connectioncount(uint32_t count) {
 }
 
 void Eyes::set_fps(float value) {
-  FPS_ = value;
+  FPF_ = value;
 }

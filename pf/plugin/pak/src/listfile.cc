@@ -138,7 +138,10 @@ uint64_t listfile_normaladd(archive_t *archive, const char *filename) {
     }
     int32_t outlength = static_cast<int32_t>(file_savedlength);
     if (PAK_ERROR_NONE == error) {
-      compress::de_zlib(listfile_cache, &outlength, listfile_compress + 8, static_cast<int32_t>(used));
+      compress::de_zlib(listfile_cache, 
+                        &outlength, 
+                        listfile_compress + 8, 
+                        static_cast<int32_t>(used));
     }
     if (PAK_ERROR_NONE == error) _filesize = cachesize = outlength;
     if (PAK_ERROR_NONE == error) {

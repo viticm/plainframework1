@@ -36,7 +36,7 @@ void loopdir(const char *dirname, int depth) {
 int main(int argc, char *argv[]) {
   char current_dir[FILENAME_MAX] = {0};
   getcwd(current_dir, sizeof(current_dir));
-
-  loopdir("./", 0);
+  printf("argv[0]: %s\n", argv[0]);
+  //loopdir("./", 0);
   return 0;
 }

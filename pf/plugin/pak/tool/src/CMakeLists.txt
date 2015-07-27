@@ -14,7 +14,7 @@ LINK_DIRECTORIES(
   "./" #run dir
   "../../../../../pf/core/dll" #linux
   "../../../../../pf/dependencies/dll" #linux
-  "../../../../../pf/plugin/pak/dll" #linux
+  "../../../../../pf/dll" #linux
 )
 
 SET(EXECUTABLE_OUTPUT_PATH ${TF_CURRENT_BINARY_PATH_BIN})

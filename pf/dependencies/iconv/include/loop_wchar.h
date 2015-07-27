@@ -467,8 +467,10 @@ static size_t wchar_id_loop_convert (iconv_t icd,
   return 0;
 }
 
+#if HAVE_WCRTOMB
 static size_t wchar_id_loop_reset (iconv_t icd,
                                    char* * outbuf, size_t *outbytesleft)
 {
   return 0;
 }
+#endif

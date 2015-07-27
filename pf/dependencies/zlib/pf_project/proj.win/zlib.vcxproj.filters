@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This file generate by plain framework admin tool, date: 2015-05-11 19:17:19 -->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+   <ItemGroup>
+    <Filter Include="include">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+  </ItemGroup>  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+   <ItemGroup>
+    <ClInclude Include="..\include\deflate.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\gzguts.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\zconf.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\zlib.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\zutil.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h" />
+  </ItemGroup>  <ItemGroup>
+    <ClCompile Include="..\src\adler32.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\compress.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\crc32.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\deflate.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gzclose.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gzlib.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gzread.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gzwrite.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\infback.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\inffast.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\inflate.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\inftrees.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\trees.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\uncompr.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\zutil.c">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+   <ItemGroup>
+    <ResourceCompile Include="zlib.rc" />
+  </ItemGroup>
+</Project>

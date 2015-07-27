@@ -1,0 +1,36 @@
+/**
+  Plain framework project file.
+  Version:             The project current version.
+  Type:                Project type [library|executable].
+  LinkDirectories:     Link directories as the Dependencies directories.
+  IncludeDirectories:  Include directories.
+  ExtraSources:        Extra source file or directories.
+  SourceFilters:       Source directory or filename filter(not active).
+  OutputPath:          The project output path.
+  Definitions:         Macros definitions.
+  Dependencies:        Dependencies library.
+**/
+{
+  "Version": "5.1.4",
+  "Type": "library",
+  "LinkDirectories": [
+    "./"
+  ],
+  "IncludeDirectories": [
+    "../include"
+  ],
+  "ExtraSources": [
+  ],
+  "SourceFilters": [
+    "CMakeFiles",
+    "lua.c",
+    "luac.c"
+  ],
+  "DisableSpecificWarnings": "4819;",
+  "OutputPath": "./../../../dll/",
+  "Definitions": [
+    "LUA_USE_MKSTEMP"
+  ],
+  "Dependencies": [
+  ]
+}

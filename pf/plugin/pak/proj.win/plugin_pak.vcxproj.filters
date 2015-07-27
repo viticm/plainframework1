@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This file generate by plain framework admin tool, date: 2015-05-11 19:17:25 -->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+   <ItemGroup>
+    <Filter Include="include">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\pak">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+    <Filter Include="misc">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+    <Filter Include="misc\bzip2">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+    <Filter Include="misc\huffman">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+    <Filter Include="misc\pklib">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+    <Filter Include="misc\wave">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+  </ItemGroup>  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\CMakeFiles">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\CMakeFiles\plugin_pak.dir">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\CMakeFiles\plugin_pak.dir\__">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\CMakeFiles\plugin_pak.dir\__\misc">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\CMakeFiles\plugin_pak.dir\__\misc\bzip2">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\CMakeFiles\plugin_pak.dir\__\misc\huffman">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\CMakeFiles\plugin_pak.dir\__\misc\pklib">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\CMakeFiles\plugin_pak.dir\__\misc\wave">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+    <Filter Include="misc">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+    <Filter Include="misc\bzip2">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+    <Filter Include="misc\huffman">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+    <Filter Include="misc\pklib">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+    <Filter Include="misc\wave">
+      <UniqueIdentifier></UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+   <ItemGroup>
+    <ClInclude Include="..\include\pak\compress.h">
+      <Filter>include\pak</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pak\config.h">
+      <Filter>include\pak</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pak\encrypt.h">
+      <Filter>include\pak</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pak\file.h">
+      <Filter>include\pak</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pak\interface.h">
+      <Filter>include\pak</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pak\listfile.h">
+      <Filter>include\pak</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pak\util.h">
+      <Filter>include\pak</Filter>
+    </ClInclude>
+    <ClInclude Include="..\misc\crc32.h">
+      <Filter>misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\misc\md5.h">
+      <Filter>misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\misc\bzip2\bzlib.h">
+      <Filter>misc\bzip2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\misc\bzip2\bzlib_private.h">
+      <Filter>misc\bzip2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\misc\huffman\huff.h">
+      <Filter>misc\huffman</Filter>
+    </ClInclude>
+    <ClInclude Include="..\misc\pklib\pklib.h">
+      <Filter>misc\pklib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\misc\wave\wave.h">
+      <Filter>misc\wave</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h" />
+  </ItemGroup>  <ItemGroup>
+    <ClCompile Include="..\src\compress.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\encrypt.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\file.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\interface.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\listfile.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\util.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\misc\crc32.cpp">
+      <Filter>misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\misc\md5.cpp">
+      <Filter>misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\misc\bzip2\blocksort.c">
+      <Filter>misc\bzip2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\misc\bzip2\bzlib.c">
+      <Filter>misc\bzip2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\misc\bzip2\compress.c">
+      <Filter>misc\bzip2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\misc\bzip2\crctable.c">
+      <Filter>misc\bzip2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\misc\bzip2\decompress.c">
+      <Filter>misc\bzip2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\misc\bzip2\huffman.c">
+      <Filter>misc\bzip2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\misc\bzip2\randtable.c">
+      <Filter>misc\bzip2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\misc\huffman\huff.cpp">
+      <Filter>misc\huffman</Filter>
+    </ClCompile>
+    <ClCompile Include="..\misc\pklib\crc32.c">
+      <Filter>misc\pklib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\misc\pklib\explode.c">
+      <Filter>misc\pklib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\misc\pklib\implode.c">
+      <Filter>misc\pklib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\misc\wave\wave.cpp">
+      <Filter>misc\wave</Filter>
+    </ClCompile>
+  </ItemGroup>
+   <ItemGroup>
+    <ResourceCompile Include="plugin_pak.rc" />
+  </ItemGroup>
+</Project>

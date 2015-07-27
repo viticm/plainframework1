@@ -3,7 +3,7 @@
 #include "pklib/pklib.h"
 
 #ifndef __SYS_ZLIB
-#include "zlib/zlib.h"
+#include "zlib.h"
 #else
 #include <zlib.h>
 #endif

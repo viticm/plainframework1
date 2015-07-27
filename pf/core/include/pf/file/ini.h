@@ -1,5 +1,5 @@
 /**
- * PAP Engine ( https://github.com/viticm/plainframework1 )
+ * PLAIN FRAMEWORK ( https://github.com/viticm/plainframework1 )
  * $Id ini.h
  * @link https://github.com/viticm/plainframework1 for the canonical source repository
  * @copyright Copyright (c) 2014- viticm( viticm@126.com/viticm.ti@gmail.com )
@@ -23,7 +23,7 @@ class PF_API Ini {
 
  public:
    Ini();
-   Ini(const char* filename);
+   Ini(const char *filename);
    virtual ~Ini();
 
  public:
@@ -71,8 +71,8 @@ class PF_API Ini {
                    const char *key, 
                    char *str, 
                    int32_t size);
-   void _trimstring(char* buffer);
-   bool _parsesection(char* buffer, char **section);
+   void _trimstring(char *buffer);
+   bool _parsesection(char *buffer, char **section);
    bool _parsekey(char *buffer, char **key, char **value);
    void _buffer_resize();
    char *get_bufferstring(int32_t position);
