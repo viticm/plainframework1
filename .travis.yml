@@ -5,5 +5,5 @@ compiler:
     - clang
     # Change this to your needs
 before_install:
-    - cd tools/script/linux/install/ && sh install_environment.sh
+    - cd tools/script/linux/install/ && sh install_environment.sh --full
 script: cd pf/core/proj.linux && cmake ./ && make
