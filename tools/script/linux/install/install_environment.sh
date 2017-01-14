@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 current_user=`whoami`
 systembit=`getconf LONG_BIT`
