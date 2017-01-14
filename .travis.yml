@@ -3,4 +3,4 @@ compiler:
     - gcc
     - clang
     # Change this to your needs
-script: cd pf/core/ && cmake ./ && make
+script: cd pf/core/proj.linux && cmake ./ && make
