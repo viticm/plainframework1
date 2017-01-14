@@ -1,6 +1,9 @@
 language: cpp
+sudo: required
 compiler:
     - gcc
     - clang
     # Change this to your needs
+before_install:
+    - cd tools/script/linux/install/ && sh install_environment.sh
 script: cd pf/core/proj.linux && cmake ./ && make
