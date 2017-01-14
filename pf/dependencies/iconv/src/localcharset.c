@@ -120,6 +120,15 @@ get_charset_aliases (void)
   if (cp == NULL)
     {
 #if !(defined DARWIN7 || defined VMS || defined WIN32_NATIVE || defined __CYGWIN__)
+
+//By viticm.
+#ifndef LIBDIR
+#define LIBDIR "./"
+#endif
+#ifndef HAVE_WORKING_O_NOFOLLOW
+#define HAVE_WORKING_O_NOFOLLOW 1
+#endif
+
       const char *dir;
       const char *base = "charset.alias";
       char *file_name;
