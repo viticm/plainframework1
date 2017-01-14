@@ -5,5 +5,5 @@ compiler:
     - clang
     # Change this to your needs
 before_install:
-    - sudo apt-get install unixODBC
+    - cd tools/script/linux/install/ && sudo bash install_environment.sh
 script: cd pf/core/proj.linux && cmake ./ && make
