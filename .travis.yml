@@ -5,5 +5,5 @@ compiler:
     - clang
     # Change this to your needs
 before_install:
-    - sudo bash export LIBS= && sudo bash export CFLAGS= && cd tools/script/linux/install/ && sudo bash install_environment.sh --full && cd ../../../../
+    - sudo export LIBS= && sudo export CFLAGS= && cd tools/script/linux/install/ && sudo bash install_environment.sh --full && cd ../../../../
 script: cd pf/core/proj.linux && cmake ./ && make
