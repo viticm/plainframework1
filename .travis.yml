@@ -7,4 +7,6 @@ compiler:
 before_install:
     - sudo apt-get install gcc-multilib
     - cd tools/script/linux/install/ && sudo bash install_environment.sh --full && cd ../../../../
+    - cd pf/dependencies/iconv/proj.linux/ && cmake ./ && make && cd ../../../../
+    - cd cd pf/dependencies/lua/5.3.0/proj.linux/ && cmake ./ && make && cd ../../../../../
 script: cd pf/core/proj.linux && cmake ./ && make
