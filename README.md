@@ -47,3 +47,6 @@ Plain framework is released under the MIT License. See the LICENSE file for deta
 ### 1.0.5
 - NewAdd: Add project manager files, see the docs in the `/documentation/material/ProjcetManager.txt`
 - Optimize: All framework codes and directory.
+
+### 1.0.5
+- **Plain:** [https://github.com/viticm/plain/](https://github.com/viticm/plain/)
